@@ -286,6 +286,15 @@ controls.addEventListener('end', () => { ctrlDragging = false; bumpInteract(); }
 // 計算に要る全点の写しは別スレッドが持っているので、画面側は無作為な標本（先頭の点。読み込みで混ぜてある）だけを持つ
 const SAMPLE_N = 200000;
 function freeAfterUpload(attr) { attr.onUpload(function () { this.array = new this.array.constructor(0); }); return attr; }
+// GPU のリセットなどで WebGL の文脈が失われると、写しを捨てた点群は描き直せない。戻ったら同じファイルを開き直す
+renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); status('画面の描画が止まりました。戻ったら点群を開き直します', true); });
+renderer.domElement.addEventListener('webglcontextrestored', () => {
+  const files = S.files.map(f => f.file).filter(Boolean);
+  for (const f of [...S.files]) removeFile(f, false);
+  afterRemove();
+  if (files.length) enqueue(files, 'cloud');
+  status('画面の描画が戻ったので、点群を開き直しています');
+});
 function applyLod() {
   const budget = +$('lodSel').value;
   const vis = S.files.filter(f => f.visible);
