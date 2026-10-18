@@ -589,6 +589,14 @@ self.onmessage = async (e) => {
       const ds = sets.get(msg.id);
       const a = ds.fields[msg.name].slice();
       self.postMessage({ type: 'field', id: msg.id, name: msg.name, values: a, req: msg.req }, [a.buffer]);
+    } else if (msg.type === 'tbounds') {
+      // 行列で回した全点の範囲（画面側は全点を持たないので、ここで求める）
+      const ds = sets.get(msg.id), P = ds.positions, e = msg.M, lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < ds.n; i++) {
+        const x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2];
+        for (let k = 0; k < 3; k++) { const v = e[k] * x + e[4 + k] * y + e[8 + k] * z + e[12 + k]; if (v < lo[k]) lo[k] = v; if (v > hi[k]) hi[k] = v; }
+      }
+      self.postMessage({ type: 'tbounds', req: msg.req, lo, hi });
     } else if (msg.type === 'pick') {
       let best = null;
       for (const q of msg.queries) {

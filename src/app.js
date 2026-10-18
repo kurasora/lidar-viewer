@@ -282,6 +282,10 @@ controls.addEventListener('change', () => { requestRender(); bumpInteract(); });
 controls.addEventListener('start', () => { ctrlDragging = true; bumpInteract(); });
 controls.addEventListener('end', () => { ctrlDragging = false; bumpInteract(); });
 
+// 1 点あたりのメモリを減らす（R5-003）: 点の座標・色・値は GPU に送ったら画面側の写しを捨てる。
+// 計算に要る全点の写しは別スレッドが持っているので、画面側は無作為な標本（先頭の点。読み込みで混ぜてある）だけを持つ
+const SAMPLE_N = 200000;
+function freeAfterUpload(attr) { attr.onUpload(function () { this.array = new this.array.constructor(0); }); return attr; }
 function applyLod() {
   const budget = +$('lodSel').value;
   const vis = S.files.filter(f => f.visible);
@@ -338,7 +342,7 @@ function colorSample() {
   const vals = [];
   const vis = S.files.filter(f => f.fieldName === S.field);
   for (const f of vis) {
-    const a = f.geom.getAttribute('scalar').array, m = Math.min(a.length, Math.floor(300000 / vis.length));
+    const a = f.fieldSampleVals || [], m = Math.min(a.length, Math.floor(300000 / vis.length));
     for (let i = 0; i < m; i++) vals.push(a[i]);
   }
   S.fieldSample = { name: S.field, values: vals };
@@ -348,7 +352,7 @@ function refreshEq() { updateEq(colorSample(), shared.uMin.value, shared.uMax.va
 
 // ------------------------------------------------------------------ 範囲（水平補正後の座標）
 function sampleWorld(f, maxN = 200000) {
-  const m = Math.min(f.n, maxN), P = f.positions, e = world.matrix.elements;
+  const P = f.sample, m = Math.min(P.length / 3, maxN), e = world.matrix.elements;
   const out = new Float32Array(m * 3);
   for (let i = 0; i < m; i++) {
     const x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2];
@@ -378,11 +382,26 @@ function updateBounds(resetClip) {
   for (const f of vis) {
     for (let k = 0; k < 3; k++) { flo[k] = Math.min(flo[k], f.bbox.min[k] + o[k]); fhi[k] = Math.max(fhi[k], f.bbox.max[k] + o[k]); }
     if (!S.levelInfo) { for (let k = 0; k < 3; k++) { tlo[k] = Math.min(tlo[k], f.bbox.min[k]); thi[k] = Math.max(thi[k], f.bbox.max[k]); } continue; }
-    const P = f.positions;
-    for (let i = 0; i < f.n; i++) {
-      const x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2];
-      for (let k = 0; k < 3; k++) { const v = e[k] * x + e[4 + k] * y + e[8 + k] * z + e[12 + k]; if (v < tlo[k]) tlo[k] = v; if (v > thi[k]) thi[k] = v; }
+    // 回した座標の全点の範囲は別スレッドで求める（画面側は全点を持たない。R5-003）。届くまでは箱の 8 つの角を回した範囲（少し広め）
+    const key = Array.from(e, v => v.toFixed(9)).join(',');
+    let tb = f.tbox && f.tbox.key === key ? f.tbox : null;
+    if (!tb) {
+      const c = { lo: [Infinity, Infinity, Infinity], hi: [-Infinity, -Infinity, -Infinity] };
+      for (let j = 0; j < 8; j++) {
+        const x = j & 1 ? f.bbox.max[0] : f.bbox.min[0], y = j & 2 ? f.bbox.max[1] : f.bbox.min[1], z = j & 4 ? f.bbox.max[2] : f.bbox.min[2];
+        for (let k = 0; k < 3; k++) { const v = e[k] * x + e[4 + k] * y + e[8 + k] * z + e[12 + k]; c.lo[k] = Math.min(c.lo[k], v); c.hi[k] = Math.max(c.hi[k], v); }
+      }
+      tb = c;
+      if (!f.tboxReq || f.tboxReq !== key) {
+        f.tboxReq = key;
+        call({ type: 'tbounds', id: f.id, M: Array.from(e) }).then(r => {
+          if (!S.files.includes(f) || f.tboxReq !== key) return;
+          f.tbox = { key, lo: r.lo, hi: r.hi };
+          if (Array.from(world.matrix.elements, v => v.toFixed(9)).join(',') === key) { updateBounds(false); updateInfo(); }
+        }).catch(() => {});
+      }
     }
+    for (let k = 0; k < 3; k++) { tlo[k] = Math.min(tlo[k], tb.lo[k]); thi[k] = Math.max(thi[k], tb.hi[k]); }
   }
   S.boundsFile = { min: flo, max: fhi };
   S.boundsTrue = { min: tlo, max: thi };
@@ -582,8 +601,9 @@ async function ensureField(f, name, sum = fieldSummary(name)) {
     vals = new Float32Array(raw.length);
     for (let i = 0; i < raw.length; i++) vals[i] = raw[i] + (b - sum.base);
   }
-  f.geom.setAttribute('scalar', new THREE.BufferAttribute(vals, 1));
-  f.fieldName = name; f.fieldKey = key;
+  f.fieldSampleVals = vals.slice(0, SAMPLE_N); // 色の範囲を決める標本だけ残す
+  f.geom.setAttribute('scalar', freeAfterUpload(new THREE.BufferAttribute(vals, 1)));
+  f.fieldName = name; f.fieldKey = key; f.fieldRaw = null;
   return true;
 }
 async function applyColor(resetRange = true) {
@@ -960,8 +980,8 @@ function onTraj(m) {
 function onLoadedInner(m, info) {
   const color = freeColor(FILE_COLORS, S.files.map(f => f.color));
   const geom = new THREE.BufferGeometry();
-  geom.setAttribute('position', new THREE.BufferAttribute(m.positions, 3));
-  if (m.rgb) geom.setAttribute('rgbc', new THREE.BufferAttribute(m.rgb, 3, true));
+  geom.setAttribute('position', freeAfterUpload(new THREE.BufferAttribute(m.positions, 3)));
+  if (m.rgb) geom.setAttribute('rgbc', freeAfterUpload(new THREE.BufferAttribute(m.rgb, 3, true)));
   const c = new THREE.Vector3((m.bbox.min[0] + m.bbox.max[0]) / 2, (m.bbox.min[1] + m.bbox.max[1]) / 2, (m.bbox.min[2] + m.bbox.max[2]) / 2);
   geom.boundingSphere = new THREE.Sphere(c, Math.hypot(m.bbox.max[0] - m.bbox.min[0], m.bbox.max[1] - m.bbox.min[1], m.bbox.max[2] - m.bbox.min[2]) / 2);
   const mat = makeMaterial(color);
@@ -969,7 +989,7 @@ function onLoadedInner(m, info) {
   world.add(points);
   if (!S.offset) S.offset = m.offset;
   const f = { id: m.id, name: info.name, size: info.size, n: m.n, total: m.total, sampled: m.sampled, skipped: m.skipped, header: m.header, bbox: m.bbox, stats: m.stats,
-    positions: m.positions, hasRgb: !!m.rgb, geom, mat, points, color, visible: true, fieldName: null, file: info.file, fieldBase: m.fieldBase || {} };
+    sample: m.positions.slice(0, 3 * Math.min(m.n, SAMPLE_N)), hasRgb: !!m.rgb, geom, mat, points, color, visible: true, fieldName: null, file: info.file, fieldBase: m.fieldBase || {} };
   S.files.push(f);
   S.active = f.id;
   hideProgress();
@@ -2586,7 +2606,7 @@ const demo = {
     const f = S.files[0];
     if (!f) { status('デモには点群（サンプルの廊下の地図など）を開いておく必要があります'); return false; }
     const t = S.trajs[0];
-    const P = f.positions, N = f.n, M = world.matrix;
+    const P = f.sample, N = P.length / 3, M = world.matrix;
     // 地図の点を、ふだん画面に出している座標（水平補正後）に直して使う
     const W = new Float32Array(Math.min(N, 400000) * 3), v = new THREE.Vector3();
     for (let i = 0; i < W.length / 3; i++) { v.set(P[3 * i], P[3 * i + 1], P[3 * i + 2]).applyMatrix4(M); W[3 * i] = v.x; W[3 * i + 1] = v.y; W[3 * i + 2] = v.z; }
