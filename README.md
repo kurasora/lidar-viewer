@@ -12,7 +12,7 @@ FAST-LIO などで作った点群の地図（.pcd など）を、見やすく表
 - 画像を保存：画面に映っているもの（吹き出しを含む）をそのまま PNG に
 
 ## 使い方
-1. [Releases](../../releases) から自分の OS の配布物をダウンロードする
+1. [Releases](https://github.com/kurasora/lidar-viewer/releases) から自分の OS の配布物をダウンロードする
    - Windows：`LiDARViewer-<版>-portable.exe`（ダブルクリックで起動）か `-win-x64.zip`
    - Ubuntu：`.deb`（`sudo apt install ./LiDARViewer-<版>-amd64.deb`）か `.AppImage`
    - Raspberry Pi（64 bit）：`-arm64.deb` か `-arm64.AppImage`

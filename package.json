@@ -7,7 +7,7 @@
   "desktopName": "lidar-viewer.desktop",
   "author": {
     "name": "fukuda",
-    "email": "fukuda@localhost"
+    "email": "kurasora@users.noreply.github.com"
   },
   "license": "MIT",
   "scripts": {
@@ -93,7 +93,7 @@
       "category": "Graphics",
       "executableName": "lidar-viewer",
       "artifactName": "LiDARViewer-${version}-${arch}.${ext}",
-      "maintainer": "fukuda <fukuda@localhost>",
+      "maintainer": "kurasora <kurasora@users.noreply.github.com>",
       "synopsis": "LiDAR Viewer — 点群ビューア",
       "icon": "build/icons",
       "syncDesktopName": true,
@@ -165,5 +165,5 @@
   "dependencies": {
     "ws": "^8.18.0"
   },
-  "homepage": "https://localhost/lidar-viewer"
+  "homepage": "https://github.com/kurasora/lidar-viewer"
 }
