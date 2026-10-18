@@ -1,0 +1,9 @@
+[
+ {"label": "ifc/sample_nolevel", "nolevel": true, "files": ["/home/claude/pcd-viewer/sample/formats/ifcopenshell_building.ifc"], "script": "s_bbox.js"},
+ {"label": "step/sample_nolevel", "nolevel": true, "files": ["/home/claude/pcd-viewer/sample/formats/gmsh_parts.step"], "script": "s_bbox.js"},
+ {"label": "step/sample_level", "files": ["/home/claude/pcd-viewer/sample/formats/gmsh_parts.step"], "script": "s_bbox.js"},
+ {"label": "dxf/sample_nolevel", "nolevel": true, "files": ["/home/claude/pcd-viewer/sample/formats/ezdxf_drawing.dxf"], "script": "s_bbox.js"},
+ {"label": "live/demo_pick_hidden_map", "files": ["../p1/room.pcd"], "script": "s_livepick.js"},
+ {"label": "stale/pickbox_after_level_reset", "files": ["../p3/utm_room_f8.pcd"], "script": "s_stale.js"},
+ {"label": "stats/cap10000", "capInject": 10000, "files": ["../p1/room.pcd"], "script": "s_capstats.js"}
+]

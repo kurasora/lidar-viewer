@@ -1,0 +1,4 @@
+#!/bin/bash
+# 軽い実行（Node の単体試験・ファジング・小さなスクリプト）: 同時 3 つまで、既定 800 MB / 300 秒
+# 変えたいとき: MEM=1200 TIMEOUT=900 light node x.mjs
+exec "$(dirname "$0")/_slot" light 3 800 300 -- "$@"

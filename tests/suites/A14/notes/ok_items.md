@@ -1,0 +1,12 @@
+# 問題なかった項目（確認できて OK）
+- FAST-LIO の scans.pcd（PointXYZINormal・binary・324 万点・104 MB）: 点数・平均・最小・最大が正解と一致（Node・アプリ版）。読み込み 19 秒（SwiftShader の試験環境）
+- rosbag2（MCAP、rosbags で作成）の /Odometry: 1,202 姿勢・57.05 m・120.1 秒、正解とのずれ 0。/path・/livox/imu・/tf が混ざっていても /Odometry を選ぶ。/odom（車輪のオドメトリ）だけでも読める
+- TUM 形式の軌跡: 正しい（ずれ 0）
+- 自動の水平補正の「傾き」と「廊下の向き」: 4.26°・6.94°（正解 4.27°・7.0°）。床の高さはセンサーが低い地図（0.3 m）と屋外では正しい
+- 地図と軌跡は同じ水平補正で一緒に回り、重なったまま
+- livox_ros_driver2 の PointXYZRTLT（#pragma pack(1) の 26 バイト/点、timestamp が 8 バイト境界にない）の binary PCD を正しく読める。ascii 版も同じ結果
+- LIO-SAM の GlobalMap.pcd・trajectory.pcd・transformations.pcd（PointXYZIRPYT）を点群として開ける（座標・点数が正しい）
+- zstd 圧縮の MCAP・/path だけの MCAP は、理由の分かる知らせで断る
+- 同じ PC で ROS2 ドライバ（SO_REUSEADDR なし）がポートを使っているとき「ポート 56101 がほかのソフト（livox_ros_driver2 など）に使われています…」と出る
+- 開く→閉じる 30 回（30 万点）・324 万点を 4 回で、メモリ（画面のプロセス・GPU・主プロセス・JS ヒープ）が増え続けない
+- ライブのデモを 5 分流してもメモリが一定

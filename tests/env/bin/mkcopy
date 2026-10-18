@@ -1,0 +1,9 @@
+#!/bin/bash
+# mkcopy <行き先>: プロジェクトを自分用に写す（node_modules は元への記号リンク。release と dist-artifact は写さない）
+#   写した先では自由に書き換え・node build.mjs してよい。元（/home/claude/pcd-viewer）は読むだけ
+set -e
+d=$1; [ -n "$d" ] || { echo "usage: mkcopy <行き先>"; exit 2; }
+mkdir -p "$d"
+tar -C /home/claude/pcd-viewer --exclude=./node_modules --exclude=./release --exclude=./dist-artifact -cf - . | tar -C "$d" -xf -
+ln -sfn /home/claude/pcd-viewer/node_modules "$d/node_modules"
+echo "写しました: $d"

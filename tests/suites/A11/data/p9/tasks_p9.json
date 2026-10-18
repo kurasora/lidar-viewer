@@ -1,0 +1,5 @@
+[
+ {"label": "color/cls64_legend_vs_drawn", "nolevel": true, "files": ["cls64.las"], "script": "s_cat.js", "shot": "shot_cls64.png"},
+ {"label": "color/inten_inf", "nolevel": true, "files": ["inten_inf.pcd"], "script": "s_inf.js", "shot": "shot_inten_inf.png"},
+ {"label": "color/inten_nan", "nolevel": true, "files": ["inten_nan.pcd"], "script": "s_inf.js"}
+]

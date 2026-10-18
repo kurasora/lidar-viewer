@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "allowJs": true, "checkJs": true, "noEmit": true, "strict": false, "noImplicitAny": false,
+    "target": "es2022", "module": "node16", "moduleResolution": "node16", "lib": ["es2023"],
+    "skipLibCheck": true, "ignoreDeprecations": "6.0", "types": ["node", "ws"], "typeRoots": ["/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A12/tools/node_modules/@types"],
+    "baseUrl": "/home/claude/pcd-viewer", "paths": { "ws": ["/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A12/tools/node_modules/@types/ws/index.d.ts"] }
+  },
+  "files": ["/home/claude/pcd-viewer/main.js", "/home/claude/pcd-viewer/preload.js", "/home/claude/pcd-viewer/live.js", "/home/claude/pcd-viewer/tools/fake_mid360.js"]
+}

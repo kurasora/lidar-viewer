@@ -1,0 +1,293 @@
+[
+ {
+  "label": "pick/ceiling_top",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/s_ceilpick.js"
+ },
+ {
+  "label": "display/utm_room_f8",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room_f8.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/s_display.js"
+ },
+ {
+  "label": "display/utm_room",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room.las"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/s_display.js"
+ },
+ {
+  "label": "display/loc_room",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/loc_room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/s_display.js"
+ },
+ {
+  "label": "range/pcl_binary",
+  "files": [
+   "/home/claude/pcd-viewer/sample/formats/pcl_binary.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p2/s_range.js",
+  "nolevel": true
+ },
+ {
+  "label": "quant/outlier_first",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p4/room_outlier_first.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p4/s_quant.js",
+  "nolevel": true,
+  "shot": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/regress/out/quant_outlier_first.png"
+ },
+ {
+  "label": "ceil/c_room",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_2story",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_2story.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_atrium",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_atrium.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_slope",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_slope.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_outdoor",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_outdoor.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_below",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_below.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/c_beams",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/c_beams.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/upside",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p5/cases/upside.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/sw40",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p5/sweep/sw40.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ceil/sample5000",
+  "files": [
+   "/home/claude/pcd-viewer/sample/formats/pcl_binary.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p6/s_ceil.js"
+ },
+ {
+  "label": "ortho/room_inside",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p7/s_ortho.js",
+  "args": {
+   "wheel": 8,
+   "shot": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/regress/out/ortho_inside.png"
+  }
+ },
+ {
+  "label": "measure/utm_las_nolevel",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room.las"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p7/s_measure.js",
+  "nolevel": true,
+  "args": {
+   "pairs": [
+    [
+     0,
+     1,
+     false
+    ],
+    [
+     2,
+     3,
+     false
+    ],
+    [
+     4,
+     5,
+     true
+    ]
+   ]
+  }
+ },
+ {
+  "label": "measure/utm_pcd_level",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room_f8.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p7/s_measure.js",
+  "args": {
+   "pairs": [
+    [
+     0,
+     1,
+     false
+    ],
+    [
+     2,
+     3,
+     false
+    ],
+    [
+     4,
+     5,
+     true
+    ]
+   ]
+  }
+ },
+ {
+  "label": "traj/utm_map+utm_traj",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room.las"
+  ],
+  "traj": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/utm_traj.txt"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/s_traj.js"
+ },
+ {
+  "label": "traj/loc_map+loc_traj",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/loc_room.pcd"
+  ],
+  "traj": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/loc_traj.txt"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/s_traj.js"
+ },
+ {
+  "label": "traj/utm_diag_only",
+  "traj": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/utm_diag_traj.txt"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p12/s_traj.js"
+ },
+ {
+  "label": "ifc/sample_nolevel",
+  "files": [
+   "/home/claude/pcd-viewer/sample/formats/ifcopenshell_building.ifc"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_bbox.js",
+  "nolevel": true
+ },
+ {
+  "label": "step/sample_nolevel",
+  "files": [
+   "/home/claude/pcd-viewer/sample/formats/gmsh_parts.step"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_bbox.js",
+  "nolevel": true
+ },
+ {
+  "label": "live/demo_pick_hidden_map",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_livepick.js"
+ },
+ {
+  "label": "stale/pickbox_after_level_reset",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room_f8.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_stale.js"
+ },
+ {
+  "label": "stats/cap10000",
+  "capInject": 10000,
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_capstats.js"
+ },
+ {
+  "label": "color/cls64_legend_vs_drawn",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p9/cls64.las"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p9/s_cat.js",
+  "nolevel": true
+ },
+ {
+  "label": "color/inten_inf",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p9/inten_inf.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p9/s_inf.js",
+  "nolevel": true
+ },
+ {
+  "label": "size/world30cm",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p15/sizes.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p15/s_size.js",
+  "nolevel": true
+ },
+ {
+  "label": "ifc/units_m",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/units_m.ifc"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_bbox.js",
+  "nolevel": true
+ },
+ {
+  "label": "ifc/units_mm",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/units_mm.ifc"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_bbox.js",
+  "nolevel": true
+ },
+ {
+  "label": "display/ecef_room",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/ecef_room.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/s_display.js"
+ }
+]

@@ -1,0 +1,3 @@
+#!/bin/bash
+# 重い実行（Playwright の Chromium / Electron / CloudCompare / xvfb-run）: 同時 2 つまで、既定 1600 MB / 900 秒
+exec "$(dirname "$0")/_slot" heavy 2 1600 900 -- "$@"

@@ -1,0 +1,169 @@
+{
+  "name": "lidar-viewer",
+  "productName": "LiDAR Viewer",
+  "version": "0.4.1",
+  "description": "LiDAR Viewer（点群ビューア: PCD・LAS・E57 ほか、LiDAR のライブ表示）",
+  "main": "main.js",
+  "desktopName": "lidar-viewer.desktop",
+  "author": {
+    "name": "fukuda",
+    "email": "fukuda@localhost"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node build.mjs && electron .",
+    "licenses": "node build/gen-licenses.cjs",
+    "dist": "node build.mjs && node build/gen-licenses.cjs && electron-builder --win portable zip --x64",
+    "dist:linux": "node build.mjs && node build/gen-licenses.cjs && electron-builder --linux -c.productName=LiDARViewer",
+    "dist:mac": "node build.mjs && node build/gen-licenses.cjs && electron-builder --mac"
+  },
+  "build": {
+    "appId": "local.fukuda.lidarviewer",
+    "productName": "LiDAR Viewer",
+    "files": [
+      "main.js",
+      "preload.js",
+      "live.js",
+      "assets/icon.png",
+      "dist/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "build/THIRD_PARTY_LICENSES.txt",
+        "to": "THIRD_PARTY_LICENSES.txt"
+      }
+    ],
+    "toolsets": {
+      "appimage": "1.0.3"
+    },
+    "fileAssociations": [
+      { "ext": "pcd", "name": "PCD 点群", "description": "PCD 点群（Point Cloud Library）", "mimeType": "application/x-pcd", "role": "Viewer", "rank": "Default" },
+      { "ext": "las", "name": "LAS 点群", "description": "LAS 点群", "mimeType": "application/vnd.las", "role": "Viewer", "rank": "Default" },
+      { "ext": "laz", "name": "LAZ 点群", "description": "LAZ 点群（圧縮 LAS）", "mimeType": "application/vnd.laszip", "role": "Viewer", "rank": "Default" },
+      { "ext": "e57", "name": "E57 点群", "description": "E57 点群（ASTM E2807）", "mimeType": "application/x-e57", "role": "Viewer", "rank": "Default" },
+      { "ext": "ptx", "name": "PTX 点群", "description": "PTX 点群（Leica）", "mimeType": "application/x-ptx", "role": "Viewer", "rank": "Default" },
+      { "ext": "pts", "name": "PTS 点群", "description": "PTS 点群", "mimeType": "application/x-pts-pointcloud", "role": "Viewer", "rank": "Default" },
+      { "ext": "ply", "name": "PLY 点群・メッシュ", "description": "PLY（Stanford）", "mimeType": "model/x-ply", "role": "Viewer", "rank": "Alternate" },
+      { "ext": "xyz", "name": "XYZ 点群", "description": "XYZ 点群（文字）", "mimeType": "application/x-xyz-pointcloud", "role": "Viewer", "rank": "Alternate" }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signExecutable": false,
+      "artifactName": "LiDARViewer-${version}-win-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "LiDARViewer-${version}-portable.exe",
+      "unpackDirName": "LiDARViewer"
+    },
+    "directories": {
+      "output": "release"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "Graphics",
+      "executableName": "lidar-viewer",
+      "artifactName": "LiDARViewer-${version}-${arch}.${ext}",
+      "maintainer": "fukuda <fukuda@localhost>",
+      "synopsis": "LiDAR Viewer — 点群ビューア",
+      "icon": "build/icons",
+      "syncDesktopName": true,
+      "packageCategory": "graphics",
+      "desktop": {
+        "entry": {
+          "Name": "LiDAR Viewer",
+          "Name[ja]": "LiDAR Viewer",
+          "GenericName[ja]": "点群ビューア",
+          "Keywords": "LiDAR;PointCloud;PCD;LAS;E57;点群;"
+        }
+      }
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.graphics-design",
+      "artifactName": "LiDARViewer-${version}-mac-${arch}.${ext}",
+      "identity": null,
+      "extendInfo": {
+        "NSLocalNetworkUsageDescription": "LiDAR（Livox MID-360）を同じネットワークから探して点群を受け取り、ほかのパソコンの LiDAR Viewer と点群をやり取りするために使います。",
+        "NSCameraUsageDescription": null,
+        "NSMicrophoneUsageDescription": null,
+        "NSAudioCaptureUsageDescription": null,
+        "NSBluetoothAlwaysUsageDescription": null,
+        "NSBluetoothPeripheralUsageDescription": null
+      }
+    },
+    "deb": {
+      "fpm": [
+        "build/linux/copyright=/usr/share/doc/lidar-viewer/copyright"
+      ],
+      "depends": [
+        "libgbm1",
+        "libasound2t64 | libasound2",
+        "libdrm2",
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1",
+        "libsecret-1-0"
+      ]
+    },
+    "publish": null
+  },
+  "devDependencies": {
+    "draco3d": "^1.5.8",
+    "electron": "44.8.0",
+    "electron-builder": "26.15.3",
+    "esbuild": "0.24.2",
+    "fflate": "^0.8.3",
+    "geotiff": "^3.0.5",
+    "laz-perf": "^0.0.7",
+    "occt-import-js": "^0.0.23",
+    "three": "0.160.1",
+    "web-ifc": "^0.0.78"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "homepage": "https://localhost/lidar-viewer"
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+# rmnet <名前> [台数=3]: mknet でつくったものを消す（中で動いているプロセスは先に止めておくこと）
+n=$1; c=${2:-3}
+for k in $(seq 1 $c); do ip netns del ${n}$k 2>/dev/null; done
+ip netns del ${n}sw 2>/dev/null
+true

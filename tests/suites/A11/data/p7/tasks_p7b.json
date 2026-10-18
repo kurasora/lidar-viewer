@@ -1,0 +1,1 @@
+[ {"label": "ortho/inside_two_files", "files": ["room_noceil.pcd", "ceil_only.pcd"], "script": "s_ortho2.js", "args": {"shot": "shot_ortho2.png"}} ]

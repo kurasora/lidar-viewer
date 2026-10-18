@@ -1,0 +1,6 @@
+[
+ {"label": "traj/utm_map+utm_traj", "files": ["../p3/utm_room.las"], "traj": ["utm_traj.txt"], "script": "s_traj.js", "shot": "shot_utm_traj.png"},
+ {"label": "traj/utm_traj_first_then_map", "trajFirst": true, "traj": ["utm_traj.txt"], "files": ["../p3/utm_room.las"], "script": "s_traj.js"},
+ {"label": "traj/loc_map+loc_traj", "files": ["../p3/loc_room.pcd"], "traj": ["loc_traj.txt"], "script": "s_traj.js"},
+ {"label": "traj/utm_diag_only", "traj": ["utm_diag_traj.txt"], "script": "s_traj.js"}
+]

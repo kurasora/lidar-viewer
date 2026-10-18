@@ -1,0 +1,39 @@
+QSocketNotifier: Can only be used with threads started with QThread
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+[Global Shift] Max abs. coord = 1e+04 / max abs. diag = 1e+06
+[ccColorScalesManager] Found 0 custom scale(s) in persistent settings
+[Plugin] Searching: /usr/lib/x86_64-linux-gnu/cloudcompare/plugins
+	Plugin found: Animation (libQANIMATION_PLUGIN.so)
+	Plugin found: Compass (libQCOMPASS_PLUGIN.so)
+	Plugin found: Core I/O (libQCORE_IO_PLUGIN.so)
+	Plugin found: EDL Shader (libQEDL_GL_PLUGIN.so)
+	Plugin found: Hough Normals Computation (libQHOUGH_NORMALS_PLUGIN.so)
+	Plugin found: PCV / ShadeVis (libQPCV_PLUGIN.so)
+	Plugin found: Photoscan I/O (libQPHOTOSCAN_IO_PLUGIN.so)
+	Plugin found: RANSAC Shape Detection (libQRANSAC_SD_PLUGIN.so)
+	Plugin found: Surface of Revolution Analysis (libQSRA_PLUGIN.so)
+[Plugin] Searching: /root/.local/share/CCCorp/CloudCompare/plugins
+[Plugin] Searching: /usr/local/share/CCCorp/CloudCompare/plugins
+[Plugin] Searching: /usr/share/CCCorp/CloudCompare/plugins
+[Plugin] Searching: /root/.nix-profile/share/CCCorp/CloudCompare/plugins
+[Plugin] Searching: /nix/var/nix/profiles/default/share/CCCorp/CloudCompare/plugins
+[Plugin][Core I/O] New file extensions registered:  GEOREF MA OBJ OFF PDMS PTX SBF STL VTK
+[Plugin][Photoscan I/O] New file extensions registered: PSZ
+[LOADING]
+Opening file: 'cc/mat2.ptx'
+[PTX] Scan #1 - grid size: 6 x 5
+[Scan grid] Detected pitch step: 1.30919 degrees (span [0.120827 - 6.66677])
+[Scan grid] Detected yaw step: 2.22955 degrees (span [52.11 - 64.3182])
+[PTX] Scan #2 - grid size: 6 x 5
+[Scan grid] Detected pitch step: 0.159729 degrees (span [0.384429 - 1.18307])
+[Scan grid] Detected yaw step: 0.388277 degrees (span [61.428 - 63.3904])
+[I/O] File 'cc/mat2.ptx' loaded successfully
+Found one cloud with 29 points
+Found one cloud with 29 points
+[MERGE CLOUDS]
+[SAVING]
+[I/O] File 'cc/mat2_MERGED_0.bin' saved successfully
+Output export format (clouds) set to: ASC
+[SAVING]
+[I/O] File 'cc/mat2_MERGED_0.asc' saved successfully
+Processed finished in 0.55 s.

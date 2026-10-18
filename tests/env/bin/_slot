@@ -1,0 +1,31 @@
+#!/bin/bash
+# 共通: _slot <種類> <枠の数> <既定MB> <既定秒> -- コマンド...
+#  ・bigmem が待っている間は、light / heavy は新しく始めない（bigmem を先に通す）
+#  ・light / heavy は global を共有でつかみ、bigmem は独占でつかむ
+T=$(cd "$(dirname "$0")/.." && pwd); L=$T/locks
+kind=$1; slots=$2; dmem=$3; dto=$4; shift 4; [ "$1" = "--" ] && shift
+mem=${MEM:-$dmem}; to=${TIMEOUT:-$dto}
+if [ "$kind" = bigmem ]; then
+  exec 8>$L/bigmem.lock; flock 8            # bigmem 同士は 1 つずつ
+  touch $L/bigmem.want
+  exec 9>$L/global.lock; flock -x 9
+  rm -f $L/bigmem.want
+  python3 $T/bin/guard --mem $mem --timeout $to --label bigmem -- "$@" 7>&- 8>&- 9>&-; rc=$?
+  exit $rc
+fi
+while true; do
+  while [ -e $L/bigmem.want ]; do sleep 2; done
+  exec 9>$L/global.lock
+  if flock -s -w 5 9; then
+    for i in $(seq 1 $slots); do
+      exec 7>$L/$kind.$i.lock
+      if flock -n 7; then
+        python3 $T/bin/guard --mem $mem --timeout $to --label $kind -- "$@" 7>&- 8>&- 9>&-; rc=$?
+        exit $rc
+      fi
+      exec 7>&-
+    done
+    exec 9>&-
+  fi
+  sleep $((1 + RANDOM % 3))
+done

@@ -1,0 +1,13 @@
+[
+ {"label": "ceil/c_room", "files": ["c_room.pcd"], "script": "s_ceil.js"},
+ {"label": "ceil/c_2story", "files": ["c_2story.pcd"], "script": "s_ceil.js", "shot": "shot_c_2story.png"},
+ {"label": "ceil/c_atrium", "files": ["c_atrium.pcd"], "script": "s_ceil.js"},
+ {"label": "ceil/c_slope", "files": ["c_slope.pcd"], "script": "s_ceil.js"},
+ {"label": "ceil/c_outdoor", "files": ["c_outdoor.pcd"], "script": "s_ceil.js", "shot": "shot_c_outdoor.png"},
+ {"label": "ceil/c_below", "files": ["c_below.pcd"], "script": "s_ceil.js", "shot": "shot_c_below.png"},
+ {"label": "ceil/c_beams", "files": ["c_beams.pcd"], "script": "s_ceil.js"},
+ {"label": "ceil/upside", "files": ["../p5/cases/upside.pcd"], "script": "s_ceil.js", "shot": "shot_upside.png"},
+ {"label": "ceil/sw40", "files": ["../p5/sweep/sw40.pcd"], "script": "s_ceil.js", "shot": "shot_sw40.png"},
+ {"label": "ceil/ramp5", "files": ["../p5/cases/ramp5.pcd"], "script": "s_ceil.js"},
+ {"label": "ceil/sample5000", "files": ["/home/claude/pcd-viewer/sample/formats/pcl_binary.pcd"], "script": "s_ceil.js"}
+]

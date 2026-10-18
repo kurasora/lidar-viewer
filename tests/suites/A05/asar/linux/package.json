@@ -1,0 +1,16 @@
+{
+  "name": "lidar-viewer",
+  "productName": "LiDAR Viewer",
+  "version": "0.3.0",
+  "description": "LiDAR Viewer（点群ビューア: PCD・LAS・E57 ほか、LiDAR のライブ表示）",
+  "main": "main.js",
+  "author": {
+    "name": "fukuda",
+    "email": "fukuda@localhost"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "homepage": "https://localhost/lidar-viewer"
+}

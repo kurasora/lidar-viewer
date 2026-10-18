@@ -1,0 +1,4 @@
+[
+ {"label": "ifc/units_m", "nolevel": true, "files": ["units_m.ifc"], "script": "s_bbox.js"},
+ {"label": "ifc/units_mm", "nolevel": true, "files": ["units_mm.ifc"], "script": "s_bbox.js"}
+]

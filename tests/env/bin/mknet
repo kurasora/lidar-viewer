@@ -1,0 +1,26 @@
+#!/bin/bash
+# mknet <名前> <番号 11..250> [台数=3]
+#   同じ「スイッチ」（ブリッジ）につながった、ネットワーク名前空間を台数分つくる
+#   名前空間: <名前>1 … <名前>N（それぞれ eth0 = 10.<番号>.0.<k>/24、ブロードキャストあり）
+#   スイッチ: <名前>sw（中に br0）
+#   例: mknet a7 17 3 → a71(10.17.0.1) a72(10.17.0.2) a73(10.17.0.3)
+#   中で動かす: ip netns exec a72 xvfb-run -a node x.js   （guard と組み合わせるなら heavy ip netns exec a72 ...）
+#   片付け: rmnet <名前> [台数]
+set -e
+n=$1; o=$2; c=${3:-3}
+[ -n "$n" ] && [ -n "$o" ] || { echo "usage: mknet <名前> <番号> [台数]"; exit 2; }
+ip netns add ${n}sw
+ip -n ${n}sw link add br0 type bridge
+ip -n ${n}sw link set br0 up
+ip -n ${n}sw link set lo up
+for k in $(seq 1 $c); do
+  ip netns add ${n}$k
+  ip link add ${n}h$k type veth peer name eth0 netns ${n}$k
+  ip link set ${n}h$k netns ${n}sw
+  ip -n ${n}sw link set ${n}h$k master br0
+  ip -n ${n}sw link set ${n}h$k up
+  ip -n ${n}$k addr add 10.$o.0.$k/24 brd + dev eth0
+  ip -n ${n}$k link set eth0 up
+  ip -n ${n}$k link set lo up
+done
+echo "つくりました: $(for k in $(seq 1 $c); do printf '%s(10.%s.0.%s) ' ${n}$k $o $k; done)"

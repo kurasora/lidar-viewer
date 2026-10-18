@@ -1,0 +1,5 @@
+[
+ {"label": "ortho/room_inside", "files": ["../p1/room.pcd"], "script": "s_ortho.js", "args": {"wheel": 8, "shot": "shot_ortho_inside.png"}},
+ {"label": "measure/utm_las_nolevel", "nolevel": true, "files": ["../p3/utm_room.las"], "script": "s_measure.js", "args": {"pairs": [[0, 1, false], [2, 3, false], [4, 5, true]]}},
+ {"label": "measure/utm_pcd_level", "files": ["../p3/utm_room_f8.pcd"], "script": "s_measure.js", "args": {"pairs": [[0, 1, false], [2, 3, false], [4, 5, true]]}}
+]

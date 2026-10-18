@@ -1,0 +1,7 @@
+postinst の判定（root で実行）: 0755
+A_space_0755_userns_ok       dir="LiDAR Viewer" sandbox=0755 userns=allow alive=yes procs=[      1 --type=gpu-process       1 --type=renderer       1 --type=utility       3 --type=zygote ] renderer: Seccomp=2 NSpid=2360 4 uid=999 | 
+B_space_0755_userns_ng       dir="LiDAR Viewer" sandbox=0755 userns=block alive=no procs=[]  | [2698:1017/051727.142119:FATAL:setuid_sandbox_host.cc(163)] The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now. You need to make sure that /opt/ 
+C_space_4755_userns_ng       dir="LiDAR Viewer" sandbox=4755 userns=block alive=no procs=[]  | LaunchProcess: failed to execvp: [3067:1017/051742.287479:FATAL:zygote_host_impl_linux.cc(207)] Check failed: . : Invalid argument (22) 
+D_nospace_4755_userns_ng     dir="LiDARViewer" sandbox=4755 userns=block alive=yes procs=[      1 --type=gpu-process       1 --type=renderer       1 --type=utility       4 --type=zygote ] renderer: Seccomp=2 NSpid=3606 4 uid=999 | 
+E_space_0755_no_sandbox      dir="LiDAR Viewer" sandbox=0755 userns=block alive=yes procs=[      1 --type=gpu-process       1 --type=renderer       1 --type=utility       2 --type=zygote ] renderer: Seccomp=2 NSpid=4069  uid=999 | 
+F_space_4755_disable_ns      dir="LiDAR Viewer" sandbox=4755 userns=allow alive=no procs=[]  | LaunchProcess: failed to execvp: [4436:1017/051827.876709:FATAL:zygote_host_impl_linux.cc(207)] Check failed: . : Invalid argument (22) 

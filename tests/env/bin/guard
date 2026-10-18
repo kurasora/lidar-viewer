@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+# 見張り付きで実行する: guard [--mem MB] [--timeout 秒] [--label 名前] -- コマンド...
+#  ・子孫プロセスすべての RSS の合計が MB を超えたら、子孫をまとめて止める（終了コード 137）
+#  ・時間切れでも子孫をまとめて止める（終了コード 124）
+#  ・終わったあと、取り残された子孫（Electron / Chromium / Xvfb など）も片付ける
+#    （親が先に死んだ孫も、この見張りが引き取る＝subreaper）
+import os, sys, time, signal, subprocess, ctypes
+
+def parse():
+    a = sys.argv[1:]; mem = 1000; to = 300; label = ''
+    while a and a[0] != '--':
+        if a[0] == '--mem': mem = int(a[1]); a = a[2:]
+        elif a[0] == '--timeout': to = int(a[1]); a = a[2:]
+        elif a[0] == '--label': label = a[1]; a = a[2:]
+        else: break
+    if a and a[0] == '--': a = a[1:]
+    if not a: print('usage: guard [--mem MB] [--timeout S] -- cmd...', file=sys.stderr); sys.exit(2)
+    return mem, to, label, a
+
+def table():
+    t = {}
+    for p in os.listdir('/proc'):
+        if not p.isdigit(): continue
+        try:
+            with open(f'/proc/{p}/stat') as f: s = f.read()
+            r = s.rsplit(')', 1)[1].split()
+            ppid = int(r[1]); start = r[19]
+            with open(f'/proc/{p}/statm') as f: rss = int(f.read().split()[1]) * 4096
+            t[int(p)] = (ppid, start, rss)
+        except Exception: pass
+    return t
+
+def descendants(root, t):
+    kids = {}
+    for pid, (pp, st, rss) in t.items(): kids.setdefault(pp, []).append(pid)
+    out, stack = [], [root]
+    while stack:
+        x = stack.pop()
+        for c in kids.get(x, []): out.append(c); stack.append(c)
+    return out
+
+def main():
+    mem, to, label, cmd = parse()
+    try: ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0)  # PR_SET_CHILD_SUBREAPER
+    except Exception: pass
+    me = os.getpid()
+    try: p = subprocess.Popen(cmd)
+    except FileNotFoundError as e: print(f'[guard] コマンドが見つかりません: {e}', file=sys.stderr); sys.exit(127)
+    status = None
+    t0 = time.time(); peak = 0; reason = None
+    def reap():
+        nonlocal status
+        while True:
+            try: pid, st = os.waitpid(-1, os.WNOHANG)
+            except ChildProcessError: return
+            if pid == 0: return
+            if pid == p.pid: status = st
+    while True:
+        reap()
+        t = table()
+        tot = sum(t[d][2] for d in descendants(me, t) if d in t)
+        peak = max(peak, tot)
+        if status is not None: break
+        if tot > mem * 1048576: reason = f'メモリ上限 {mem} MB を超えた（{tot/1048576:.0f} MB）'; break
+        if time.time() - t0 > to: reason = f'時間切れ {to} 秒'; break
+        time.sleep(0.4)
+    def killall(sig):
+        t = table()
+        for d in descendants(me, t):
+            try: os.kill(d, sig)
+            except Exception: pass
+    def cleanup():
+        killall(signal.SIGTERM)
+        for _ in range(10):
+            time.sleep(0.2); reap()
+            if not descendants(me, table()): break
+        killall(signal.SIGKILL)
+        for _ in range(10):
+            time.sleep(0.1); reap()
+            if not descendants(me, table()): break
+    cleanup()
+    if reason:
+        print(f'[guard{(":"+label) if label else ""}] 止めました: {reason}（最大 {peak/1048576:.0f} MB、{time.time()-t0:.1f} 秒）', file=sys.stderr, flush=True)
+        sys.exit(137 if 'メモリ' in reason else 124)
+    rc = os.waitstatus_to_exitcode(status) if status is not None else 1
+    if os.environ.get('GUARD_VERBOSE'): print(f'[guard] 終了 {rc}（最大 {peak/1048576:.0f} MB、{time.time()-t0:.1f} 秒）', file=sys.stderr)
+    sys.exit(rc if rc >= 0 else 128 - rc)
+
+main()
