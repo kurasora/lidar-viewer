@@ -32,7 +32,6 @@ NOSAMPLE=1 node build.mjs artifact   # 1 ファイルの試作ページ（dist-a
 ```
 - `main.js`：Electron の起動・ファイルの受け渡し・画像の保存
 - `src/app.js`：画面（three.js）／`src/worker.js`：読み込み・補正・点の選択（別スレッド）／`src/io/`：各形式の読み込み
-- `live.js`：LiDAR（Livox MID-360）の直接表示と配信。0.4.1 では画面のボタンを隠している（`src/app.js` の `LIVE_ENABLED`）
 - 試験：`tests/TESTING.md`、見つかった問題と直したこと：`tests/BUGS.md`
 
 ## 使用許諾

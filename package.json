@@ -2,7 +2,7 @@
   "name": "lidar-viewer",
   "productName": "LiDAR Viewer",
   "version": "0.4.1",
-  "description": "LiDAR Viewer（点群ビューア: PCD・LAS・E57 ほか、LiDAR のライブ表示）",
+  "description": "LiDAR Viewer（点群ビューア: PCD・LAS・E57 ほか）",
   "main": "main.js",
   "desktopName": "lidar-viewer.desktop",
   "author": {
@@ -121,7 +121,6 @@
       "artifactName": "LiDARViewer-${version}-mac-${arch}.${ext}",
       "identity": null,
       "extendInfo": {
-        "NSLocalNetworkUsageDescription": "LiDAR（Livox MID-360）を同じネットワークから探して点群を受け取り、ほかのパソコンの LiDAR Viewer と点群をやり取りするために使います。",
         "NSCameraUsageDescription": null,
         "NSMicrophoneUsageDescription": null,
         "NSAudioCaptureUsageDescription": null,
