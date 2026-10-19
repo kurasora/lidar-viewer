@@ -34,9 +34,25 @@ async function getAsset(name, base) {
 // 部品の場所（URL）を渡す必要がある読み込み部品用
 async function getAssetURL(name, base) {
   const emb = typeof __EMBED_ASSETS__ !== 'undefined' ? __EMBED_ASSETS__ : null;
-  if (emb && emb[name]) return URL.createObjectURL(new Blob([await getAsset(name, base)], { type: 'application/wasm' }));
+  if (emb && emb[name]) {
+    // 埋め込みの部品は fetch を使わずに渡す（試作ページの枠は connect-src が blob: を許さないことがある。R14-001）
+    const url = URL.createObjectURL(new Blob([], { type: 'application/wasm' }));
+    embeddedURLs.set(url, await getAsset(name, base));
+    if (!fetchShimmed) {
+      fetchShimmed = true;
+      const realFetch = self.fetch.bind(self);
+      self.fetch = (u, o) => {
+        const k = typeof u === 'string' ? u : u && u.url;
+        if (embeddedURLs.has(k)) return Promise.resolve(new Response(embeddedURLs.get(k), { headers: { 'Content-Type': 'application/wasm' } }));
+        return realFetch(u, o);
+      };
+    }
+    return url;
+  }
   return new URL('wasm/' + name, base).href;
 }
+const embeddedURLs = new Map();
+let fetchShimmed = false;
 
 function rng(seed) {
   let s = seed >>> 0 || 1;
@@ -485,6 +501,13 @@ function analyze(ds, maxTilt = 35) {
   const sc = score(up);
   if (sc.par < 0.05 * total) throw unsure('床や天井のような水平な面が見つかりません');
   if (sc.par + sc.perp < 0.5 * total) throw unsure('床・天井と壁のような直交する面が少なく、向きを決められません');
+  // 選んだ上向きより水平に近い大きな面（例: 45° の屋根面だけの屋根裏の床）が別にあれば、上向きを取り違えている（R17-004）
+  const C10 = Math.cos(10 * Math.PI / 180);
+  for (const c of pick) {
+    if (Math.abs(c.n[2]) <= up[2] + 0.02) continue;
+    if (Math.abs(c.n[0] * up[0] + c.n[1] * up[1] + c.n[2] * up[2]) >= C10) continue;
+    if (score(c.n).par >= 0.3 * sc.par) throw unsure('床と斜めの面（屋根など）の区別がつかず、向きを決められません');
+  }
   let R1 = rotationTo(up);
   // 3. 床の高さ（廊下の向きの回転は z を変えないので、先に求める）
   const fl = findFloor(ds, normals, R1);
@@ -585,6 +608,12 @@ self.onmessage = async (e) => {
       let spacing = null, reason = '';
       try { spacing = pointSpacing(ds); if (spacing == null) reason = '点がまばらで求められません'; } catch (err) { ds.index = null; reason = '点の索引を作れませんでした（' + (err.message || err) + '）'; }
       self.postMessage({ type: 'spacing', id: msg.id, spacing, reason });
+    } else if (msg.type === 'buffers') {
+      // WebGL の文脈が戻ったとき、画面側が捨てた座標・色の写しをもう一度渡す（開き直さずに描き直す。R11-003・R14-004・R15-005）
+      const ds = sets.get(msg.id);
+      if (!ds) throw new Error('点群が見つかりません');
+      const pos = ds.positions.slice(), rgb = ds.rgb ? ds.rgb.slice() : null;
+      self.postMessage({ type: 'buffers', id: msg.id, positions: pos, rgb, req: msg.req }, rgb ? [pos.buffer, rgb.buffer] : [pos.buffer]);
     } else if (msg.type === 'field') {
       const ds = sets.get(msg.id);
       const a = ds.fields[msg.name].slice();
@@ -634,7 +663,10 @@ self.onmessage = async (e) => {
   } catch (err) {
     let message = err.message || String(err);
     // ページの設定で WebAssembly が止められている場合（LAZ・Draco・IFC・STEP が使う）
-    if (/WebAssembly|wasm|unsafe-eval|Content Security Policy/i.test(message)) message = `この画面では展開用の部品（WebAssembly）が使えないため開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
+    // 原因を分けて言う（R14-001・R14-006）: 文字列の eval の禁止／部品の取り寄せの失敗／WebAssembly の禁止
+    if (/evaluate a string|EvalError/i.test(message) && !/WebAssembly\.(compile|instantiate)|Refused to compile/i.test(message)) message = `この画面の設定（文字列のプログラムの実行の禁止）のため、この形式の部品が動かず開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
+    else if (/fetching of the wasm failed|Failed to fetch|NetworkError|connect-src/i.test(message)) message = `この画面の設定で展開用の部品を読み込めないため開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
+    else if (/WebAssembly|wasm|unsafe-eval|Content Security Policy/i.test(message)) message = `この画面では展開用の部品（WebAssembly）が使えないため開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
     self.postMessage({ type: 'error', id: msg.id, req: msg.req, message, unsure: !!err.unsure });
   }
 };

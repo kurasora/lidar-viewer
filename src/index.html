@@ -33,7 +33,7 @@
         <div id="fmtSampleList"></div>
         <p class="hint">RIEGL（.rdb .rdbx .vxls .ptch .mtch .rsp .rds）と DotProduct（.dp）は、メーカーの専用ライブラリが必要なため開けません。</p>
       </details>
-      <input id="fileInput" type="file" accept=".pcd,.las,.laz,.e57,.ply,.ptx,.txt,.asc,.neu,.xyz,.pts,.csv,.bin,.sbf,.data,.pn,.pv,.soi,.out,.obj,.mtl,.stl,.off,.vtk,.drc,.fbx,.dae,.gltf,.glb,.dxf,.shp,.shx,.dbf,.prj,.ifc,.stp,.step,.pdms,.pdmsmac,.mac,.poly,.sx,.psz,.icm,.pov,.tif,.tiff,.bmp,.gif,.ico,.jpg,.jpeg,.png,.pbm,.pgm,.ppm,.svg,.webp,.tga,.xbm,.xpm,.cur,.icns,.wbmp,.svgz,.rdb,.rdbx,.rsp,.rds,.vxls,.ptch,.mtch,.dp" multiple hidden>
+      <input id="fileInput" type="file" accept=".pcd,.las,.laz,.e57,.ply,.ptx,.txt,.asc,.neu,.xyz,.pts,.csv,.bin,.sbf,.data,.pn,.pv,.soi,.out,.wrl,.obj,.mtl,.stl,.off,.vtk,.drc,.fbx,.dae,.gltf,.glb,.dxf,.shp,.shx,.dbf,.prj,.ifc,.stp,.step,.pdms,.pdmsmac,.mac,.poly,.sx,.psz,.icm,.pov,.tif,.tiff,.bmp,.gif,.ico,.jpg,.jpeg,.png,.pbm,.pgm,.ppm,.svg,.webp,.tga,.xbm,.xpm,.cur,.icns,.wbmp,.svgz,.rdb,.rdbx,.rsp,.rds,.vxls,.ptch,.mtch,.dp" multiple hidden>
       <input id="trajInput" type="file" accept=".mcap,.txt,.csv,.tum" multiple hidden>
     </section>
     <section data-pop="live" class="popsec livesec">
@@ -289,7 +289,7 @@
   <main class="stage" id="stage">
     <div class="empty" id="empty">
       <p class="big">点群ファイルをここにドラッグ</p>
-      <p>または下の「開く」から選んでください。</p>
+      <p>または「ファイル」から選んでください。</p>
       <p class="keys">左ドラッグ: 回る ・ 右ドラッグ: 平行に動かす ・ ホイール: 近づく・離れる</p>
     </div>
     <p class="mguide" id="mGuide" hidden></p>
@@ -322,7 +322,7 @@
     <div class="shotview" id="shotView" role="dialog" aria-modal="true" aria-labelledby="shotTitle" hidden>
       <div class="shotbox">
         <div class="shothead"><h2 id="shotTitle">画像</h2><button type="button" class="x" id="btnShotClose" aria-label="閉じる">×</button></div>
-        <p class="hint">このページからは直接ダウンロードできません。画像を<b>右クリック</b>して「名前を付けて画像を保存」を選んでください。</p>
+        <p class="hint">このページからは直接ダウンロードできません。画像を<b>右クリック</b>（スマホ・タブレットでは<b>長押し</b>）して「名前を付けて画像を保存」（「画像を保存」）を選んでください。</p>
         <img id="shotImg" alt="">
       </div>
     </div>

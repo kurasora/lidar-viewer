@@ -4,7 +4,8 @@
 import { eachLine, numbersIn, cellsIn, decode, wordsIn, parseToken } from '../util.js';
 
 const NAMES = {
-  x: /^(x|east(ing)?|e|lon(gitude)?)$/i, y: /^(y|north(ing)?|n|lat(itude)?)$/i, z: /^(z|h|height|elev(ation)?|alt(itude)?|up)$/i,
+  // 「X_m」「px」「pos_x」「position.x」「point_x」も座標とみなす（R12-004）
+  x: /^((p|pos|position|point)?[._]?x([._]?m)?|east(ing)?|e|lon(gitude)?)$/i, y: /^((p|pos|position|point)?[._]?y([._]?m)?|north(ing)?|n|lat(itude)?)$/i, z: /^((p|pos|position|point)?[._]?z([._]?m)?|h|height|elev(ation)?|alt(itude)?|up)$/i,
   r: /^(r|red|colou?r_?r)$/i, g: /^(g|green|colou?r_?g)$/i, b: /^(b|blue|colou?r_?b)$/i,
   nx: /^(nx|normal_?x)$/i, ny: /^(ny|normal_?y)$/i, nz: /^(nz|normal_?z)$/i,
 };
@@ -77,7 +78,9 @@ export async function read(src, sink, ctx) {
       for (const [k, re] of Object.entries(NAMES)) if (re.test(s) && !role.includes(k)) { role[i] = k; break; }
     });
   }
-  if (!role.includes('x')) { role[0] = 'x'; role[1] = 'y'; role[2] = 'z'; }
+  // 見出しで x が決まらず、1 列目が時刻・番号の見出しなら、2〜4 列目を x y z にする（時刻を x にしない。R12-004）
+  const timeFirst = names && ncol >= 4 && /^(t|time|times?tamp|stamp|sec|secs|gps_?time|id|index|no|#)([._ ]?(s|sec|ms|us|ns))?$/i.test(bare(names[0] || ''));
+  if (!role.includes('x')) { const o = timeFirst ? 1 : 0; role[o] = 'x'; role[o + 1] = 'y'; role[o + 2] = 'z'; }
   const isByte = c => sampleRows.every(r => r.length > c && Number.isInteger(r[c]) && r[c] >= 0 && r[c] <= 255);
   const isUnit = c => sampleRows.every(r => r.length > c + 2 && Math.abs(Math.hypot(r[c], r[c + 1], r[c + 2]) - 1) < 0.02);
   const free = c => role[c] === null && (!names || !names[c] || !/^(sf|scalar|i|int|intensity|value)/i.test(names[c]));

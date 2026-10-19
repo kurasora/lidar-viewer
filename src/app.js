@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SAMPLE_GROUPS } from './samples.js';
+import { extractMcap } from './trajectory.js';
 
 THREE.ColorManagement.enabled = false;
 const $ = id => document.getElementById(id);
@@ -14,16 +15,44 @@ const css = name => getComputedStyle(document.documentElement).getPropertyValue(
 // 試作ページ版は別スレッドのコードを gzip して埋め込んでいるので、展開してから起動する（それまでの送信は順に待たせる）
 const worker = (() => {
   if (!__WORKER_GZ__) return new Worker(URL.createObjectURL(new Blob([__WORKER_CODE__], { type: 'text/javascript' })));
+  // 別スレッドが使えない（DecompressionStream が無い・枠の CSP が blob: の Worker を禁じる）ときは「止まった」とし、
+  // 以後の送信には原因の文で失敗を返す（黙って捨てると「開いています」のまま止まる。R14-002・R14-003）
+  let dead = null, onMsg = null, onErr = null, cspWorker = false;
+  addEventListener('securitypolicyviolation', e => { if (/^(worker|script|child)-src/.test(e.effectiveDirective || '') && /^blob/.test(e.blockedURI || '')) cspWorker = true; });
+  const fail = m => { if (m.type !== 'remove' && onMsg) onMsg({ data: { type: 'error', id: m.id, req: m.req, message: dead } }); };
+  const die = msg => {
+    if (dead) return;
+    dead = msg;
+    for (const [k, p] of pending) { pending.delete(k); p.reject(new Error(msg)); }
+    if (onErr) onErr({ message: msg });
+    else { hideProgress(); status(msg, true); }
+  };
   const ready = (async () => {
+    if (typeof DecompressionStream === 'undefined') throw new Error('このブラウザは古いため、この画面では点群を開けません（DecompressionStream がありません）。新しいブラウザ（Chrome・Edge・Firefox 113 以降・Safari 16.4 以降）で開いてください');
     const gz = Uint8Array.from(atob(__WORKER_GZ__), c => c.charCodeAt(0));
     const code = await new Response(new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'))).blob();
-    return new Worker(URL.createObjectURL(new Blob([code], { type: 'text/javascript' })));
+    const w = new Worker(URL.createObjectURL(new Blob([code], { type: 'text/javascript' })));
+    w.onmessage = e => { if (onMsg) onMsg(e); };
+    w.onerror = e => {
+      // 文の無い error は Worker そのものが動けない（起動できない・落ちた）
+      if (e && !e.message) {
+        if (e.preventDefault) e.preventDefault();
+        setTimeout(() => die(cspWorker ? 'この画面の設定では別スレッド（Worker）が使えないため、ファイルを開けません。アプリ版では開けます' : '読み込みの処理が止まりました。メモリが足りない可能性があります。「表示」の「読み込む最大点数」を減らしてから、ページを読み直してください'), 100);
+        return;
+      }
+      if (onErr) onErr(e);
+    };
+    return w;
   })();
+  ready.catch(e => setTimeout(() => die(e.message || String(e)), 0));
   let chain = ready;
   return {
-    postMessage(m, t) { chain = chain.then(w => { w.postMessage(m, t); return w; }); },
-    set onmessage(f) { ready.then(w => { w.onmessage = f; }); },
-    set onerror(f) { ready.then(w => { w.onerror = f; }); },
+    postMessage(m, t) {
+      if (dead) { setTimeout(() => fail(m), 0); return; }
+      chain = chain.then(w => { if (dead || !w) setTimeout(() => fail(m), 0); else w.postMessage(m, t); return w; }, () => { setTimeout(() => fail(m), 0); });
+    },
+    set onmessage(f) { onMsg = f; },
+    set onerror(f) { onErr = f; },
   };
 })();
 // 別スレッドの英語の誤りを、対処の分かる日本語にする（元の文は括弧に残す）
@@ -31,6 +60,8 @@ function jaError(msg) {
   const s = String(msg || '');
   if (/allocation failed|Invalid (typed )?array length|out of memory|Array buffer|RangeError: (Array|Invalid)/i.test(s)) return 'メモリが足りません。「表示」の「読み込む最大点数」を減らしてから開き直してください';
   if (/Maximum call stack/i.test(s)) return `処理が深くなりすぎて止まりました（${s.slice(0, 60)}）`;
+  // 大きすぎるファイル（約 2 GB 超）を丸ごと読もうとしたとき、Chromium は「権限の問題」の文を返す（R12-002）
+  if (/could not be read|NotReadableError/i.test(s)) return 'ファイルを読めませんでした。大きすぎる（約 2 GB 超）か、開いている間にファイルが動かされた・消された可能性があります';
   return s;
 }
 // 読み込み中のファイルが開けなかったとき: 名前を付けて知らせ、別スレッドに残った分を消し、順番待ちを先へ進める
@@ -41,7 +72,8 @@ function loadFailed(message) {
   const name = info ? info.name : 'ファイル';
   if (info && info.cancelled) { S.loadingFile = null; loadNext(); return; } // すべて閉じたあとに失敗が届いた
   // 中身で軌跡と判定したのに軌跡として読めなかったら、点群として開き直す（R8-001）
-  if (info && info.auto && info.kind === 'traj' && info.file) {
+  // .mcap・.tum は点群にならないので開き直さず、本当の理由を出す（R12-003）
+  if (info && info.auto && info.kind === 'traj' && info.file && /^(txt|csv)$/.test(extOf(info.name))) {
     S.loadingFile = null;
     queue.unshift({ file: info.file, kind: 'cloud', parts: info.parts, auto: false });
     loadNext();
@@ -79,6 +111,9 @@ worker.onmessage = e => {
 worker.onerror = e => {
   if (e && e.preventDefault) e.preventDefault();
   const msg = (e && e.message) || '読み込みの処理が止まりました。メモリが足りない可能性があります。「表示」の「読み込む最大点数」を減らしてください';
+  // 返事を待っている問い合わせ（点の選択・補正・色分けの値など）は待たせたままにしない（R11-006）
+  for (const p of pending.values()) p.reject(new Error(msg));
+  pending.clear();
   if (loading && S.loadingFile) loadFailed(msg);
   else status(jaError(msg), true);
 };
@@ -286,14 +321,23 @@ controls.addEventListener('end', () => { ctrlDragging = false; bumpInteract(); }
 // 計算に要る全点の写しは別スレッドが持っているので、画面側は無作為な標本（先頭の点。読み込みで混ぜてある）だけを持つ
 const SAMPLE_N = 200000;
 function freeAfterUpload(attr) { attr.onUpload(function () { this.array = new this.array.constructor(0); }); return attr; }
-// GPU のリセットなどで WebGL の文脈が失われると、写しを捨てた点群は描き直せない。戻ったら同じファイルを開き直す
-renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); status('画面の描画が止まりました。戻ったら点群を開き直します', true); });
-renderer.domElement.addEventListener('webglcontextrestored', () => {
-  const files = S.files.map(f => f.file).filter(Boolean);
-  for (const f of [...S.files]) removeFile(f, false);
-  afterRemove();
-  if (files.length) enqueue(files, 'cloud');
-  status('画面の描画が戻ったので、点群を開き直しています');
+// GPU のリセットなどで WebGL の文脈が失われると、写しを捨てた点群は描き直せない。戻ったら別スレッドが持つ全点の写しを
+// もう一度受け取って GPU に送り直す（開き直さないので、色・表示・ピン・計測・補正・付属ファイルの情報はそのまま。R11-003・R14-004・R15-005）
+renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); status('画面の描画が止まりました。戻ったら描き直します', true); });
+renderer.domElement.addEventListener('webglcontextrestored', async () => {
+  status('画面の描画が戻ったので、点群を描き直しています');
+  const failed = [];
+  for (const f of [...S.files]) {
+    try {
+      const r = await call({ type: 'buffers', id: f.id });
+      if (!S.files.includes(f)) continue; // 待っている間に閉じられた
+      f.geom.setAttribute('position', freeAfterUpload(new THREE.BufferAttribute(r.positions, 3)));
+      if (r.rgb) f.geom.setAttribute('rgbc', freeAfterUpload(new THREE.BufferAttribute(r.rgb, 3, true)));
+      if (f.fieldName) { const name = f.fieldName; f.fieldKey = null; f.geom.deleteAttribute('scalar'); await ensureField(f, name); }
+    } catch (err) { failed.push(f.name); }
+  }
+  requestRender();
+  status(failed.length ? `画面の描画は戻りましたが、${failed.join('、')} を描き直せませんでした。閉じて開き直してください` : '画面の描画が戻りました', !!failed.length);
 });
 function applyLod() {
   const budget = +$('lodSel').value;
@@ -406,7 +450,11 @@ function updateBounds(resetClip) {
         call({ type: 'tbounds', id: f.id, M: Array.from(e) }).then(r => {
           if (!S.files.includes(f) || f.tboxReq !== key) return;
           f.tbox = { key, lo: r.lo, hi: r.hi };
-          if (Array.from(world.matrix.elements, v => v.toFixed(9)).join(',') === key) { updateBounds(false); updateInfo(); }
+          if (Array.from(world.matrix.elements, v => v.toFixed(9)).join(',') === key) {
+            updateBounds(false); updateInfo();
+            // 高さの色の範囲スライダーも、仮の広い範囲から本当の範囲で作り直す（R10-001）
+            if (S.colorMode === 'height' && !S.files.some(x => x.visible && x.tboxReq && (!x.tbox || x.tbox.key !== x.tboxReq))) applyColor(true);
+          }
         }).catch(() => {});
       }
     }
@@ -611,13 +659,17 @@ async function ensureField(f, name, sum = fieldSummary(name)) {
     for (let i = 0; i < raw.length; i++) vals[i] = raw[i] + (b - sum.base);
   }
   f.fieldSampleVals = vals.slice(0, SAMPLE_N); // 色の範囲を決める標本だけ残す
-  f.geom.setAttribute('scalar', freeAfterUpload(new THREE.BufferAttribute(vals, 1)));
+  // 前の項目の GPU バッファは使い回す（置き換えると three.js は古いバッファを消さない。R17-003）
+  const old = f.geom.getAttribute('scalar');
+  if (old && old.count === vals.length) { old.array = vals.constructor === old.array.constructor ? vals : new old.array.constructor(vals); old.needsUpdate = true; }
+  else f.geom.setAttribute('scalar', freeAfterUpload(new THREE.BufferAttribute(vals, 1)));
   f.fieldName = name; f.fieldKey = key; f.fieldRaw = null;
   return true;
 }
 async function applyColor(resetRange = true) {
   const mode = $('colorMode').value;
   if (resetRange) S.fieldSample = null;
+  const gen = S.colorGen = (S.colorGen || 0) + 1; // 項目の値を待っている間に色分けが切り替わったら、古い呼び出しは何もしない（R11-002）
   if (S.colorMode === 'rgb' && mode !== 'rgb') status('');
   S.colorMode = mode;
   const names = fieldNames();
@@ -629,8 +681,9 @@ async function applyColor(resetRange = true) {
     S.field = $('fieldSel').value || names[0];
     const sum = fieldSummary(S.field);
     $('rangeBox').hidden = sum.categorical;
-    for (const f of S.files) {
+    for (const f of [...S.files]) {
       const has = await ensureField(f, S.field, sum);
+      if (gen !== S.colorGen) return;
       f.mat.uniforms.uMode.value = has ? (sum.categorical ? 2 : 1) : 3;
     }
     shared.uCatMin.value = 0; // 種類の色分けでは、値ではなく番号（0, 1, 2, …）を送っている
@@ -744,13 +797,18 @@ async function isTrajectory(file) {
     const path = st.reduce((a, b) => a + b, 0);
     return !(path > 1) || (dt > 0 && path / dt < 30);
   };
-  const first = lines.find(l => l.trim());
-  if (first && /[a-z_]/i.test(first.replace(/e[-+]?\d/gi, ''))) {
-    const cols = first.replace(/^[#/%\s]+/, '').toLowerCase().split(/[\s,;\t]+/).map(c => c.replace(/^["']|["']$/g, ''));
+  // 見出しの行: 先頭の行。それが「# exported by …」のような注釈で、次の行が見出しならそちら（R12-006）
+  const textLines = lines.filter(l => l.trim()).slice(0, 2);
+  const isWordy = l => l && /[a-z_぀-ヿ一-鿿]/i.test(l.replace(/e[-+]?\d/gi, ''));
+  const first = /^\s*(#|\/\/|%)/.test(textLines[0] || '') && isWordy(textLines[1]) && !/^\s*(#|\/\/|%)/.test(textLines[1]) ? textLines[1] : textLines[0];
+  if (isWordy(first)) {
+    // 単位（「time [s]」「x (m)」）を外してから列に分ける
+    const cols = first.replace(/^[#/%\s]+/, '').toLowerCase().replace(/\s*[[(（][^\])）]*[\])）]/g, '').split(/[\s,;\t]+/).map(c => c.replace(/^["']|["']$/g, ''));
     const q = ['x', 'y', 'z', 'w'];
     if (q.every(a => cols.includes('q' + a)) || q.every(a => cols.some(c => new RegExp(`orientation[._]${a}$`).test(c)))) return true;
     // 「t x y z」「timestamp x y z …」のように、先頭の列が時刻で続く 3 列が位置の見出し（時刻が増えていくこと）
-    if (/^(t|time|timestamp|stamp|sec|secs)$/.test(cols[0]) && /^(t|p)?x$/.test(cols[1]) && /^(t|p)?y$/.test(cols[2]) && /^(t|p)?z$/.test(cols[3])) {
+    const pos = a => new RegExp(`^((t|p)|pos[._]?|position[._])?${a}(_m)?$`);
+    if (/^(t|time|timestamp|stamp|sec|secs|gps_?time|時刻|時間)(_?(s|sec|ns|us|ms))?$/.test(cols[0]) && pos('x').test(cols[1]) && pos('y').test(cols[2]) && pos('z').test(cols[3])) {
       const rows = numRows();
       // 8 列なら 5〜8 列目が姿勢の名前であること（「timestamp,x,y,z,intensity,…」の点群を軌跡にしない。R8-001）
       if (rows && rows[0].length === 8 && !/^(q|orientation[._])?x$/.test(cols[4] || '')) return false;
@@ -816,7 +874,7 @@ function finishBatch() {
 }
 async function enqueue(files, kind = null) {
   startBatchIfIdle();
-  const n0 = queue.length;
+  let added = 0; // 自分が積んだ数だけ数える（同時に走る別の enqueue の分を数えない。R11-001）
   const isPart = await companionsOf(files);
   const parts = {};
   for (const f of files) parts[f.name] = f;
@@ -830,7 +888,7 @@ async function enqueue(files, kind = null) {
     const found = refs.map(r => files.find(f => f.name === r.replace(/^.*[\\/]/, '')));
     if (!refs.length) { status(`${file.name} に点群ファイルの名前が書かれていません`, true); continue; }
     if (found.some(f => !f)) { status(`${file.name} が使う ${refs.filter((r, i) => !found[i]).join(', ')} も一緒に選んでください`, true); continue; }
-    for (const f of found) if (!viaMeta.has(f)) { viaMeta.add(f); queue.push({ file: f, kind: 'cloud', parts }); }
+    for (const f of found) if (!viaMeta.has(f)) { viaMeta.add(f); queue.push({ file: f, kind: 'cloud', parts }); added++; }
     // .icm の画像の目録（.wrl）は点群ではないので開かない（一緒に選ばれていても黙って使わない）
     if (ext === 'icm') for (const m of txt.matchAll(/^IMAGES_DESCRIPTOR=(.+?)\s*$/gm)) { const w = files.find(f => f.name === m[1].replace(/^.*[\\/]/, '')); if (w) viaMeta.add(w); }
   }
@@ -839,9 +897,9 @@ async function enqueue(files, kind = null) {
     if (ext === 'pov' || ext === 'icm' || viaMeta.has(file)) continue; // viaMeta: 目録から開いた点群・使わない画像の目録
     if (kind !== 'traj' && isPart(file)) continue;
     const k = kind || (await isTrajectory(file) ? 'traj' : 'cloud');
-    queue.push({ file, kind: k, parts, auto: !kind });
+    queue.push({ file, kind: k, parts, auto: !kind }); added++;
   }
-  loadBatch.total += queue.length - n0;
+  loadBatch.total += added;
   if (!loading) loadNext();
 }
 async function loadNext() {
@@ -854,7 +912,10 @@ async function loadNext() {
     S.loadingFile = { id, name: file.name, size: file.size, file, auto: item.auto, kind, parts };
     showProgress(`${file.name} を開いています`, 0, '読み込み');
     if (kind === 'traj') {
-      const buffer = await file.arrayBuffer();
+      // .mcap は少しずつ読んで軌跡の記録だけを送る（数 GB の bag でも、丸ごと読まない。R12-002）
+      const magic = new Uint8Array(await file.slice(0, 5).arrayBuffer());
+      const isMcap = magic.length === 5 && magic[0] === 0x89 && magic[1] === 0x4d && magic[2] === 0x43 && magic[3] === 0x41 && magic[4] === 0x50;
+      const buffer = isMcap ? await extractMcap(file) : await file.arrayBuffer();
       worker.postMessage({ type: 'traj', id, buffer, name: file.name }, [buffer]);
       return;
     }
@@ -908,6 +969,8 @@ async function readWithThree(file, ext, parts) {
     } else {
       const { ColladaLoader } = await import('three/examples/jsm/loaders/ColladaLoader.js');
       root = new ColladaLoader(manager).parse(await file.text(), '')?.scene;
+      // Z_UP のファイルに部品が付ける「Y を上にする回転」を外す（このアプリは Z が上。R15-007）
+      if (root) root.rotation.set(0, 0, 0);
     }
   } catch (e) { // 部品の英語の例外は出さない
     for (const u of Object.values(urls)) URL.revokeObjectURL(u);
@@ -926,8 +989,10 @@ async function readWithThree(file, ext, parts) {
     for (let i = 0; i < pos.count; i++) { v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld); V[3 * i] = v.x; V[3 * i + 1] = v.y; V[3 * i + 2] = v.z; }
     const col = g.attributes.color;
     const C = new Uint8Array(pos.count * 3);
-    if (col) { hasC = true; for (let i = 0; i < pos.count; i++) { C[3 * i] = col.getX(i) * 255; C[3 * i + 1] = col.getY(i) * 255; C[3 * i + 2] = col.getZ(i) * 255; } }
-    else { const m = Array.isArray(o.material) ? o.material[0] : o.material; const c = m && m.color ? m.color : new THREE.Color(0.8, 0.8, 0.8); C.fill(0); for (let i = 0; i < pos.count; i++) { C[3 * i] = c.r * 255; C[3 * i + 1] = c.g * 255; C[3 * i + 2] = c.b * 255; } }
+    // 部品が色を線形に直して返すので、ファイルに書かれた sRGB の値に戻してから 0〜255 にする（R15-006）
+    const sc = new THREE.Color();
+    if (col) { hasC = true; for (let i = 0; i < pos.count; i++) { sc.setRGB(col.getX(i), col.getY(i), col.getZ(i)).convertLinearToSRGB(); C[3 * i] = Math.round(sc.r * 255); C[3 * i + 1] = Math.round(sc.g * 255); C[3 * i + 2] = Math.round(sc.b * 255); } }
+    else { const m = Array.isArray(o.material) ? o.material[0] : o.material; const c = m && m.color ? m.color.clone().convertLinearToSRGB() : new THREE.Color(0.8, 0.8, 0.8); C.fill(0); for (let i = 0; i < pos.count; i++) { C[3 * i] = Math.round(c.r * 255); C[3 * i + 1] = Math.round(c.g * 255); C[3 * i + 2] = Math.round(c.b * 255); } }
     const T = [];
     if (o.isMesh) {
       if (g.index) for (let i = 0; i < g.index.count; i++) T.push(g.index.getX(i) + nv);
@@ -999,6 +1064,7 @@ function onLoadedInner(m, info) {
   if (!S.offset) S.offset = m.offset;
   const f = { id: m.id, name: info.name, size: info.size, n: m.n, total: m.total, sampled: m.sampled, skipped: m.skipped, header: m.header, bbox: m.bbox, stats: m.stats,
     sample: m.positions.slice(0, 3 * Math.min(m.n, SAMPLE_N)), hasRgb: !!m.rgb, geom, mat, points, color, visible: true, fieldName: null, file: info.file, fieldBase: m.fieldBase || {} };
+  const dup = S.files.some(x => x.name === f.name && x.size === f.size); // 同じファイルを重ねて開いたことを知らせる（R11-007）
   S.files.push(f);
   S.active = f.id;
   hideProgress();
@@ -1014,7 +1080,7 @@ function onLoadedInner(m, info) {
   if (first) { setView('iso', false); showNavHint(); }
   // 平らなもの（画像など）は水平補正しない
   if (first && $('autoLevel').checked && (m.bbox.max[2] - m.bbox.min[2]) > 1e-6 * Math.max(1, m.bbox.max[0] - m.bbox.min[0], m.bbox.max[1] - m.bbox.min[1])) runLevel(true);
-  status(`${info.name} を開きました（${m.sampled ? `全 ${fmtN(m.total)} 点のうち ${fmtN(m.n)} 点を表示` : `${fmtN(m.n)} 点`}${m.skipped ? `、座標のない ${fmtN(m.skipped)} 点を除外` : ''}）`, false, true);
+  status(`${info.name} を開きました（${m.sampled ? `全 ${fmtN(m.total)} 点のうち ${fmtN(m.n)} 点を表示` : `${fmtN(m.n)} 点`}${m.skipped ? `、座標のない ${fmtN(m.skipped)} 点を除外` : ''}）${dup ? '。同じファイルがすでに開いているので、重ねて表示しています' : ''}`, false, true);
   applyLod();
 }
 function onTrajInner(m, info) {
@@ -1047,7 +1113,7 @@ function onTrajInner(m, info) {
   hideProgress();
   renderFileList();
   const canCloud = info.file && /^(txt|csv)$/.test(extOf(info.name));
-  status(`軌跡 ${info.name} を開きました（${m.topic}、${fmtN(n)} 姿勢、${fmt(len, 1)} m、${fmt(dur, 1)} 秒）${info.auto && canCloud ? '。点群なら「開く」の一覧で「点群として開き直す」を押してください' : ''}`, false, true);
+  status(`軌跡 ${info.name} を開きました（${m.topic}、${fmtN(n)} 姿勢、${fmt(len, 1)} m、${fmt(dur, 1)} 秒）${m.note ? `。${m.note}` : ''}${info.auto && canCloud ? '。点群なら「開く」の一覧で「点群として開き直す」を押してください' : ''}`, false, true);
   // 点群がないときは、軌跡が見えるように視点を合わせる
   if (!S.files.length && S.trajs.length === 1) setView('iso', false);
   $('empty').hidden = true;
@@ -1164,7 +1230,7 @@ $('btnCloseAll').addEventListener('click', () => {
   // 順番待ちのファイルも開かない。読み込み中のものは届いたら捨てる（R5-004）
   const skipped = queue.length; queue.length = 0;
   if (S.loadingFile) S.loadingFile.cancelled = true;
-  if (skipped || S.loadingFile) loadBatch.total = Math.max(0, loadBatch.total - skipped);
+  if (skipped || S.loadingFile) loadBatch.total = Math.max(0, loadBatch.total - skipped - (S.loadingFile ? 1 : 0)); // 中断した読み込み中の 1 個も数えない（R11-005）
   for (const f of [...S.files]) removeFile(f, false);
   for (const t of [...S.trajs]) removeTraj(t, false);
   afterRemove(); updateTrajMove();
@@ -1207,7 +1273,8 @@ function trajSphere() {
   if (!ts.length) return null;
   world.updateMatrixWorld(true);
   const box = new THREE.Box3(), v = new THREE.Vector3();
-  for (const t of ts) for (let i = 0; i < t.P.length; i += 3) box.expandByPoint(v.set(t.P[i], t.P[i + 1], t.P[i + 2]).applyMatrix4(world.matrixWorld));
+  for (const t of ts) for (let i = 0; i < t.P.length; i += 3) if (Number.isFinite(t.P[i] + t.P[i + 1] + t.P[i + 2])) box.expandByPoint(v.set(t.P[i], t.P[i + 1], t.P[i + 2]).applyMatrix4(world.matrixWorld)); // NaN の姿勢は範囲に入れない（R12-001）
+  if (box.isEmpty()) return null;
   const c = box.getCenter(new THREE.Vector3());
   return { c, r: Math.max(0.5, box.getSize(new THREE.Vector3()).length() / 2) };
 }
@@ -1218,7 +1285,9 @@ function setView(kind, animate = true) {
 }
 function setViewDir(dir, animate = true) {
   const { c, r } = (!S.files.length && trajSphere()) || visibleSphere();
+  if (![c.x, c.y, c.z, r].every(Number.isFinite)) return; // 範囲が壊れていたら視点を変えない（R12-001）
   dir = dir.clone().normalize();
+  if (!Number.isFinite(dir.x + dir.y + dir.z) || dir.lengthSq() < 0.5) dir.set(...VIEW_DIRS.iso).normalize(); // 今の視点が NaN のとき「全体」は斜めから
   if (Math.abs(dir.z) > 0.9999) dir.set(0, dir.z > 0 ? -1e-4 : 1e-4, Math.sign(dir.z)).normalize(); // 真上・真下は少しずらす
   const dist = r / Math.sin(persp.fov * Math.PI / 360) * 1.02;
   const pos = c.clone().addScaledVector(dir, dist);
@@ -1228,7 +1297,10 @@ function setViewDir(dir, animate = true) {
 // ------------------------------------------------------------------ 視点をなめらかに動かす
 let anim = null;
 function animateCamera(to, ms = 380) {
-  const from = { target: controls.target.clone(), persp: persp.position.clone(), ortho: ortho.position.clone(), orthoH: (ortho.top - ortho.bottom) / ortho.zoom };
+  let from = { target: controls.target.clone(), persp: persp.position.clone(), ortho: ortho.position.clone(), orthoH: (ortho.top - ortho.bottom) / ortho.zoom };
+  // 今のカメラが NaN・Inf（壊れた姿勢などで）なら補間せず行き先へ直接（R12-001）
+  const ok = p => p && Number.isFinite(p.x + p.y + p.z);
+  if (!ok(from.target) || !ok(from.persp) || !ok(from.ortho) || !Number.isFinite(from.orthoH)) { from = { ...to, orthoH: to.orthoH || 1 }; ms = 0; }
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) ms = 0;
   anim = { from, to, t0: performance.now(), ms };
   if (!ms) stepAnim(performance.now());
@@ -1573,9 +1645,36 @@ $('btnProj').addEventListener('click', toggleProjection);
 
 // ------------------------------------------------------------------ クリックで点を選ぶ
 const raycaster = new THREE.Raycaster();
+// 画面の (x, y) から tol 画素以内に見えている軌跡の線があれば、その位置（world の外の座標）を返す（R17-005）
+function trajAtScreen(clientX, clientY, tol) {
+  const r = renderer.domElement.getBoundingClientRect(), v = new THREE.Vector3();
+  cam.updateMatrixWorld(); world.updateMatrixWorld(true);
+  const toS = (P, i) => { v.set(P[3 * i], P[3 * i + 1], P[3 * i + 2]).applyMatrix4(world.matrixWorld); const w = v.clone(); v.project(cam); return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height, ok: v.z > -1 && v.z < 1, w }; };
+  let best = null;
+  for (const t of S.trajs) {
+    if (!t.visible || !t.group.visible) continue;
+    let a = toS(t.P, 0);
+    for (let i = 1; i < t.count; i++) {
+      const b = toS(t.P, i);
+      if (a.ok && b.ok) {
+        const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy;
+        const s = L ? Math.max(0, Math.min(1, ((clientX - a.x) * dx + (clientY - a.y) * dy) / L)) : 0;
+        const dist = Math.hypot(a.x + s * dx - clientX, a.y + s * dy - clientY);
+        if (dist <= tol && (!best || dist < best.dist)) best = { dist, t, world: a.w.clone().lerp(b.w, s) };
+      }
+      a = b;
+    }
+  }
+  return best;
+}
 async function pickAt(clientX, clientY, quiet = false) {
   const vis = S.files.filter(f => f.visible && !liveHides(f));
-  if (!vis.length) return null;
+  const tr = quiet ? null : trajAtScreen(clientX, clientY, Math.max(5, shared.uSize.value * 1.5));
+  if (!vis.length) {
+    // 軌跡だけのときは黙って戻らない（R17-005）
+    if (!quiet && S.trajs.length) status(tr ? '座標と距離は点群の点を選びます。軌跡の位置は「軌跡に沿って動かす」で見られます' : 'その位置に点群の点がありません（座標と距離は点群の点を選びます）');
+    return null;
+  }
   const r = renderer.domElement.getBoundingClientRect();
   const ndc = new THREE.Vector2(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1);
   cam.updateMatrixWorld();
@@ -1604,7 +1703,10 @@ async function pickAt(clientX, clientY, quiet = false) {
   const file = S.files.find(f => f.id === res.hit.id);
   // 値の欄は基準値を足し戻した値にする（double の欄）
   if (file && res.hit.fields) for (const k of Object.keys(res.hit.fields)) res.hit.fields[k] += fieldBaseOf(file, k);
-  return { ...res.hit, local, world: local.clone().applyMatrix4(world.matrixWorld), file };
+  const hw = local.clone().applyMatrix4(world.matrixWorld);
+  // 軌跡の線は点群より手前に描かれるので、線の上をクリックすると奥の点群の点が選ばれる。離れていたら知らせる（R17-005）
+  if (tr) { const dd = tr.world.distanceTo(hw); if (dd > 0.2) status(`軌跡の線の上ですが、選んだのは線から ${fmt(dd, 2)} m 離れた点群の点です（座標と距離は点群の点を選びます）`); }
+  return { ...res.hit, local, world: hw, file };
 }
 
 let down = null;
@@ -1896,7 +1998,7 @@ document.querySelectorAll('[data-tool]').forEach(b => b.addEventListener('click'
 // auto: 開いたときの自動の補正。自信がなければ黙ってやめる（赤い誤りは手動のときだけ）。傾きは 20° まで
 async function runLevel(auto = false) {
   const f = S.files.find(x => x.id === S.active) || S.files[0];
-  if (!f) return;
+  if (!f) { if (!auto) status(S.trajs.length ? '補正する点群がありません（軌跡だけでは傾きを調べられません。点群を開いてから押してください）' : '補正する点群がありません', true); return; } // R12-009
   if (!auto) status(`${f.name} の床・天井・壁の向きを調べています…`);
   const gen = S.levelGen = (S.levelGen || 0) + 1;
   // 結果が届くまでに、そのファイルが閉じられた・別の補正が始まったら、結果は捨てる
@@ -1930,14 +2032,17 @@ function applyLevel(auto = false, keepView = false) {
   world.matrix.copy(M);
   world.updateMatrixWorld(true);
   placeOriginAxes();
+  // 回した後の座標では前の切り出しの箱は同じ場所を指さないので全範囲に戻す。黙って戻さず知らせる（R11-004）
+  const clipWas = clipD.some(d => !d.full()), secWas = $('secOn').checked;
   updateBounds(true);
   renderPins(); // 出ている座標も新しい基準で出し直す
   applyColor(true);
   renderMeasures();
   if (auto || !keepView) setView('iso'); else setView('keep'); // 設定（床を 0・廊下の向き）の切り替えでは視点の向きを変えない（R7-009）
-  status(r ? '水平補正しました' : '水平補正を元に戻しました', false, auto); // 自動の補正では、開けなかった赤い知らせを消さない（R3-002）
+  const extra = (clipWas ? '。切り出しは全範囲に戻しました' : '') + (secWas ? '。断面の位置は新しい座標の範囲の同じ割合の所に移りました' : '');
+  status((r ? '水平補正しました' : '水平補正を元に戻しました') + extra, false, auto); // 自動の補正では、開けなかった赤い知らせを消さない（R3-002）
 }
-$('btnLevelReset').addEventListener('click', () => { S.levelInfo = null; applyLevel(); });
+$('btnLevelReset').addEventListener('click', () => { if (!S.levelInfo) { status('水平補正はしていません（元に戻すものがありません）'); return; } S.levelInfo = null; applyLevel(); }); // R12-009
 $('alignCorr').addEventListener('change', () => { if (S.levelInfo) applyLevel(false, true); });
 $('floorZero').addEventListener('change', () => { if (S.levelInfo) applyLevel(false, true); });
 $('coordFile').addEventListener('change', () => { updateInfo(); renderPins(); });
@@ -2166,6 +2271,8 @@ const OPEN_TYPES = [
   ['CSV の高さの表 (*.csv)', ['.csv']],
   ['ラスター (*.tif *.tiff)', ['.tif', '.tiff']],
   ['画像 (*.png *.jpg *.bmp *.gif *.webp など)', ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp', '.tga', '.ppm', '.pgm', '.pbm', '.ico', '.cur', '.icns', '.xbm', '.xpm', '.wbmp', '.svg', '.svgz']],
+  // 開けない形式も選べるようにして、「開けない理由」の案内に届くように（R16-004。src/io/index.js の UNSUPPORTED と同じ）
+  ['メーカー専用形式（開けない理由を表示） (*.rdb *.rdbx *.rsp *.rds *.vxls *.ptch *.mtch *.dp)', ['.rdb', '.rdbx', '.rsp', '.rds', '.vxls', '.ptch', '.mtch', '.dp']],
 ];
 const TRAJ_TYPES = [['軌跡 (*.mcap)', ['.mcap']], ['TUM 形式の軌跡 (*.tum *.txt)', ['.tum', '.txt']], ['CSV の軌跡 (*.csv)', ['.csv']]];
 const pickerTypes = (list, allName) => {
@@ -2724,6 +2831,7 @@ if (__ARTIFACT__ && __SAMPLE__) {
     if (!b) return;
     const [, files] = SAMPLE_GROUPS.find(([g]) => g === b.dataset.sg)[1][+b.dataset.si];
     try {
+      if (typeof DecompressionStream === 'undefined') throw new Error('このブラウザは古いため展開できません。新しいブラウザで開いてください');
       status(`サンプル ${files[0]} を取得しています…`);
       const got = await Promise.all(files.map(async n => {
         const b64 = __SAMPLE_FILES__[n];

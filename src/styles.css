@@ -171,10 +171,11 @@ details > * + * { margin-top: 8px }
 .pophead h2 { margin: 0; font-size: 13px }
 .pophead .x { border: none; background: none; color: var(--muted); font-size: 18px; line-height: 1; padding: 4px 8px }
 .pophead .x:hover { color: var(--fg) }
-.popsec { padding: 10px 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px }
-.bigbtns { display: grid; gap: 6px }
-.bigbtns button { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 12px; text-align: left }
-.bigbtns .ext { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap }
+.popsec { padding: 10px 14px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px }
+.bigbtns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px }
+.bigbtns button { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 12px; text-align: left; min-width: 0 }
+.bigbtns .ext { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 0; text-align: right; white-space: normal }
+.bigbtns button > span:first-child { flex-shrink: 0 }
 .bigbtns button.primary .ext { color: var(--accent-fg); opacity: 0.75 }
 #dropHint { margin: 0 }
 .seg { display: flex; flex-wrap: wrap; gap: 4px }
@@ -446,4 +447,20 @@ input[type=range]::-webkit-slider-runnable-track { box-shadow: inset 0 0 0 1px c
 [data-pop="view"] #viewMore[hidden] { display: none }
 [data-pop="view"] .vpane { display: grid; gap: 8px }
 [data-pop="view"] .vpane[hidden] { display: none }
+/* G3: 重ねたカードは同じ幅にして、奥のカードの角が段にならないように（R13-003） */
+.pop[data-name="measure"], .pop[data-name="level"], .pop[data-name="info"] { width: min(320px, calc(100% - 28px)) }
+.ptab[data-name="measure"], .ptab[data-name="level"], .ptab[data-name="info"] { width: min(320px, calc(100vw - 28px)) }
+/* G3: カードの中身が横にはみ出しても横のスクロールバーを出さない（R16-001） */
+#pop { overflow-x: hidden }
+/* G3: 狭い窓ではカードを開いている間、右上の状態表示をカードの下に下げる（R13-004） */
+@media (max-width: 560px) {
+  .app:has(.pop:not([hidden])) .hud { top: auto; bottom: 84px; z-index: 7 }
+  .app:has(.pop:not([hidden])) .navhint { display: none }
+}
+/* G3: 強制カラーで、選んでいる吹き出しを枠で区別し、点の印を 3D の上で見える色に（R16-002） */
+@media (forced-colors: active) {
+  .pcall.pin.sel .pc-box, .labels .mcall.sel .mc-box { border: 2px solid Highlight }
+  .pcall.pin .pc-dot, .mcall .mc-dot { forced-color-adjust: none; background: CanvasText; box-shadow: 0 0 0 2px Canvas }
+  .pcall.pin.sel .pc-dot, .labels .mcall.sel .mc-dot { background: Highlight }
+}
 /* カードの重なり（間のカードを閉じたときは滑らせる） */

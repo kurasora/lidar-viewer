@@ -29,6 +29,10 @@ function setupLive(win) {
   ipcMain.handle('live:stop', () => need().stopAll());
 }
 
+// 画面のプロセスが落ちた理由を日本語に（R15-003）
+const GONE_REASON = { oom: 'メモリ不足', killed: 'ほかのプログラムに止められました', crashed: '異常終了', 'abnormal-exit': '異常終了',
+  'launch-failed': '起動に失敗', 'integrity-failure': 'プログラムの検証に失敗', 'memory-eviction': 'メモリ不足' };
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
@@ -41,7 +45,7 @@ function createWindow() {
     // 起動直後に白く光らないように: 画面の地の色（styles.css の --bg）で塗り、描けてから見せる
     backgroundColor: '#0e1317',
     show: false,
-    webPreferences: { contextIsolation: true, sandbox: true, preload: path.join(__dirname, 'preload.js') },
+    webPreferences: { contextIsolation: true, sandbox: true, spellcheck: false, preload: path.join(__dirname, 'preload.js') },
   });
   let shown = false;
   const showOnce = () => { if (!shown && !win.isDestroyed()) { shown = true; win.show(); } };
@@ -65,7 +69,7 @@ function createWindow() {
     const { response } = await dialog.showMessageBox(win, {
       type: 'error', title: 'LiDAR Viewer',
       message: '画面が止まりました',
-      detail: `画面の処理が終了しました（${d && d.reason === 'oom' ? 'メモリ不足' : (d && d.reason) || '不明'}）。開いていた点群は閉じられました。${wasLive ? 'ライブの表示は止め、LiDAR は表示する前の状態に戻しました。' : ''}` + (d && d.reason === 'oom' ? '\n大きなファイルは「間引き」を強めて開いてください。' : ''),
+      detail: `画面の処理が終了しました（${GONE_REASON[d && d.reason] || '原因は不明'}）。開いていた点群は閉じられました。${wasLive ? 'ライブの表示は止め、LiDAR は表示する前の状態に戻しました。' : ''}` + (d && d.reason === 'oom' ? '\n大きなファイルは「間引き」を強めて開いてください。' : ''),
       buttons: ['読み込み直す', '終了する'], defaultId: 0, cancelId: 0,
     });
     if (win.isDestroyed()) return;

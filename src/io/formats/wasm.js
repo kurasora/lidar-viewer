@@ -17,7 +17,13 @@ export const readDRC = guard('Draco', readDRC_);
 async function readDRC_(src, sink, ctx) {
   const D = await once('draco', async () => {
     const wasmBinary = await ctx.asset('draco_decoder.wasm');
-    return new Promise((res, rej) => { try { DracoDecoderModule({ wasmBinary, onModuleLoaded: m => res(m) }); } catch (e) { rej(e); } });
+    // 失敗は onAbort にしか来ないので、ここで reject する（来ないと順番待ちが永久に止まる。R14-005）
+    return new Promise((res, rej) => {
+      try {
+        const p = DracoDecoderModule({ wasmBinary, onModuleLoaded: m => res(m), onAbort: e => rej(new Error('WebAssembly: ' + (e && e.message || e))) });
+        if (p && typeof p.catch === 'function') p.catch(e => rej(e instanceof Error ? e : new Error('WebAssembly: ' + e)));
+      } catch (e) { rej(e); }
+    });
   });
   const data = await src.all();
   const buf = new D.DecoderBuffer();
