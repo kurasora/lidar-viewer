@@ -121,7 +121,7 @@ async function gesture(cdp, from, to, steps = 12) {
       const insetTop = probe.getBoundingClientRect().height; probe.remove();
       return { insetTop, rootPadTop: getComputedStyle(document.documentElement).paddingTop, innerH: innerHeight, popHead: r('#pop .pophead'), close: r('#popClose'), hud: r('.hud'), dock: r('#dock') };
     });
-    R.safeArea.push({ variant: strip ? '余白の打ち消しを外した版' : '今の版（:root の余白を 0 に）', cdp: ok, ...m });
+    R.safeArea.push({ variant: strip ? '余白の打ち消しを外した version ' : '今の version（:root の余白を 0 に）', cdp: ok, ...m });
     await page.screenshot({ path: `${L.OUT}/mobile_8_safearea${strip ? '_nofix' : ''}.png` });
     await ctx.close();
   }

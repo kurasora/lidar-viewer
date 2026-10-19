@@ -4,7 +4,7 @@
 
 ## 1 本で流す
 ```
-bash $W/regress/run.sh all        # 試験用ファイルを作り（なければ）、Node → アプリ版 の順に流す
+bash $W/regress/run.sh all        # 試験用ファイルを作り（なければ）、Node → アプリ version の順に流す
 bash $W/regress/run.sh node       # Node だけ（数十秒）
 APPDIR=$W/proj bash $W/regress/run.sh app   # 直した写し（$T/bin/mkcopy $W/proj して node build.mjs）を試す
 ```
@@ -16,7 +16,7 @@ APPDIR=$W/proj bash $W/regress/run.sh app   # 直した写し（$T/bin/mkcopy $W
 | `world.py` | 正解の分かっている建物（L 字の廊下: 幅 2.4 m・天井 2.7 m・床の上の箱 0.6×0.4×0.8 m・扉のへこみ・天井の照明）と、MID-360 風の走査（水平 360°・上下 -7〜52°・距離の雑音 1 cm）。環境変数 SENSOR_H・MOUNT_ROLL・MOUNT_PITCH | 共通部品 |
 | `gen_fastlio.py <出力> [光線数]` | FAST-LIO 風: scans.pcd（PointXYZINormal binary）、truth.json（正解: 変換・箱の角・床/天井の点）、odom_tum.txt、poses_kitti.txt、pos_log.txt（FAST-LIO の Log 形式 25 列）、rosbag2 MCAP 4 種（/Odometry 等・zstd・/path だけ・/odom だけ）。NOBAG=1 で bag なし | お金のツアー、水平補正、軌跡 |
 | `gen_shift.py <元> <出力>` | 同じ地図の LAS: ローカル・UTM 風（+539000,+3836000,+30）・平面直角風（-38000,-12000）・1 点目が原点の UTM、UTM の TUM 軌跡 | グローバルシフト・座標の表示 |
-| `gen_liosam_livox.py <FAST-LIO の出力> <出力>` | LIO-SAM: GlobalMap.pcd・trajectory.pcd・transformations.pcd（time F8）、livox: livox_frame.pcd（PointXYZRTLT 26 バイト/点・timestamp F8 ns）と ascii 版 | double の欄・種類の色分け |
+| `gen_liosam_livox.py <FAST-LIO の出力> <出力>` | LIO-SAM: GlobalMap.pcd・trajectory.pcd・transformations.pcd（time F8）、livox: livox_frame.pcd（PointXYZRTLT 26 バイト/点・timestamp F8 ns）と ascii version | double の欄・種類の色分け |
 | `gen_outdoor.py <出力>` | 屋外（地面・高さ 12 m の建物 3 棟・並木 40 本: 葉の層 4.5〜7 m） | 天井を隠す（屋外） |
 | `gen_cls.py <元> <出力>` | 分類つき LAS（1・2・6・18） | 種類の色分けの色のかぶり |
 | `gen_wrong.py <出力>` | 16000×16000 の PNG（中身は単色・ファイルは小さい）、8000×6000 の JPEG | 巨大な画像 |

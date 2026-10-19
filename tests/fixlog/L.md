@@ -20,7 +20,7 @@
 - 距離の途中表示 `updateLive` `#mLive`（`window.__pcd.updateLive` も。A05 t05・A11 s_measure などが使う）。名前に live を含むが、測定中の線のこと
 - `aria-live`、`alive`、「ライブラリ」、`olive`（色名）、A09 perf_load の `--live`（途中経過の記録）
 - MID-360 の名前: worker.js の水平補正の説明、A14 の模擬走査（world.py）、A01／A06 の試験データ名、env/README のロボットの説明（地図を作るセンサーとして）
-- 記録: tests/reports*・BUGS.md・fixlog、A10 の報告の下書き（`A10_draft_*.md` `report_rpi_manual.md` `run/`）、A14 の `notes/`、A05 `asar/linux/`（旧版の配布物から取り出した写し。どこからも使われていない）
+- 記録: tests/reports*・BUGS.md・fixlog、A10 の報告の下書き（`A10_draft_*.md` `report_rpi_manual.md` `run/`）、A14 の `notes/`、A05 `asar/linux/`（旧 version の配布物から取り出した写し。どこからも使われていない）
 
 ## 確かめたこと
 - grep `live|ライブ|mid-?360|pcdLive`: node_modules・tests/reports*・BUGS.md・fixlog 以外は上の「残したもの」だけ

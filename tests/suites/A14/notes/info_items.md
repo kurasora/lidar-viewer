@@ -19,8 +19,8 @@
   確認画面の既定（プライベートだけ許可）のままだと、LiDAR からの受信（56000 の返事・56301 の点群）が止められる → 一覧は「見つかりません（LAN ケーブルと LiDAR の電源を確かめてください）」となり、原因が分からない
 - mac（15 以降）: ローカルネットワークの許可が要る。Info.plist に NSLocalNetworkUsageDescription がない。断ると送信が EHOSTUNREACH になるが、送信の失敗は捨てている（live.js:120 `() => {}`）ので「見つかりません」になる。ad-hoc 署名なので Gatekeeper で開けない（15 では右クリック→開くも不可。設定→プライバシーとセキュリティ→このまま開く）
 - Raspberry Pi 5（Ubuntu Server + ROS2）: 画面がないので LiDAR Viewer（Electron）を動かせず、「LiDAR がつながった PC から配信」をロボットの上でできない。配信だけの画面なしモードがあるとよい
-- deb の Depends（electron-builder の既定のまま）に libasound2・libgbm1 がない（lidar-viewer は libasound.so.2・libgbm.so.1 を必要とする）。デスクトップ版 Ubuntu には入っているが、Server に最小のデスクトップを足した環境では起動できない可能性（Ubuntu 24.04 は libasound2t64）
+- deb の Depends（electron-builder の既定のまま）に libasound2・libgbm1 がない（lidar-viewer は libasound.so.2・libgbm.so.1 を必要とする）。デスクトップ version Ubuntu には入っているが、Server に最小のデスクトップを足した環境では起動できない可能性（Ubuntu 24.04 は libasound2t64）
 - 配信の受け手は UDP 47800 のブロードキャストの知らせでしか相手を見つけられない。学内 Wi-Fi はふつうブロードキャストや端末どうしの通信（AP の分離）を止めるので、ロボットのノート PC（有線 = LiDAR、Wi-Fi = 学内）から研究室の PC へは届かないことが多い。
   「IP を指定してつなぐ」がない。配信の WebSocket は毎回ちがうポート（port 0）なので、Ubuntu の ufw などで前もって開けておけない
-- 製品版にも試験用の窓口 window.__pcd（S・enqueue・call…）が残っている（画面の中のスクリプトから内部を操作できる。セキュリティ担当向けの情報）
+- 製品 version にも試験用の窓口 window.__pcd（S・enqueue・call…）が残っている（画面の中のスクリプトから内部を操作できる。セキュリティ担当向けの情報）
 - 画像を保存したときのファイル名が pcd_YYYYMMDD_hhmmss.png（旧名 PCD Viewer の名残）

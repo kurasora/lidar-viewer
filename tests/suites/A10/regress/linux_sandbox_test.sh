@@ -1,5 +1,5 @@
 #!/bin/bash
-# Linux 版（deb の /opt/LiDAR Viewer と同じ置き方）を、一般ユーザーで「サンドボックスあり」で起動できるかを調べる
+# Linux version（deb の /opt/LiDAR Viewer と同じ置き方）を、一般ユーザーで「サンドボックスあり」で起動できるかを調べる
 #   ・deb の postinst は root で「unshare --user true」が通るかで chrome-sandbox を 4755 / 0755 に決める
 #   ・Ubuntu 23.10 以降（24.04 = ROS2 Jazzy の標準）は AppArmor で一般ユーザーの user 名前空間が制限される
 #     → root では通るので 0755 になる → 一般ユーザーでは名前空間サンドボックスも SUID サンドボックスも使えない

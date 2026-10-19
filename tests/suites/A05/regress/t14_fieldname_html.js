@@ -1,12 +1,12 @@
 // t14 （担当外・セキュリティ）ファイルの欄の名前が HTML としてそのまま画面に入らないか（項目の選択・凡例・情報の欄）
-//   アプリ版のページ（dist/index.html、CSP あり）と試作ページ（dist-artifact/pcd-viewer.html、CSP なし）の両方
+//   アプリ version のページ（dist/index.html、CSP あり）と試作ページ（dist-artifact/pcd-viewer.html、CSP なし）の両方
 //   heavy node t14_fieldname_html.js
 const L = require('./lib.js');
 const D = L.DATA;
 
 (async () => {
   const R = L.recorder('t14_fieldname_html');
-  for (const [label, url] of [['アプリ版のページ', L.PAGE], ['試作ページ', 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html']]) {
+  for (const [label, url] of [['アプリ version のページ', L.PAGE], ['試作ページ', 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html']]) {
     const { p, errors, close } = await L.page({ url });
     await p.waitForTimeout(label === '試作ページ' ? 4000 : 300);
     await L.idle(p, { limit: 120000 });

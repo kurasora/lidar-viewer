@@ -1,6 +1,6 @@
 // CloudCompare の BIN（.bin、「CloudCompare entities」）
 //   新しい形（BIN v2）: 先頭 4 バイト "CCB2"（4 文字目は読み方の印の数字: 1 = 座標が double、2 = 値の欄が float）
-//     → 版（uint32。例: 50 = 5.0）→ 物の木（種類 ID・一意 ID・名前・印・メタデータ・中身・子の数・子 …）
+//     → version（uint32。例: 50 = 5.0）→ 物の木（種類 ID・一意 ID・名前・印・メタデータ・中身・子の数・子 …）
 //   数はリトルエンディアン。ただし Qt の QDataStream で書かれた部分（名前・メタデータ・一部の値）はビッグエンディアンで、
 //   float も 8 バイトの double で書かれている
 //   古い形（BIN v1、印なし）: 点群の数（uint32）→ 点群ごとに 点数・印・名前・float の xyz（+ 色・法線・距離）
@@ -11,7 +11,7 @@
 import { addMesh, addLines } from '../sink.js';
 
 const CUT = 'BIN ファイルが途中で切れているか、壊れています';
-const LAST_KNOWN = 58; // 中身の形を確かめた版（CloudCompare のソースでは 5.7 まで）
+const LAST_KNOWN = 58; // 中身の形を確かめた version（CloudCompare のソースでは 5.7 まで）
 
 // ---- 種類 ID のビット（ccObject.h）
 const B = {
@@ -112,7 +112,7 @@ class Parser {
   cls() {
     const r = this.r;
     let c = this.v < 34 ? BigInt(r.u32()) : r.big64();
-    // 3.5〜4.7 の版では、カメラと二次曲面の種類 ID に誤ってプラグインのビットが立っていた
+    // 3.5〜4.7 の version では、カメラと二次曲面の種類 ID に誤ってプラグインのビットが立っていた
     if (this.v >= 35 && this.v <= 47 && (c & B.CUSTOM) && ((c & T.CAMERA) === T.CAMERA || (c & T.QUADRIC) === T.QUADRIC)) c &= ~B.CUSTOM;
     if (c === 0n) throw new Error(CUT);
     return c;
@@ -557,7 +557,7 @@ export async function read(src, sink, ctx) {
   const fc = b[3] - 48;
   if (!(fc >= 0 && fc <= 8)) throw new Error(`CloudCompare の BIN ファイルの先頭の印が違います（4 文字目が「${String.fromCharCode(b[3])}」）`);
   const v = new DataView(b.buffer, b.byteOffset, 8).getUint32(4, true);
-  if (v < 20) throw new Error(`CloudCompare の BIN ファイルの版（${v}）がおかしいです`);
+  if (v < 20) throw new Error(`CloudCompare の BIN ファイルの version（${v}）がおかしいです`);
   const vs = `${Math.floor(v / 10)}.${v % 10}`;
 
   // 1) 木を読む
@@ -567,7 +567,7 @@ export async function read(src, sink, ctx) {
   try {
     root = P.obj(P.cls());
   } catch (e) {
-    if (v > LAST_KNOWN && e.message === CUT) throw new Error(`この BIN ファイルは新しい版（${vs}）の CloudCompare で書かれていて、読めませんでした`);
+    if (v > LAST_KNOWN && e.message === CUT) throw new Error(`この BIN ファイルは新しい version（${vs}）の CloudCompare で書かれていて、読めませんでした`);
     throw e;
   }
   ctx.progress(0.02);

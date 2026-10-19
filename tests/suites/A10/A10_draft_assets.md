@@ -13,9 +13,9 @@ bash $W/regress/run.sh /home/claude/pcd-viewer/release --old /home/claude/releas
 ### 個別のスクリプト（すべて `$W/regress/`）
 | ファイル | 中身 | 使い方 |
 |---|---|---|
-| `static_checks.py` | 配布物の静的な点検の本体（R01〜R15: 一覧・asar の同一性と中身・exe の版情報とアイコン・deb の control/依存/postinst/アイコン/.desktop・AppImage の runtime と中の CPU と 16K 整列・mac の Info.plist/署名/UUID/zip の記号リンク・fuse） | `light python3 -I static_checks.py <release> [--old <旧版>] [--out <dir>]` |
+| `static_checks.py` | 配布物の静的な点検の本体（R01〜R15: 一覧・asar の同一性と中身・exe の version 情報とアイコン・deb の control/依存/postinst/アイコン/.desktop・AppImage の runtime と中の CPU と 16K 整列・mac の Info.plist/署名/UUID/zip の記号リンク・fuse） | `light python3 -I static_checks.py <release> [--old <旧 version>] [--out <dir>]` |
 | `asar_check.js` | app.asar の一覧・node_modules・ソースマップ・開発用ファイル・package.json・完全性の値・旧名の出現 | `node asar_check.js <app.asar> [埋め込みの完全性の値]` |
-| `pe_info.py` | PE の版情報・アイコン（.ico に書き出し）・マニフェスト・資源・署名 | `PYTHONPATH=$W/pylib python3 -I pe_info.py <exe> [アイコンの出力先]` |
+| `pe_info.py` | PE の version 情報・アイコン（.ico に書き出し）・マニフェスト・資源・署名 | `PYTHONPATH=$W/pylib python3 -I pe_info.py <exe> [アイコンの出力先]` |
 | `mac_sig_check.py` | Linux 上での ad-hoc 署名の点検（全 Mach-O のページ指紋、Info.plist/CodeResources の特別な枠、files2 の指紋・記号リンク・入れ子の cdhash、LC_UUID、CPU、最小 OS）。rcodesign の verify は ad-hoc で誤った結果を出すため自作 | `python3 -I mac_sig_check.py "<…/LiDAR Viewer.app>"` |
 | `fuses.py` | Electron の fuse の読み取り | `python3 -I fuses.py <バイナリ>...` |
 | `gtk_icon_lookup.py` | GTK3 の icon theme で .desktop の Icon 名が見つかるか | `python3 -I gtk_icon_lookup.py lidar-viewer <展開した usr/share>` |
@@ -45,4 +45,4 @@ bash $W/regress/run.sh /home/claude/pcd-viewer/release --old /home/claude/releas
 - xvfb には窓の管理（WM）がないので、最小化・前に出すの見た目は試せない。second-instance の処理は BrowserWindow の restore/focus が呼ばれるかで確かめた
 
 ### 実機（本物の MID-360・実験室の LAN・Windows/mac/Pi の実機）で次回確かめるべきこと
-「実機で人が確かめる手順」の L-1〜L-6・W-1〜W-6・M-1〜M-6 を参照（`$W/regress/manual_checks.md` に同じ一覧）。特に L-1（Ubuntu 24.04 で起動するか）、L-5（Pi 5 の GPU と 16K ページ）、W-3（ファイアウォールで点が 0 点/秒にならないか）、M-3（macOS 15 のローカルネットワークの許可）は、直した版でも必ず確かめる。
+「実機で人が確かめる手順」の L-1〜L-6・W-1〜W-6・M-1〜M-6 を参照（`$W/regress/manual_checks.md` に同じ一覧）。特に L-1（Ubuntu 24.04 で起動するか）、L-5（Pi 5 の GPU と 16K ページ）、W-3（ファイアウォールで点が 0 点/秒にならないか）、M-3（macOS 15 のローカルネットワークの許可）は、直した version でも必ず確かめる。

@@ -1,4 +1,4 @@
-// アプリ（Electron）で、ファイルを順に開いて様子を記録する（A01-001 などの実機版での確認）
+// アプリ（Electron）で、ファイルを順に開いて様子を記録する（A01-001 などの実機 version での確認）
 //   使い方: cd $W && $T/bin/heavy xvfb-run -a -n 110 node regress/electron_seq.js <出力 json> <ファイル>...
 //   ・ファイルは 1 つずつ（前のものを閉じずに）開く。各段階で S.files・知らせ・ページのエラーを記録
 const pw = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');

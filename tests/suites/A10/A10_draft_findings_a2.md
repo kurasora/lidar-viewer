@@ -1,7 +1,7 @@
 
-### A10-002 [重大] arm64 の AppImage は、runtime が「libz.so」（版なしの名前。Debian/Ubuntu/Raspberry Pi OS では開発用の zlib1g-dev にしかない）を要求していて、普通の Raspberry Pi では起動の入口で止まる
+### A10-002 [重大] arm64 の AppImage は、runtime が「libz.so」（version なしの名前。Debian/Ubuntu/Raspberry Pi OS では開発用の zlib1g-dev にしかない）を要求していて、普通の Raspberry Pi では起動の入口で止まる
 - 種類: 配布物 / バグ
-- 対象: アプリ版（AppImage arm64。Raspberry Pi 5 など arm64 の Linux 全般。0.2.0 も同じ）
+- 対象: アプリ version（AppImage arm64。Raspberry Pi 5 など arm64 の Linux 全般。0.2.0 も同じ）
 - 再現手順: 
   1. `readelf -d LiDARViewer-0.3.0-arm64.AppImage` で先頭の runtime の NEEDED を見る
   2. qemu-user（`qemu-aarch64-static`）と arm64 の glibc だけの環境（`libc6-arm64-cross` を展開）で `LiDARViewer-0.3.0-arm64.AppImage --appimage-version` を実行（`$W/regress/arm64_appimage_qemu.sh`）

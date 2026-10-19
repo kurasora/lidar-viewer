@@ -60,10 +60,10 @@ M は「作り直し」と「全履歴から消すべきパスの一覧」まで
 - 時刻 1791886716 を合成のデータに使っているだけの生成スクリプト（A05・A11・A14）は、形が分からないので変えていない。tests/reports*・BUGS.md・fixlog・env/README の文章も残した
 
 ## 確かめたこと
-- 実測の点・軌跡の座標に 2 mm 以内で合う 3 つ組の数を、作業中の全ファイルと、全履歴のすべての版（`git rev-list --all --objects` の blob、UTF-16 も）で数えた（ローカルと +UTM の両方）。
+- 実測の点・軌跡の座標に 2 mm 以内で合う 3 つ組の数を、作業中の全ファイルと、全履歴のすべての version（`git rev-list --all --objects` の blob、UTF-16 も）で数えた（ローカルと +UTM の両方）。
   作り直した後の作業中のファイルは 0 件。履歴で見つかったのは一覧に入れたパスだけ。画像（png・jpg など）はアプリのアイコンと pillow_topview.* だけで、ほかに地図の画像は履歴にもない
 - 写し（`$T/bin/mkcopy $T/work/M/proj`）で `node build.mjs` と `node build.mjs artifact` が通る（試作ページ 14.72 MB。前は 14.60 MB）
-- Chromium（http.server で配信）: アプリ版で map.laz（361,000 点）と trajectory.txt（4,210 姿勢・83.1 m・420.9 秒）が開き、自動の水平補正「傾き 3.40° を補正、廊下の向きに合わせて 17.0° 回転、床の高さ -0.446 m」。
+- Chromium（http.server で配信）: アプリ version で map.laz（361,000 点）と trajectory.txt（4,210 姿勢・83.1 m・420.9 秒）が開き、自動の水平補正「傾き 3.40° を補正、廊下の向きに合わせて 17.0° 回転、床の高さ -0.446 m」。
   cc_cloud.csv・.sbf + .sbf.data・cc_cloud_binary.ply・cc_cloud_ascii.ply・cc_mesh.obj・OBJ + MTL + PNG（cc_mesh_textured）・laspy_utm.las・pillow_topview.png も開く。
   試作ページ（claude.ai の枠の HTML で包んだもの）でサンプルの地図・軌跡が自動で開いて同じく補正され、形式のサンプルのボタン（.csv・.sbf・.ply バイナリ・.obj・.laz・.png）も開く。pageerror はどちらも 0
 - 起動時の知らせ「…点群なら「ファイル」の一覧で「点群として開き直す」を押してください」は、前のサンプルでも同じく出る（変化なし）

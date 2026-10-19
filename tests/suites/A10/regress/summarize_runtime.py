@@ -31,8 +31,8 @@ WANT = {
     'menu.appMenuHasToggleDevTools': (False, '既定のアプリのメニューに「開発者ツール」がない', 'A10-012'),
     'roUserData.silentExit': (False, '設定の置き場所を作れないとき、何も言わずに終わらない', 'A10-019'),
     'rendererCrash.recovered': (True, '描画プロセスが落ちたら立ち直る（または知らせる）', 'A10-020'),
-    'migrate.settingsCarriedOver': (True, '旧版（PCD Viewer）で変えた設定が新版に引き継がれる', 'A10-017'),
-    'migrate.singleInstanceAcrossVersions': (True, '旧版と新版は同時に動かない（ポートの取り合いを防ぐ）', 'A10-017'),
+    'migrate.settingsCarriedOver': (True, '旧 version（PCD Viewer）で変えた設定が新 version に引き継がれる', 'A10-017'),
+    'migrate.singleInstanceAcrossVersions': (True, '旧 version と新 version は同時に動かない（ポートの取り合いを防ぐ）', 'A10-017'),
     'longTmpdir.started': (True, 'TMPDIR が長くても起動する（または理由を知らせる）', 'A10-019'),
 }
 lf = os.path.join(d, 'lifecycle.jsonl')

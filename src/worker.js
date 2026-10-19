@@ -12,7 +12,7 @@ import { parseTrajectory } from './trajectory.js';
 
 const sets = new Map();
 
-// wasm などの部品: アプリ版は中に埋め込み、試作ページ版は横に置いたファイルを読む
+// wasm などの部品: アプリ version は中に埋め込み、試作ページ version は横に置いたファイルを読む
 const assetCache = new Map();
 async function gunzip(b) { return new Uint8Array(await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()); }
 async function getAsset(name, base) {
@@ -664,9 +664,9 @@ self.onmessage = async (e) => {
     let message = err.message || String(err);
     // ページの設定で WebAssembly が止められている場合（LAZ・Draco・IFC・STEP が使う）
     // 原因を分けて言う（R14-001・R14-006）: 文字列の eval の禁止／部品の取り寄せの失敗／WebAssembly の禁止
-    if (/evaluate a string|EvalError/i.test(message) && !/WebAssembly\.(compile|instantiate)|Refused to compile/i.test(message)) message = `この画面の設定（文字列のプログラムの実行の禁止）のため、この形式の部品が動かず開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
-    else if (/fetching of the wasm failed|Failed to fetch|NetworkError|connect-src/i.test(message)) message = `この画面の設定で展開用の部品を読み込めないため開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
-    else if (/WebAssembly|wasm|unsafe-eval|Content Security Policy/i.test(message)) message = `この画面では展開用の部品（WebAssembly）が使えないため開けません。アプリ版では開けます（${message.slice(0, 80)}）`;
+    if (/evaluate a string|EvalError/i.test(message) && !/WebAssembly\.(compile|instantiate)|Refused to compile/i.test(message)) message = `この画面の設定（文字列のプログラムの実行の禁止）のため、この形式の部品が動かず開けません。アプリ version では開けます（${message.slice(0, 80)}）`;
+    else if (/fetching of the wasm failed|Failed to fetch|NetworkError|connect-src/i.test(message)) message = `この画面の設定で展開用の部品を読み込めないため開けません。アプリ version では開けます（${message.slice(0, 80)}）`;
+    else if (/WebAssembly|wasm|unsafe-eval|Content Security Policy/i.test(message)) message = `この画面では展開用の部品（WebAssembly）が使えないため開けません。アプリ version では開けます（${message.slice(0, 80)}）`;
     self.postMessage({ type: 'error', id: msg.id, req: msg.req, message, unsure: !!err.unsure });
   }
 };

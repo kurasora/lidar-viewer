@@ -57,6 +57,6 @@ echo "###############################################################"
 node $W/regress/summarize.mjs
 
 echo
-echo "完了。ブラウザ版での確認（任意、heavy・SwiftShader）:"
+echo "完了。ブラウザ version での確認（任意、heavy・SwiftShader）:"
 echo "  WAIT=90000 SHOT=$OUT/shots \$T/bin/heavy node \$T/harness/browser_read.js \\"
 echo "    $W/crashers/float32_overflow.xyz -- $W/crashers/off_truncated.off -- $W/crashers/dxf_self_insert.dxf -- <良いファイル>"

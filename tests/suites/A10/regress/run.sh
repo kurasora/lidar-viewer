@@ -1,6 +1,6 @@
 #!/bin/bash
 # A10（配布物・クロスプラットフォーム・起動と終了）の再試験をまとめて流す
-#   bash run.sh [release フォルダ] [--old <前の版の release>] [--static-only | --runtime-only] [--parts "lifecycle sandbox"]
+#   bash run.sh [release フォルダ] [--old <前の version の release>] [--static-only | --runtime-only] [--parts "lifecycle sandbox"]
 # 例: bash run.sh /home/claude/pcd-viewer/release --old /home/claude/release-archive/release-0.2.0
 # 前提: root で実行（netns・SUID の試験のため）。2 CPU・7 GB の共有マシンなので、重い部分は heavy、静的な部分は light を通す
 # 出力: $W/regress/out/<日時>/static/summary.md（静的な点検）と heavy の出力（runtime_summary.md）

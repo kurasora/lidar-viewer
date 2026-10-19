@@ -14,7 +14,7 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   const { app, p, errors, close } = await L.electron({ userdata: UD });
   const info = await p.evaluate(() => ({ title: document.title, app: !!window.pcdApp, sofp: typeof window.showOpenFilePicker, top: window.top === window, url: location.href }));
   const win = await app.evaluate(({ BrowserWindow }) => { const w = BrowserWindow.getAllWindows()[0]; return { title: w.getTitle(), min: w.getMinimumSize(), size: w.getSize(), menu: w.isMenuBarVisible() }; });
-  R.ok('EL1 窓の名前は LiDAR Viewer・アプリ版の窓口（pcdApp）あり', info.title === 'LiDAR Viewer' && win.title === 'LiDAR Viewer' && info.app, { info, win });
+  R.ok('EL1 窓の名前は LiDAR Viewer・アプリ version の窓口（pcdApp）あり', info.title === 'LiDAR Viewer' && win.title === 'LiDAR Viewer' && info.app, { info, win });
   // ---- 最小の大きさ ----
   const sz = await app.evaluate(({ BrowserWindow }) => { const w = BrowserWindow.getAllWindows()[0]; w.setSize(500, 400); return { size: w.getSize(), content: w.getContentSize(), min: w.getMinimumSize() }; });
   await p.waitForTimeout(800);
@@ -57,13 +57,13 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   // ---- ドロップ（DataTransfer）----
   await L.drop(p, [`${D}/c_xyz.pcd`]);
   let st = await L.state(p);
-  R.ok('EL9 ドロップで開く（アプリ版）', st.files.length === 2, st.files.map(f => f.name));
-  // ---- ファイルを開く画面（showOpenFilePicker がアプリ版で使えるか・Playwright で受けられるか） ----
+  R.ok('EL9 ドロップで開く（アプリ version）', st.files.length === 2, st.files.map(f => f.name));
+  // ---- ファイルを開く画面（showOpenFilePicker がアプリ version で使えるか・Playwright で受けられるか） ----
   await p.evaluate(() => { window.__res = []; const o = window.showOpenFilePicker; if (o) window.showOpenFilePicker = function (x) { window.__res.push('called:' + x.types.length + ':' + x.types[0].description); const pr = o.call(window, x); pr.then(r => window.__res.push('ok ' + r.length), e => window.__res.push(e.name + ': ' + e.message)); return pr; }; });
   let fc = null; const onFc = f => { fc = f; }; p.on('filechooser', onFc);
   await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(2500);
   const res1 = await p.evaluate(() => window.__res);
-  R.ok('EL10 アプリ版の「点群を開く」は形式ごとの種類の画面（showOpenFilePicker）を使う', info.sofp === 'function' && info.top && res1.some(r => r.startsWith('called:34:')), { sofp: info.sofp, res1, filechooser: !!fc });
+  R.ok('EL10 アプリ version の「点群を開く」は形式ごとの種類の画面（showOpenFilePicker）を使う', info.sofp === 'function' && info.top && res1.some(r => r.startsWith('called:34:')), { sofp: info.sofp, res1, filechooser: !!fc });
   if (fc) { await fc.setFiles([`${D}/c_label.pcd`]).catch(() => {}); await L.idle(p); }
   p.off('filechooser', onFc);
   st = await L.state(p);
@@ -77,7 +77,7 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   X('key', 'Escape'); await p.waitForTimeout(1500);
   const res3 = await p.evaluate(() => window.__res);
   R.ok('EL11b ネイティブのファイル選択の画面が出て、Esc で閉じると「取り消し」になる（代わりの画面は出ない）', /called:34/.test(res3.join()) && res3.some(r => /AbortError/.test(r)), { res3, windows: wins.trim().split('\n').length });
-  // ---- 画像の保存（アプリ版のダウンロード） ----
+  // ---- 画像の保存（アプリ version のダウンロード） ----
   await app.evaluate(({ session }) => { global.__dl = []; session.defaultSession.on('will-download', (e, item) => { global.__dl.push({ name: item.getFilename(), mime: item.getMimeType(), path: item.getSavePath() }); item.cancel(); }); });
   await L.card(p, 'view'); await p.click('#btnShot'); await p.waitForTimeout(1500);
   const dl = await app.evaluate(() => global.__dl);

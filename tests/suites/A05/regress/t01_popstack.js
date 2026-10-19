@@ -103,7 +103,7 @@ async function check(p, m, R, label, waitAnim = true) {
   }
   R.ok(`B 無作為歩行 ${STEPS} 手（種 ${SEED}）で不変条件が崩れない`, ng === 0, `崩れた手 ${ng}`);
   await L.shot(p, 't01_B_walk_end');
-  // --- 最小の窓（アプリ版の最小 900×600）で 8 枚 ---
+  // --- 最小の窓（アプリ version の最小 900×600）で 8 枚 ---
   while (m.st.length) await act.x();
   await p.setViewportSize({ width: 900, height: 600 });
   for (const n of DOCK) await act.dock(n);

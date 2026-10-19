@@ -17,7 +17,7 @@
 - **L-1**（A10-001）`sudo apt install ./LiDARViewer-0.3.0-amd64.deb`（Pi は arm64）→ メニューから起動。起動しなければ端末で `lidar-viewer` を実行し、エラーを記録。`cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns`、`ls -l "/opt/LiDAR Viewer/chrome-sandbox"`。続けて `sudo chmod 4755 "/opt/LiDAR Viewer/chrome-sandbox"` 後に再度（`failed to execvp: /opt/LiDAR` が出るか）。回避策 `lidar-viewer --no-sandbox` で起動するか
 - **L-2**（A10-002）アプリ一覧・ドック・Alt+Tab のアイコンが Tsubu か（汎用の歯車・白い四角でないか）。起動中の窓がドックの項目にまとまるか
 - **L-3**（A10-006）AppImage をダブルクリック → 何も起きない／libfuse2 のエラーか。`sudo apt install libfuse2t64` の後にもう一度 → サンドボックスのエラーか。`./LiDARViewer-0.3.0-x86_64.AppImage --no-sandbox` で起動するか
-- **L-4**（A10-017）旧版 0.2.0 の deb を入れた状態で 0.3.0 を入れる → `dpkg -l | grep -E "pcd-viewer|lidar-viewer"`、メニューに 2 つ出るか。旧版で変えた「読み込む最大点数」が新版に残るか
+- **L-4**（A10-017）旧 version 0.2.0 の deb を入れた状態で 0.3.0 を入れる → `dpkg -l | grep -E "pcd-viewer|lidar-viewer"`、メニューに 2 つ出るか。旧 version で変えた「読み込む最大点数」が新 version に残るか
 - **L-5**（Pi 5）`getconf PAGESIZE`・`echo $XDG_SESSION_TYPE`・`free -h`。起動するか。F12 の開発者ツールのコンソールで `const gl = document.createElement('canvas').getContext('webgl2'); gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL)` → `V3D 7.1` なら GPU、`SwiftShader`・`llvmpipe` ならソフトウェア。map.laz（100 万点）の回転の滑らかさ、ライブ 20 万点/秒の CPU（`top`）。日本語が豆腐にならないか
 - **L-6**（担当外の確認）Pi の上で livox_ros_driver2 を動かしたままライブを開く → エラーが出るか、ROS 側の点群（`ros2 topic hz /livox/lidar`）が止まらないか
 
@@ -26,7 +26,7 @@
 - **W-2**（A10-003）タスクマネージャーのプロセス名とアイコン（「Electron」か）、タスクバーにピン留めしたときのアイコン
 - **W-3**（A10-008）ライブを開いたときのファイアウォールの画面: 表示名・発行元・プライベート/パブリックのチェックの初期値。LiDAR を直結した LAN のネットワークの種類（設定 > ネットワークとインターネット）。許可しない・標準ユーザーの場合に「LiDAR は見つかるが 0 点/秒」になるか。`wf.msc` の受信の規則に何ができたか。ほかの PC からの配信が一覧に出るか
 - **W-4**（A10-007）起動にかかる秒数（初回・2 回目）、`%TEMP%` にできるフォルダ、動いている間に exe をもう一度ダブルクリック（前に出るまでの秒数・1 つ目が落ちないか・`%TEMP%\<フォルダ>` の中身が減っていないか）、終了後にフォルダが消えるか
-- **W-5**（A10-017）設定の置き場所 `%APPDATA%\LiDAR Viewer`。「読み込む最大点数」を変えて再起動 → 残るか。旧版 `%APPDATA%\PCD Viewer` の設定は引き継がれないこと
+- **W-5**（A10-017）設定の置き場所 `%APPDATA%\LiDAR Viewer`。「読み込む最大点数」を変えて再起動 → 残るか。旧 version `%APPDATA%\PCD Viewer` の設定は引き継がれないこと
 - **W-6**（A10-010）点群ファイルを exe のアイコンにドロップ／「プログラムから開く」→ 開かないこと（窓へのドロップは開く）
 
 ### macOS 14 / 15 / 26（Apple Silicon と Intel）
@@ -34,5 +34,5 @@
 - **M-2** `codesign --verify --deep --strict --verbose=2 "/Applications/LiDAR Viewer.app"`、`codesign -dv --verbose=4 "/Applications/LiDAR Viewer.app"`、`spctl -a -vvv -t exec "/Applications/LiDAR Viewer.app"` の出力を記録（Linux での点検では整合している）
 - **M-3**（A10-004）macOS 15 以降でライブを開く → ローカルネットワークの許可の画面が出るか、文言、許可する前後で MID-360 が見つかるか、拒否したときの画面。PCD Viewer 0.2.0 を先に使った Mac で、LiDAR Viewer に許可の画面が改めて出るか（UUID が同じ）。システム設定 > プライバシーとセキュリティ > ローカルネットワークの一覧の表示
 - **M-4**（A10-012）メニューバーの内容（表示 > 再読み込み など）、⌘R で開いていた点群が消えるか、⌘W・⌘Q で終わるか、終了後に `ps aux | grep "LiDAR Viewer"` が空か
-- **M-5** Dock のアイコン（Tsubu）、「LiDAR Viewer について」の版（0.3.0）、Finder で点群ファイルを「このアプリケーションで開く」・Dock のアイコンへドロップ → 開かないこと（A10-010）
+- **M-5** Dock のアイコン（Tsubu）、「LiDAR Viewer について」の version（0.3.0）、Finder で点群ファイルを「このアプリケーションで開く」・Dock のアイコンへドロップ → 開かないこと（A10-010）
 - **M-6** 「ファイアウォール」をオンにした Mac で、配信を始めたときに「受信を許可しますか」が出るか、毎回出ないか

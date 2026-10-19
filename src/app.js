@@ -13,9 +13,9 @@ const fmt = (v, d = 2) => { if (v == null || !Number.isFinite(v)) return '—'; 
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // ------------------------------------------------------------------ 別スレッド
-// 試作ページ版は別スレッドのコードを gzip して埋め込んでいるので、展開してから起動する（それまでの送信は順に待たせる）
+// 試作ページ version は別スレッドのコードを gzip して埋め込んでいるので、展開してから起動する（それまでの送信は順に待たせる）
 const worker = (() => {
-  // アプリ版: 横に置いた worker.js から起動する（blob: から作ると画面の CSP を受け継ぎ、STEP の部品が使う文字列の実行のために
+  // アプリ version: 横に置いた worker.js から起動する（blob: から作ると画面の CSP を受け継ぎ、STEP の部品が使う文字列の実行のために
   // 画面本体にも 'unsafe-eval' が要る。ファイルから作れば別スレッドだけで済む。S3-005・S1-007）
   if (!__WORKER_GZ__) return new Worker('worker.js');
   // 別スレッドが使えない（DecompressionStream が無い・枠の CSP が blob: の Worker を禁じる）ときは「止まった」とし、
@@ -40,7 +40,7 @@ const worker = (() => {
       // 文の無い error は Worker そのものが動けない（起動できない・落ちた）
       if (e && !e.message) {
         if (e.preventDefault) e.preventDefault();
-        setTimeout(() => die(cspWorker ? 'この画面の設定では別スレッド（Worker）が使えないため、ファイルを開けません。アプリ版では開けます' : '読み込みの処理が止まりました。メモリが足りない可能性があります。「表示」の「読み込む最大点数」を減らしてから、ページを読み直してください'), 100);
+        setTimeout(() => die(cspWorker ? 'この画面の設定では別スレッド（Worker）が使えないため、ファイルを開けません。アプリ version では開けます' : '読み込みの処理が止まりました。メモリが足りない可能性があります。「表示」の「読み込む最大点数」を減らしてから、ページを読み直してください'), 100);
         return;
       }
       if (onErr) onErr(e);
@@ -994,7 +994,7 @@ async function readWithThree(file, ext, parts) {
   } catch (e) { // 部品の英語の例外は出さない
     for (const u of Object.values(urls)) URL.revokeObjectURL(u);
     if (/[぀-ヿ一-鿿]/.test(e?.message || '')) throw e;
-    throw new Error(`${ext === 'fbx' ? 'FBX' : 'COLLADA（DAE）'} のファイルが壊れているか、対応していない版のため開けません`);
+    throw new Error(`${ext === 'fbx' ? 'FBX' : 'COLLADA（DAE）'} のファイルが壊れているか、対応していない version のため開けません`);
   }
   if (!root) throw new Error('COLLADA（DAE）のファイルが壊れているため開けません');
   root.updateMatrixWorld(true);
@@ -2330,7 +2330,7 @@ window.addEventListener('drop', e => {
 });
 
 // ------------------------------------------------------------------ 画像の保存
-//   アプリ版: ダウンロードで保存する（保存の画面を出す。保存したかどうかは画面からは分からないので「保存しました」とは言わない）
+//   アプリ version: ダウンロードで保存する（保存の画面を出す。保存したかどうかは画面からは分からないので「保存しました」とは言わない）
 //   試作ページ: ダウンロードが許されていないので、画像を大きく出して「右クリックで保存」と案内する
 let shotUrl = null;
 function closeShot() {
@@ -2397,7 +2397,7 @@ $('btnShot').addEventListener('click', () => {
     a.click();
     status(`画像（${name}）の保存先を選んでください`);
   };
-  // アプリ版: 画面に映っているもの（点群・座標と距離の吹き出し）をそのまま撮る。設定のカード・下の操作の帯などは写さない
+  // アプリ version: 画面に映っているもの（点群・座標と距離の吹き出し）をそのまま撮る。設定のカード・下の操作の帯などは写さない
   if (window.pcdApp && window.pcdApp.capture) {
     const app = document.querySelector('.app');
     app.classList.add('shooting');
@@ -2556,7 +2556,7 @@ for (const el of document.querySelectorAll('[title]')) el.removeAttribute('title
 new MutationObserver(ms => { for (const m of ms) if (m.type === 'attributes' && m.target.hasAttribute('title')) m.target.removeAttribute('title'); else for (const n of m.addedNodes || []) if (n.nodeType === 1) { if (n.hasAttribute('title')) n.removeAttribute('title'); for (const c of n.querySelectorAll('[title]')) c.removeAttribute('title'); } })
   .observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['title'] });
 window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, shotCanvas, get cam() { return cam; }, controlsTarget: () => controls.target.toArray(), updateLive }; // 動作確認用
-// OS から渡されたファイル（関連付け・ダブルクリック・コマンドライン・「このアプリで開く」）を開く（アプリ版だけ）。
+// OS から渡されたファイル（関連付け・ダブルクリック・コマンドライン・「このアプリで開く」）を開く（アプリ version だけ）。
 // 主プロセスが隠れた入力欄 #pcdOsOpen にファイルを入れてから知らせてくる
 if (window.pcdApp) {
   const osIn = document.createElement('input');

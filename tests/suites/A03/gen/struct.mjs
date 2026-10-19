@@ -138,7 +138,7 @@ add({ id: 'dxf_mutual_insert', name: 'x.dxf', bytes: te.encode(dxfMutual), note:
 add({ id: 'pdms_deep_new', name: 'x.pdms', bytes: te.encode('NEW SITE\n'.repeat(60000) + 'NEW BOX XLENGTH 1 YLENGTH 1 ZLENGTH 1\n'), note: 'PDMS 深い NEW ネスト 6万（walk 再帰）' });
 
 // ---------- CCBIN v2: 深い子のネスト（obj 再帰） ----------
-// 版 50、座標 float。各 obj: id(4) name(qstr: ff ff ff ff=空) flags(4) meta count(4=0) + HOBJ(hobj: 5+1(colorOverride bool=0)+1(hasGL bool=0)+1(nameIn3D) ) + childCount(4) + (v>=23 skip4) + (v>=45 skip64)
+// version 50、座標 float。各 obj: id(4) name(qstr: ff ff ff ff=空) flags(4) meta count(4=0) + HOBJ(hobj: 5+1(colorOverride bool=0)+1(hasGL bool=0)+1(nameIn3D) ) + childCount(4) + (v>=23 skip4) + (v>=45 skip64)
 // 簡単のため HOBJ グループを深くネスト
 function ccbinDeep(depth) {
   const parts = [te.encode('CCB2'), u32(50)];

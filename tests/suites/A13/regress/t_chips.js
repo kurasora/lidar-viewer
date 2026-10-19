@@ -2,7 +2,7 @@
 //   node t_chips.js <場面> <やり方> [出力名]
 //     場面:  top（file:// で直接）| claude（claude.ai 役の枠＋既知の CSP）| <CSP の名前>（lib.js の CSP_PROFILES）
 //     やり方: withmap … 起動時に開く廊下の地図を開いたまま、ボタンを 1 つずつ押す（利用者の手順。押したものだけ閉じてから次へ）
-//            clean   … 毎回すべて閉じてから押す（アプリ版の試験と同じ条件）
+//            clean   … 毎回すべて閉じてから押す（アプリ version の試験と同じ条件）
 //   環境変数: ONLY=ラベルの正規表現（一部だけ試す）、SHOTS=1（ボタンごとに画面写真）
 //   出力: out/chips_<場面>_<やり方>.json
 'use strict';

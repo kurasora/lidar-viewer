@@ -1,4 +1,4 @@
-// 欄の名前に HTML / スクリプトを入れたファイルを、アプリ版のページ（CSP あり）と試作ページ（CSP なし）で開き、差し込み・実行されるかを見る
+// 欄の名前に HTML / スクリプトを入れたファイルを、アプリ version のページ（CSP あり）と試作ページ（CSP なし）で開き、差し込み・実行されるかを見る
 //   使い方: node bxss.js <出力フォルダ> <ファイル>...
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const fs = require('fs'), path = require('path');

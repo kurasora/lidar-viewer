@@ -6,14 +6,14 @@ import { gzipSync } from 'node:zlib';
 import { mkdirSync, copyFileSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 
 const artifact = process.argv[2] === 'artifact';
-// 読み込みに使う wasm（アプリ版は別スレッドのコードに埋め込み、試作ページ版は wasm/ に置いて必要なときに読む）
+// 読み込みに使う wasm（アプリ version は別スレッドのコードに埋め込み、試作ページ version は wasm/ に置いて必要なときに読む）
 const ASSETS = {
   'laz-perf.wasm': 'node_modules/laz-perf/lib/web/laz-perf.wasm',
   'draco_decoder.wasm': 'node_modules/three/examples/jsm/libs/draco/draco_decoder.wasm',
   'web-ifc.wasm': 'node_modules/web-ifc/web-ifc.wasm',
   'occt-import-js.wasm': 'node_modules/occt-import-js/dist/occt-import-js.wasm',
 };
-// アプリ版はそのまま、試作ページ版は gzip してから埋め込む（1 ファイル 16 MB に収めるため）
+// アプリ version はそのまま、試作ページ version は gzip してから埋め込む（1 ファイル 16 MB に収めるため）
 const embed = {};
 for (const [k, f] of Object.entries(ASSETS)) embed[k] = artifact ? 'gz:' + gzipSync(readFileSync(f), { level: 9 }).toString('base64') : readFileSync(f).toString('base64');
 const worker = await esbuild.build({
@@ -42,7 +42,7 @@ const js = app.outputFiles[0].text;
 if (!artifact) {
   mkdirSync('dist', { recursive: true });
   writeFileSync('dist/app.js', js);
-  // アプリ版の別スレッドは別のファイルにする。画面本体の CSP から 'unsafe-eval'（STEP の部品が使う）を外すため（S3-005・S1-007）
+  // アプリ version の別スレッドは別のファイルにする。画面本体の CSP から 'unsafe-eval'（STEP の部品が使う）を外すため（S3-005・S1-007）
   writeFileSync('dist/worker.js', workerText);
   copyFileSync('src/index.html', 'dist/index.html');
   copyFileSync('src/styles.css', 'dist/styles.css');

@@ -39,7 +39,7 @@ def expected(fn, pf, rgbshift=8):
 
 def gen():
     n = N0
-    # 1) 版 × 点の形式（座標はそのまま、scale 0.001）
+    # 1) version × 点の形式（座標はそのまま、scale 0.001）
     combos = [('1.1', pf) for pf in (0, 1)] + [('1.2', pf) for pf in range(4)] + [('1.3', pf) for pf in range(6)] + [('1.4', pf) for pf in range(11)]
     for ver, pf in combos:
         h = laspy.LasHeader(point_format=pf, version=ver); h.scales = [0.001] * 3; h.offsets = [0, 0, 0]
@@ -50,7 +50,7 @@ def gen():
         # LAZ も同じ（Node では展開器が動かないので画面だけ）
         fz = path(f'laz/v{ver}_pf{pf}.laz'); las.write(fz, laz_backend=laspy.LazBackend.Lazrs)
         case(f'laz/v{ver}_pf{pf}', [f'laz/v{ver}_pf{pf}.laz'], f'LAZ {ver} 点の形式 {pf}', P=P, C=C, F=F, rgb=pf in RGB_FMTS, node=False)
-    # LAS 1.0（1.1 の版の数字だけ 1.0 にしたもの。頭書きの形は同じ 227 バイト）
+    # LAS 1.0（1.1 の version の数字だけ 1.0 にしたもの。頭書きの形は同じ 227 バイト）
     for pf in (0, 1):
         src = open(path(f'las/v1.1_pf{pf}.las'), 'rb').read()
         b = bytearray(src); b[25] = 0

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 配布物の静的な点検（再試験用）。新しい配布物にも同じ点検をかけられる
-#   python3 -I static_checks.py <release フォルダ> [--old <前の版の release フォルダ>] [--out <出力フォルダ>]
+#   python3 -I static_checks.py <release フォルダ> [--old <前の version の release フォルダ>] [--out <出力フォルダ>]
 # 出力: <out>/summary.md（表）と <out>/summary.json。PASS/FAIL/WARN/INFO と、関係する報告の番号（A10-xxx）
 # 依存: dpkg-deb, readelf, unzip, 7za（electron-builder の 7zip-bin）, node（@electron/asar）, pefile/Pillow/python-xlib（$W/pylib）
 import sys, os, re, json, glob, hashlib, subprocess, shutil, plistlib, struct, tempfile, io
@@ -122,7 +122,7 @@ if ART.get('exe'):
     o = json.loads(sh(['python3', '-I', os.path.join(HERE, 'pe_info.py'), ART['exe'], os.path.join(tmp, 'ico_outer')]).stdout or b'{}')
     vi = o.get('version_info', {})
     ok = vi.get('ProductName') == PRODUCT and vi.get('ProductVersion', '').startswith(VER)
-    rec('R04', 'portable.exe（外側）の版情報', 'PASS' if ok else 'FAIL', {k: vi.get(k) for k in ('ProductName', 'ProductVersion', 'CompanyName', 'FileDescription', 'LegalCopyright')})
+    rec('R04', 'portable.exe（外側）の version 情報', 'PASS' if ok else 'FAIL', {k: vi.get(k) for k in ('ProductName', 'ProductVersion', 'CompanyName', 'FileDescription', 'LegalCopyright')})
     rec('R04b', 'portable.exe の Authenticode 署名', 'PASS' if o.get('authenticode', {}).get('present') else 'WARN', '署名なし（SmartScreen の警告が出る）' if not o.get('authenticode', {}).get('present') else '', 'A10-011')
     inner = os.path.join(tmp, 'inner.exe')
     with open(inner, 'wb') as f:
@@ -131,7 +131,7 @@ if ART.get('exe'):
     os.remove(inner)
     vi = i.get('version_info', {})
     ok = vi.get('ProductName') == PRODUCT and 'GitHub' not in vi.get('CompanyName', '') and vi.get('FileDescription') != 'Electron'
-    rec('R05', '中の exe（実際に動く方）の版情報が LiDAR Viewer', 'PASS' if ok else 'FAIL', {k: vi.get(k) for k in ('ProductName', 'FileDescription', 'CompanyName', 'FileVersion', 'OriginalFilename')}, 'A10-003')
+    rec('R05', '中の exe（実際に動く方）の version 情報が LiDAR Viewer', 'PASS' if ok else 'FAIL', {k: vi.get(k) for k in ('ProductName', 'FileDescription', 'CompanyName', 'FileVersion', 'OriginalFilename')}, 'A10-003')
     try:
         sys.path.insert(0, PYLIB)
         from PIL import Image
@@ -205,7 +205,7 @@ for k in ('appimage_x64', 'appimage_arm64'):
     fuse2 = b'libfuse.so.2' in d
     nd = re.findall(r'\(NEEDED\)\s+Shared library: \[([^\]]+)\]', sh(['readelf', '-d', p]).stdout.decode())
     unver = [x for x in nd if re.fullmatch(r'lib[^.]+\.so', x)]
-    rec('R10g', f'{k}: runtime の NEEDED に版なしの .so（開発用パッケージにしかない名前）がない', 'FAIL' if unver else 'PASS', {'NEEDED': nd}, 'A10-002')
+    rec('R10g', f'{k}: runtime の NEEDED に version なしの .so（開発用パッケージにしかない名前）がない', 'FAIL' if unver else 'PASS', {'NEEDED': nd}, 'A10-002')
     rec('R10b', f'{k}: runtime が libfuse2 を要しない（Ubuntu 22.04+ の既定で動く）', 'WARN' if fuse2 else 'PASS', 'libfuse.so.2 を dlopen する古い runtime' if fuse2 else '', 'A10-006')
     root = appimage_extract(p, None, os.path.join(tmp, k + '_full'))
     bad = []; n = 0; align_bad = []
@@ -243,7 +243,7 @@ for k in ('zip_mac_x64', 'zip_mac_arm64'):
     app = apps[0]
     pl = plistlib.load(open(os.path.join(app, 'Contents', 'Info.plist'), 'rb'))
     ok = pl.get('CFBundleName') == PRODUCT and pl.get('CFBundleShortVersionString') == VER and pl.get('CFBundleIdentifier')
-    rec('R11', f'{k}: Info.plist の名前・版・ID', 'PASS' if ok else 'FAIL', {x: pl.get(x) for x in ('CFBundleName', 'CFBundleDisplayName', 'CFBundleIdentifier', 'CFBundleShortVersionString', 'CFBundleVersion', 'LSMinimumSystemVersion', 'NSHumanReadableCopyright')})
+    rec('R11', f'{k}: Info.plist の名前・version・ID', 'PASS' if ok else 'FAIL', {x: pl.get(x) for x in ('CFBundleName', 'CFBundleDisplayName', 'CFBundleIdentifier', 'CFBundleShortVersionString', 'CFBundleVersion', 'LSMinimumSystemVersion', 'NSHumanReadableCopyright')})
     rec('R11b', f'{k}: NSLocalNetworkUsageDescription（macOS 15+ のローカルネットワークの許可の説明）', 'PASS' if pl.get('NSLocalNetworkUsageDescription') else 'FAIL', '', 'A10-004')
     un = [x for x in ('NSCameraUsageDescription', 'NSMicrophoneUsageDescription', 'NSBluetoothAlwaysUsageDescription', 'NSBluetoothPeripheralUsageDescription') if x in pl]
     rec('R11c', f'{k}: 使わない機能の許可の説明文（カメラ・マイク・Bluetooth）', 'WARN' if un else 'PASS', un, 'A10-015')
@@ -265,7 +265,7 @@ for k in ('zip_mac_x64', 'zip_mac_arm64'):
                 sys.path.insert(0, HERE)
                 import mac_sig_check as M
                 oj = M.check_macho(oe[0], None, None, [])['slices'][0].get('uuid')
-                rec('R12c', f'{k}: 前の版と主の実行ファイルの LC_UUID が違う', 'FAIL' if oj == main[0]['uuid'] else 'PASS', {'old': oj, 'new': main[0]['uuid']}, 'A10-004')
+                rec('R12c', f'{k}: 前の version と主の実行ファイルの LC_UUID が違う', 'FAIL' if oj == main[0]['uuid'] else 'PASS', {'old': oj, 'new': main[0]['uuid']}, 'A10-004')
     # zip の中の権限・記号リンク
     zl = sh(['zipinfo', p]).stdout.decode('utf-8', 'replace').splitlines()
     links = [l for l in zl if l.startswith('l')]

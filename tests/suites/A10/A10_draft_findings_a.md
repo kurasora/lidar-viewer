@@ -1,9 +1,9 @@
 
 ## 見つけた問題（重大度の高い順）
 
-### A10-001 [致命] Ubuntu 24.04（ROS2 Jazzy の標準 OS）で deb 版・AppImage 版が起動直後に落ちる。エラーの指示どおり chrome-sandbox を 4755 にしても、置き場所「/opt/LiDAR Viewer」の空白のせいでやはり落ちる
+### A10-001 [致命] Ubuntu 24.04（ROS2 Jazzy の標準 OS）で deb version・AppImage version が起動直後に落ちる。エラーの指示どおり chrome-sandbox を 4755 にしても、置き場所「/opt/LiDAR Viewer」の空白のせいでやはり落ちる
 - 種類: 配布物 / バグ
-- 対象: アプリ版（Linux x64・arm64 の deb と AppImage）。Ubuntu 23.10 以降（24.04 LTS を含む）など、一般ユーザーの user 名前空間を制限している OS。ロボットの Raspberry Pi 5（Ubuntu 24.04 + ROS2 Jazzy）に画面環境を入れて動かす場合にもそのまま当たる
+- 対象: アプリ version（Linux x64・arm64 の deb と AppImage）。Ubuntu 23.10 以降（24.04 LTS を含む）など、一般ユーザーの user 名前空間を制限している OS。ロボットの Raspberry Pi 5（Ubuntu 24.04 + ROS2 Jazzy）に画面環境を入れて動かす場合にもそのまま当たる
 - 再現手順（このマシンで、Ubuntu 24.04 の制限を seccomp でまねて再現。`$W/regress/linux_sandbox_test.sh`）:
   1. deb と同じく `/opt/LiDAR Viewer/` に linux-unpacked を置く（専用のマウント名前空間で /opt に重ねる）
   2. deb の postinst と同じ判定を root で実行 → `unshare --user true` が root では通るので **0755**（SUID にしない）と判定

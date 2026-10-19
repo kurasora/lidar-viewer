@@ -6676,7 +6676,7 @@
   "files": [
    "ascii/jp_header_sjis.csv"
   ],
-  "desc": "日本語の見出し（Shift_JIS、日本語版 Excel の CSV）",
+  "desc": "日本語の見出し（Shift_JIS、日本語 version Excel の CSV）",
   "kind": "cloud",
   "node": true,
   "n": 5000,

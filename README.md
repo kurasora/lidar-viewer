@@ -13,8 +13,8 @@ FAST-LIO などで作った点群の地図（.pcd など）を、見やすく表
 
 ## 使い方
 1. [Releases](https://github.com/kurasora/lidar-viewer/releases) から自分の OS の配布物をダウンロードする
-   - Windows：`LiDARViewer-<版>-portable.exe`（ダブルクリックで起動）か `-win-x64.zip`
-   - Ubuntu：`.deb`（`sudo apt install ./LiDARViewer-<版>-amd64.deb`）か `.AppImage`
+   - Windows：`LiDARViewer-<version>-portable.exe`（ダブルクリックで起動）か `-win-x64.zip`
+   - Ubuntu：`.deb`（`sudo apt install ./LiDARViewer-<version>-amd64.deb`）か `.AppImage`
    - Raspberry Pi（64 bit）：`-arm64.deb` か `-arm64.AppImage`
    - macOS：`-mac-arm64.zip`（Apple シリコン）か `-mac-x64.zip`
 2. 下のメニューの「ファイル」→「点群のファイル」で開く（画面へのドラッグでも開ける）

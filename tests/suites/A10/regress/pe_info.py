@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# PE（Windows の exe）の版情報・アイコン・マニフェスト・独自の資源を JSON で出す
+# PE（Windows の exe）の version 情報・アイコン・マニフェスト・独自の資源を JSON で出す
 #   PYTHONPATH=$W/pylib python3 -I pe_info.py <exe> [アイコンを書き出すフォルダ]
 # 依存: pefile（$W/pylib に入れる）
 import sys, os, json, struct
@@ -32,7 +32,7 @@ def main():
     info = {'file': exe, 'size': os.path.getsize(exe), 'machine': hex(pe.FILE_HEADER.Machine),
             'subsystem': pe.OPTIONAL_HEADER.Subsystem, 'timestamp': pe.FILE_HEADER.TimeDateStamp,
             'dll_characteristics': hex(pe.OPTIONAL_HEADER.DllCharacteristics)}
-    # 版情報
+    # version 情報
     vi = {}
     if hasattr(pe, 'FileInfo'):
         for fi in pe.FileInfo:

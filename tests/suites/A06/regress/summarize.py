@@ -54,7 +54,7 @@ for nm in ('keyboard_chromium.json', 'keyboard_electron.json'):
         if m0: chk('A06-019', '天井のない点群で「天井を表示しています」と出ない', not ('天井を表示' in m0['msg'] and not m0['ceilFound']), m0['msg'])
 
 pe = text('pe_info.txt')
-chk('A06-003', 'Windows の exe の版情報・アイコンが LiDAR Viewer', ("'ProductName': 'Electron'" not in pe) if pe else None)
+chk('A06-003', 'Windows の exe の version 情報・アイコンが LiDAR Viewer', ("'ProductName': 'Electron'" not in pe) if pe else None)
 e = load('electron_misc.json')
 if e:
     chk('A06-004', '起動時に白い画面が出ない（背景色の指定）', e['win'].get('bg', '').upper() != '#FFFFFF' and not any(s['dominant'].startswith('(24') for s in e['startup']), e['win'].get('bg'))

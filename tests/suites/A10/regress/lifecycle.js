@@ -1,4 +1,4 @@
-// 起動と終了の試験。配布物の Linux 版（linux-unpacked）を Playwright で動かす
+// 起動と終了の試験。配布物の Linux version（linux-unpacked）を Playwright で動かす
 //   heavy xvfb-run -a -n 200 node lifecycle.js [場面...]   （場面を省くと全部）
 //   環境変数: APPBIN（既定 release/linux-unpacked/lidar-viewer）、W（作業フォルダ）、BIGPCD（読み込み中に閉じる用の大きな PCD）
 // 出力: 1 場面 1 行の JSON（ok が false の項目が問題）
@@ -65,7 +65,7 @@ async function closeAndWatch(h, label) {
 
 const SCENES = {};
 
-// S1: 普通に起動して終わる。名前・版・設定の置き場所（既定）・窓の題・WM_CLASS・ロックの片付け
+// S1: 普通に起動して終わる。名前・version・設定の置き場所（既定）・窓の題・WM_CLASS・ロックの片付け
 SCENES.basic = async () => {
   const home = path.join(W, 'home', 'basic');
   fs.rmSync(home, { recursive: true, force: true }); fs.mkdirSync(home, { recursive: true });
@@ -270,7 +270,7 @@ SCENES.rendererCrash = async () => {
   return { renderersKilled: kids.length, state: st, shot, close: c, checks: { recovered: st.crashed === false } };
 };
 
-// S12: 旧版（PCD Viewer 0.2.0）からの引き継ぎ。旧版で変えた設定（点数の上限・背景）が新版で残るか／旧版と新版を同時に起動できるか
+// S12: 旧 version（PCD Viewer 0.2.0）からの引き継ぎ。旧 version で変えた設定（点数の上限・背景）が新 version で残るか／旧 version と新 version を同時に起動できるか
 const OLDAPP = process.env.OLDBIN || '/home/claude/release-archive/release-0.2.0/linux-unpacked/pcd-viewer';
 SCENES.migrate = async () => {
   if (!fs.existsSync(OLDAPP)) return { skip: 'no ' + OLDAPP };
@@ -289,7 +289,7 @@ SCENES.migrate = async () => {
   const n = await launch('migrate_new', { noUd: true, env });
   const newInfo = await n.app.evaluate(({ app }) => ({ name: app.getName(), version: app.getVersion(), userData: app.getPath('userData') }));
   const got = await n.page.evaluate(() => ({ cap: localStorage.getItem('pcdviewer.cap'), bg: localStorage.getItem('pcdviewer.bg'), capSel: document.getElementById('capSel').value }));
-  // 新版を起動したまま旧版も起動（設定の置き場所が違うので二重起動にならない）
+  // 新 version を起動したまま旧 version も起動（設定の置き場所が違うので二重起動にならない）
   let both = null;
   try {
     const o2 = await launch('migrate_old2', { noUd: true, env, bin: OLDAPP });

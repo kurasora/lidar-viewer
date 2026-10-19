@@ -1,4 +1,4 @@
-// A05 の試験の共通部品（Chromium の dist/index.html と Electron のアプリ版）
+// A05 の試験の共通部品（Chromium の dist/index.html と Electron のアプリ version）
 //   const L = require('./lib.js'); const { p, close } = await L.page(); ...
 const path = require('path');
 const fs = require('fs');

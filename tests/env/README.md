@@ -10,7 +10,7 @@
 ## 1. 絶対に守ること
 
 1. **元のプロジェクトを書き換えない。** `/home/claude/pcd-viewer` と `/home/claude/samples` は読み取り専用でマウントしてあります（書けません）。
-   改造・計測用の版が必要なら `$T/bin/mkcopy $W/proj` で自分用に写し、写しの中で `node build.mjs` などをしてください。
+   改造・計測用の version が必要なら `$T/bin/mkcopy $W/proj` で自分用に写し、写しの中で `node build.mjs` などをしてください。
 2. **electron-builder（配布物の作成）は実行しない。** 配布物は `/home/claude/pcd-viewer/release/` にできています（読むだけ）。
 3. **試験の実行は必ず見張り付きの入口から。** 同時に動かせる数と、メモリ・時間の上限を守るためです（このマシンは 2 CPU・メモリ 7 GB しかありません）。
    - `$T/bin/light <コマンド>` … Node の単体試験・ファジング・小さな Python など。同時 3 つ・既定 800 MB・300 秒
@@ -90,7 +90,7 @@
 - CloudCompare（比較の正解として使える）: `QT_QPA_PLATFORM=offscreen xvfb-run -a -n <番号> CloudCompare -SILENT -NO_TIMESTAMP -O <入力> -C_EXPORT_FMT ASC -SAVE_CLOUDS`（出力は入力と同じフォルダに書くので、入力は自分の場所に写してから）
 - Python: numpy, laspy(+lazrs), pye57, plyfile, trimesh, ezdxf, pyshp(shapefile), ifcopenshell, gmsh, DracoPy, tifffile, Pillow, scipy, pandas, imageio
 - `$T/harness/read.mjs` … Node で読み込み部品を直接動かす: `$T/bin/light node --no-warnings $T/harness/read.mjs <ファイル> [付属ファイル…] [--cap=N]` → JSON
-  （**LAZ・Draco・IFC・PNG/JPG などの画像は Node では動きません**（wasm の作り・createImageBitmap のため）。それらは次のブラウザ版で）
+  （**LAZ・Draco・IFC・PNG/JPG などの画像は Node では動きません**（wasm の作り・createImageBitmap のため）。それらは次のブラウザ version で）
 - `$T/harness/browser_read.js` … Chromium で `dist/index.html` を開いてファイルを開かせる（本番と同じ道筋）: `$T/bin/heavy node $T/harness/browser_read.js a.pcd -- b.shp b.dbf -- c.laz` → 1 組 1 行の JSON。環境変数 `PAGE`（写しの dist を試す）`CAP` `SHOT` `WAIT`
 - `$T/harness/electron_app.js` … Electron でアプリを動かす雛形: `cd $W && $T/bin/heavy xvfb-run -a -n <番号> node $T/harness/electron_app.js [ファイル…]`（`APPDIR` `USERDATA`）
 - 以前の確認用スクリプト（古いものもある。参考に）: `/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/shot/*.js`（`fmt_test.js` `el_pkg.js` `sec_test.js` `meas_test.js` `ceil.js` など）、`…/scratchpad/ccbin/`（BIN の試験）、`…/scratchpad/nodetest/`
@@ -113,7 +113,7 @@
 ## 見つけた問題
 ### <ID>-001 [重大度] 一行の題名
 - 種類: バグ / 意図しない挙動 / セキュリティ / 性能 / 使い勝手 / 文言 / 配布物
-- 対象: アプリ版 / 試作ページ / 両方（OS に依存するならその OS）
+- 対象: アプリ version / 試作ページ / 両方（OS に依存するならその OS）
 - 再現手順:（具体的に。入力ファイルはパスを書く）
 - 期待される結果:
 - 実際の結果:（知らせの文言・エラー・数値をそのまま）

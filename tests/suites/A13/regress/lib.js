@@ -1,4 +1,4 @@
-// A13 試作ページ（アーティファクト版）の試験で共通に使う道具
+// A13 試作ページ（アーティファクト version）の試験で共通に使う道具
 //  ・claude.ai の枠の再現: 親（http://localhost:8830）と子（http://127.0.0.1:8831、アーティファクト役）の 2 つの http サーバー
 //    子は CSP（下の CSP_PROFILES）と Permissions-Policy をヘッダーで返す。親は sandbox 付きの iframe で子を読む
 //  ・Chromium の起動（WebGL は SwiftShader）、読み込みが終わるまで待つ、点群の統計を取る、など
@@ -60,7 +60,7 @@ function childHandler(req, res) {
     const wrap = u.searchParams.get('wrap') || 'skeleton';
     const charset = u.searchParams.get('charset') !== '0';
     let body = artHtml();
-    // strip=padfix … ビルドが付ける「:root { padding: 0 !important; }」を外した版（骨組みの安全領域の余白が効くようにした比較用）
+    // strip=padfix … ビルドが付ける「:root { padding: 0 !important; }」を外した version（骨組みの安全領域の余白が効くようにした比較用）
     if (u.searchParams.get('strip') === 'padfix') body = Buffer.from(body.toString('utf8').replace(':root { padding: 0 !important; }', ''), 'utf8');
     // claude.ai が公開のときに付ける骨組み（公開中のページを読んで、そのまま写したもの: claude_skeleton_head.html / _tail.html）
     if (wrap === 'skeleton') body = Buffer.concat([SKEL_HEAD, body, SKEL_TAIL]);

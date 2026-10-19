@@ -3,7 +3,7 @@
 #   light bash arm64_appimage_qemu.sh <arm64.AppImage>...
 # 道具（全体の環境は変えず $W/tools に展開）:
 #   apt-get download qemu-user-static libc6-arm64-cross → dpkg-deb -x で $W/tools/qemu・$W/tools/sysroot/lib へ
-# 調べること: runtime の NEEDED に「libz.so」（版なし。Debian/Ubuntu/Raspberry Pi OS では開発用の zlib1g-dev にしかない）があり、
+# 調べること: runtime の NEEDED に「libz.so」（version なし。Debian/Ubuntu/Raspberry Pi OS では開発用の zlib1g-dev にしかない）があり、
 #             普通の arm64 の環境では「libz.so: cannot open shared object file」で起動できないこと
 set -u
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv

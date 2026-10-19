@@ -1,7 +1,7 @@
 # A09 性能・メモリ・負荷 — 再試験の道具
 
 この試験環境では `bash run.sh`（全部・2〜3 時間）か `bash run.sh quick`（約 15 分）。結果は `../out/*.jsonl` と `../out/summary.md`。
-実機（Windows の PC・Raspberry Pi 5）では下の「実機で測る」の手順で、同じスクリプトを Electron 版（配布物）に対して流す。
+実機（Windows の PC・Raspberry Pi 5）では下の「実機で測る」の手順で、同じスクリプトを Electron version（配布物）に対して流す。
 
 ## スクリプト
 

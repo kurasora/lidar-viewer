@@ -3,7 +3,7 @@
 #   使い方: bash run.sh [all|gen|node|app] [--appdir <アプリのフォルダ>]
 #     gen  … 試験用ファイルを作る（約 700 MB。files/ がなければ自動で作る）
 #     node … Node だけで動くもの（読み込み部品・軌跡・判定）: light で流す
-#     app  … アプリ版（Electron）で画面ごと動かすもの: heavy で流す
+#     app  … アプリ version（Electron）で画面ごと動かすもの: heavy で流す
 #   結果: out/run_<日時>/ にログ、最後に「判定」の一覧（OK = 直っている／NG = まだ再現する）
 #   環境変数 APPDIR を付けると、写し（mkcopy して直したもの）を試せる: APPDIR=$W/proj bash run.sh app
 set -u
@@ -41,7 +41,7 @@ app_tests() {
   # A14-001 床の検出（Chromium、X 不要）
   PAGE=file://$APPDIR/dist/index.html MEM=2500 TIMEOUT=900 $T/bin/heavy node $R/level_check.js $F/floor_h0.3 $F/floor_h0.55 $F/floor_h0.8 $F/floor_h1.2 > $O/level_check.log 2>&1
   grep -q '"floorOK":false' $O/level_check.log && judge NG A14-001 || judge OK A14-001
-  # A14-002 隠した天井の点が選ばれる（アプリ版）
+  # A14-002 隠した天井の点が選ばれる（アプリ version）
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 240 node $R/c1_pick_hidden.js > $O/pick_hidden.log 2>&1
   grep -q 'boxTop_hidden' $O/pick_hidden.log && echo "（pick_hidden.log の boxTop_hidden の Z が 0.8 前後なら直っている）" >> $O/judge.txt
   # その他の画面の確かめ（ログを見て判定）

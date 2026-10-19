@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# mac の .app（ad-hoc 署名）を Linux 上で点検する（Apple の codesign の代わりの簡易版）
+# mac の .app（ad-hoc 署名）を Linux 上で点検する（Apple の codesign の代わりの簡易 version）
 #   python3 -I mac_sig_check.py "<…/LiDAR Viewer.app>"  → JSON（problems が空なら OK）
 # 確かめること:
 #   ・入れ子のコード（Frameworks/*.framework/Versions/A、Helper の .app、dylib など）を含む全 Mach-O の

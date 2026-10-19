@@ -1,5 +1,5 @@
 // 点群ファイルの中の文字（項目名）が innerHTML に入る所で、スクリプトが動くか（試作ページは CSP の meta を持たない）
-//   場面: 試作ページ（claude.ai 役の枠＋既知の CSP）、試作ページ（file:// で直接）、アプリ版（dist/index.html。CSP の meta あり）
+//   場面: 試作ページ（claude.ai 役の枠＋既知の CSP）、試作ページ（file:// で直接）、アプリ version（dist/index.html。CSP の meta あり）
 //   1) xss_field.pcd を開く → 「選んだファイルの情報」（updateInfo）と「項目」の選択肢（refreshFieldSelect）に項目名が入る
 //   2) xss_field_cat.pcd を開いて、色を「反射」（値）にする → 凡例（drawLegend の分類）に項目名が入る
 //   3) ファイル名に HTML を入れた File を開く（名前の側は escapeHtml されているはず）
@@ -14,7 +14,7 @@ const FILES = path.join(L.W, 'files');
   const scenes = [
     { name: '試作ページ（枠＋CSP claude）', url: L.parentURL({ csp: 'claude' }), iframe: true, startup: true },
     { name: '試作ページ（file:// 直接）', url: 'file://' + L.ART, iframe: false, startup: true },
-    { name: 'アプリ版 dist（CSP meta あり）', url: L.APP, iframe: false, startup: false },
+    { name: 'アプリ version dist（CSP meta あり）', url: L.APP, iframe: false, startup: false },
   ];
   const results = [];
   for (const sc of scenes) {

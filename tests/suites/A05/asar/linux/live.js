@@ -2,7 +2,7 @@
 //   ・Livox MID-360 から点群を直接受け取る（Livox SDK2 と同じ通信手順。ドライバや ROS は使わない）
 //   ・受け取った点群を、同じネットワークのほかの LiDAR Viewer に配信する
 //   ・ほかの LiDAR Viewer が配信している点群を受け取る
-//   ※ 配信の知らせに使う名前 app: 'pcd-viewer' は、旧名（PCD Viewer）の版とも互いに見つけられるよう、そのままにしている
+//   ※ 配信の知らせに使う名前 app: 'pcd-viewer' は、旧名（PCD Viewer）の version とも互いに見つけられるよう、そのままにしている
 // 画面へは、およそ 20 回/秒にまとめた点（x y z の float32 と 反射の uint8）を送る
 'use strict';
 const dgram = require('node:dgram');
@@ -22,7 +22,7 @@ const KEY = { pclDataType: 0x0000, pointDataHostIp: 0x0006, workMode: 0x001a };
 const DEV_TYPES = { 9: 'MID-360', 35: 'MID-360s', 41: 'MID-360L', 7: 'Avia', 40: 'Avia2', 10: 'HAP', 15: 'HAP', 6: 'Mid-70', 3: 'Horizon', 2: 'Tele-15', 1: 'Mid-40', 16: 'PA' };
 
 let seq = 1;
-// 命令の箱: sof(0xAA) 版 長さ 通し番号 命令 種類 送り手 予備6 CRC16（先頭18バイト） CRC32（中身）+ 中身
+// 命令の箱: sof(0xAA) version 長さ 通し番号 命令 種類 送り手 予備6 CRC16（先頭18バイト） CRC32（中身）+ 中身
 function packCmd(cmdId, data = Buffer.alloc(0), cmdType = 0, sender = 0, seqNo = null) {
   const b = Buffer.alloc(24 + data.length);
   b[0] = 0xaa; b[1] = 0; b.writeUInt16LE(b.length, 2); b.writeUInt32LE(seqNo === null ? (seq++ & 0xffff) : seqNo, 4);
@@ -165,7 +165,7 @@ class LivoxLink extends EventEmitter {
     const p = parseCmd(m);
     if (p && p.cmd === CMD.workModeControl && p.type === 1 && p.data.length >= 3) this.ack = { ret: p.data[0], key: p.data.readUInt16LE(1) };
   }
-  // 点群の箱: 版 長さ 時間間隔 点数 箱の番号 フレーム番号 種類 時刻の種類 予備12 CRC32 時刻8 = 36 バイト + 点
+  // 点群の箱: version 長さ 時間間隔 点数 箱の番号 フレーム番号 種類 時刻の種類 予備12 CRC32 時刻8 = 36 バイト + 点
   onPoints(m) {
     if (!this.batch || m.length < 36) return;
     const n = m.readUInt16LE(5), type = m[10];

@@ -49,7 +49,7 @@ function createWindow() {
     if (win.isDestroyed()) return;
     if (response === 1) app.quit(); else win.reload();
   });
-  // F12 で開発者ツール（不具合の調査用）。製品版では環境変数 LIDAR_VIEWER_DEVTOOLS=1 のときだけ
+  // F12 で開発者ツール（不具合の調査用）。製品 version では環境変数 LIDAR_VIEWER_DEVTOOLS=1 のときだけ
   if (!app.isPackaged || process.env.LIDAR_VIEWER_DEVTOOLS === '1') {
     win.webContents.on('before-input-event', (e, input) => {
       if (input.type === 'keyDown' && input.key === 'F12') win.webContents.toggleDevTools();
@@ -191,9 +191,9 @@ function setupMacMenu() {
   ]));
 }
 
-// Linux の AppImage 版: Ubuntu 23.10 以降は AppArmor が「プロファイルのないアプリの user 名前空間」を止めるため、
+// Linux の AppImage version: Ubuntu 23.10 以降は AppArmor が「プロファイルのないアプリの user 名前空間」を止めるため、
 // Chromium の安全な囲い（サンドボックス）が作れず起動直後に落ちる。AppImage には SUID の補助も置けないので、
-// その制限があるときだけ囲いなしで動かす（deb 版は AppArmor のプロファイルを入れるので囲いありのまま動く）
+// その制限があるときだけ囲いなしで動かす（deb version は AppArmor のプロファイルを入れるので囲いありのまま動く）
 if (process.platform === 'linux' && process.env.APPIMAGE) {
   try {
     if (require('node:fs').readFileSync('/proc/sys/kernel/apparmor_restrict_unprivileged_userns', 'utf8').trim() === '1') app.commandLine.appendSwitch('no-sandbox');

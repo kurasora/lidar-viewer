@@ -3,7 +3,7 @@
 #   bash run.sh            … 全部（30〜60 分。heavy の枠の空き次第）
 #   bash run.sh quick      … 写真の行列を 900x600 と 1280x800 だけにする
 #   結果: ../out/*.json *.log、写真: ../shots/、最後に summarize.py が「OK / NG」の一覧を出す
-#   別の版（写し）を試すとき: APPDIR=<写しのフォルダ> PAGE=file://<写し>/dist/index.html bash run.sh
+#   別の version（写し）を試すとき: APPDIR=<写しのフォルダ> PAGE=file://<写し>/dist/index.html bash run.sh
 set -u
 R=$(cd "$(dirname "$0")" && pwd); W=$(cd "$R/.." && pwd)
 T=$(cd "$W/../.." && pwd)

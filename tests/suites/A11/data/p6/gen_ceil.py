@@ -7,7 +7,7 @@ def put(name, P, note, expect):
     write_pcd(f'{name}.pcd', P); cases[name] = {'note': note, 'expect': expect, 'n': len(P)}
 # a) 1 部屋（基準）
 put('c_room', room(L=20, Wd=6, H=2.7, step=0.05, noise=0.003, seed=21), '1 部屋 20×6×2.7', '天井 2.7 を隠す')
-# b) 2 階建て（1 階 0〜2.7、床版 3.0、2 階 3.0〜5.7）
+# b) 2 階建て（1 階 0〜2.7、床 version 3.0、2 階 3.0〜5.7）
 r1 = room(L=20, Wd=6, H=2.7, step=0.05, noise=0.003, seed=22)
 r2 = room(L=20, Wd=6, H=2.7, step=0.05, noise=0.003, seed=23); r2[:, 2] += 3.0
 put('c_2story', np.vstack([r1, r2]), '2 階建て（1 階の天井 2.7、2 階の床 3.0、天井 5.7）', '2 階の内容は残すのが望ましい')

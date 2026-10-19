@@ -66,7 +66,7 @@ const validExt = e => /^\.[A-Za-z0-9+.]*$/.test(e) && !e.endsWith('.') && e.leng
   await p.click('#btnOpen'); await p.waitForTimeout(1500);
   R.ok('P12 showOpenFilePicker が失敗したら、代わりのファイル選択（input）が開く', !!fc, fc ? 'filechooser が出た' : '何も出ない');
   if (fc) { await fc.setFiles([`${D}/c_xyz.pcd`]); await L.idle(p); st = await L.state(p); R.ok('P12b 代わりの画面で選んだファイルが開く', st.files.length === 1, st.files.map(f => f.name)); }
-  R.ok('ページのエラーなし（差し替え版）', !errors.length, errors.slice(0, 5));
+  R.ok('ページのエラーなし（差し替え version）', !errors.length, errors.slice(0, 5));
   await close();
   // ---- 本物の showOpenFilePicker（headless Chromium）: 受け付けて選択画面まで進むか ----
   const real = () => {

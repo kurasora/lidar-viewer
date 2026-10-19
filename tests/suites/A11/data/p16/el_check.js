@@ -1,4 +1,4 @@
-// アプリ版（Electron）で、天井を隠した部屋の床を上からクリック（pickAt）→ 選ばれた点の z、UTM の部屋の座標の吹き出し
+// アプリ version（Electron）で、天井を隠した部屋の床を上からクリック（pickAt）→ 選ばれた点の z、UTM の部屋の座標の吹き出し
 const pw = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const path = require('path'), fs = require('fs');
 const W = process.argv[2];

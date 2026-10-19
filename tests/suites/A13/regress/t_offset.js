@@ -2,7 +2,7 @@
 //   1) 地図を開いたまま .las（laspy_utm.las）を押す → 座標の細かさ（minGap）、知らせ、ページのエラー
 //   2) そのあと、ほかのサンプル（.pcd ascii）を押す → 開けるか（読み込みの順番待ちが止まっていないか）
 //   3) 比較: 全部閉じてから .las を押す（きれいな状態）→ 並べた座標を点ごとに比べて、ずれの最大を出す
-//   4) 自前の UTM ファイル（utm_cloud.pcd、double）でも同じ（試作ページ・アプリ版の両方。アプリ版は小さな点群を先に開く）
+//   4) 自前の UTM ファイル（utm_cloud.pcd、double）でも同じ（試作ページ・アプリ version の両方。アプリ version は小さな点群を先に開く）
 //   出力: out/offset.json
 'use strict';
 const L = require('./lib');
@@ -54,11 +54,11 @@ const FILES = path.join(L.W, 'files');
     // 座標の表示（座標ボタンで点を選ぶ）: 地図を開いたまま UTM の点を選んだときの表示の桁
     await ctx.close();
   }
-  // ---- 自前の UTM ファイル: 試作ページ（地図のあと）とアプリ版（小さな点群のあと）
+  // ---- 自前の UTM ファイル: 試作ページ（地図のあと）とアプリ version（小さな点群のあと）
   for (const sc of [{ name: '試作ページ: 地図のあと utm_cloud.pcd', url: L.parentURL({ csp: 'claude' }), iframe: true, first: null },
-    { name: 'アプリ版: map.laz（廊下の地図・自動で水平）のあと utm_cloud.pcd', url: L.APP, iframe: false, first: '/home/claude/pcd-viewer/sample/map.laz' },
-    { name: 'アプリ版: small_local.pcd（水平補正できない小さな箱）のあと utm_cloud.pcd', url: L.APP, iframe: false, first: 'small_local.pcd' },
-    { name: 'アプリ版: utm_cloud.pcd だけ', url: L.APP, iframe: false, first: false }]) {
+    { name: 'アプリ version: map.laz（廊下の地図・自動で水平）のあと utm_cloud.pcd', url: L.APP, iframe: false, first: '/home/claude/pcd-viewer/sample/map.laz' },
+    { name: 'アプリ version: small_local.pcd（水平補正できない小さな箱）のあと utm_cloud.pcd', url: L.APP, iframe: false, first: 'small_local.pcd' },
+    { name: 'アプリ version: utm_cloud.pcd だけ', url: L.APP, iframe: false, first: false }]) {
     const { ctx, page, logs } = await L.newPage(browser);
     await page.goto(sc.url, { waitUntil: 'commit' });
     const frame = sc.iframe ? await L.artFrame(page) : page.mainFrame();

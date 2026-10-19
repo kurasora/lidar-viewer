@@ -1,4 +1,4 @@
-# Windows の exe の版情報とアイコン（リソース）を取り出す: python3 pe_info.py <exe> <出力フォルダ>
+# Windows の exe の version 情報とアイコン（リソース）を取り出す: python3 pe_info.py <exe> <出力フォルダ>
 import sys, os, struct, io
 import pefile
 from PIL import Image

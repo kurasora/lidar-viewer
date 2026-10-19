@@ -140,12 +140,12 @@ def gen():
     rowsN0 = list(rows6); rowsN0[0] = 'nan nan nan'
     write_text('ascii/first_nan.txt', rowsN0)
     case('ascii/first_nan', ['ascii/first_nan.txt'], '最初の行が nan nan nan', P=P6[1:], n=n - 1, total=n - 1, skipped=None, rgb=False)
-    # 日本語の見出し（UTF-8 と Shift_JIS。日本語版 Excel の CSV は Shift_JIS）
+    # 日本語の見出し（UTF-8 と Shift_JIS。日本語 version Excel の CSV は Shift_JIS）
     lines = [f'{X[i]:.6f},{Y[i]:.6f},{Z[i]:.6f},{I0[i]:g}' for i in range(n)]
     write_text('ascii/jp_header_utf8.csv', lines, head=['X座標,Y座標,Z座標,強度'])
     case('ascii/jp_header_utf8', ['ascii/jp_header_utf8.csv'], '日本語の見出し（UTF-8）X座標,Y座標,Z座標,強度', P=P6, F={'強度': I0}, rgb=False)
     write_text('ascii/jp_header_sjis.csv', lines, head=['X座標,Y座標,Z座標,強度'], enc='shift_jis')
-    case('ascii/jp_header_sjis', ['ascii/jp_header_sjis.csv'], '日本語の見出し（Shift_JIS、日本語版 Excel の CSV）', P=P6, F={'強度': I0}, rgb=False, extra={'note': '欄の名前が文字化けしないか'})
+    case('ascii/jp_header_sjis', ['ascii/jp_header_sjis.csv'], '日本語の見出し（Shift_JIS、日本語 version Excel の CSV）', P=P6, F={'強度': I0}, rgb=False, extra={'note': '欄の名前が文字化けしないか'})
     # 見出しにない名前で始まる語（id, index など）。i で始まる語は inf と読まれないか
     write_text('ascii/head_id.csv', [f'{i},{X[i]:.6f},{Y[i]:.6f},{Z[i]:.6f}' for i in range(n)], head=['id,x,y,z'])
     case('ascii/head_id', ['ascii/head_id.csv'], '見出し id,x,y,z（x が 2 列目）', P=P6, F={'id': np.arange(n).astype(float)}, rgb=False)
