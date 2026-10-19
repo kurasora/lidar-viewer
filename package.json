@@ -1,7 +1,7 @@
 {
   "name": "lidar-viewer",
   "productName": "LiDAR Viewer",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "LiDAR Viewer（点群ビューア: PCD・LAS・E57 ほか）",
   "main": "main.js",
   "desktopName": "lidar-viewer.desktop",
