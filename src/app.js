@@ -1171,7 +1171,7 @@ function afterRemove() {
   if (!S.files.length) {
     // 点群がひとつもなくなったら、そのファイルに関する表示（情報・高さの分布・計測・水平補正）も消す
     S.zSample = []; S.worldSample = []; S.ceil = null; S.ceilZ = null;
-    S.levelInfo = null; S.lastLevel = null;
+    S.levelInfo = null; S.lastLevel = null; syncLevelBtn();
     if (!S.trajs.length) S.offset = null; // 軌跡が残っている間は、その座標の基準（シフト）を消さない（R6-002）
     world.matrix.identity(); world.updateMatrixWorld(true);
     $('levelResult').textContent = '';
@@ -1580,9 +1580,9 @@ function renderPop() {
 }
 // カードを出したら、フォーカスをカードの見出しに移す（Tab ですぐ中の部品へ進める）
 function focusPop() { if (popName) $('popTitle').focus({ preventScroll: true }); }
+// 開けるカードは常に 1 枚。別のカードを開くと、それまでのカードは閉じ、そのメニューのボタンも解除される
 function bringPop(name) {
-  popStack = popStack.filter(n => n !== name);
-  popStack.push(name);
+  popStack = [name];
   renderPop();
   focusPop();
 }
@@ -2015,7 +2015,10 @@ async function runLevel(auto = false) {
   }
 }
 $('btnLevel').addEventListener('click', () => runLevel(false));
+// 「点群の傾きを補正する」ボタン: 補正が掛かっている間は、天井を隠すボタンと同じく色を付ける
+function syncLevelBtn() { const on = !!S.levelInfo, b = $('btnLevel'); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
 function applyLevel(auto = false, keepView = false) {
+  syncLevelBtn();
   const r = S.levelInfo;
   const M = levelMatrix(r);
   if (r) {
