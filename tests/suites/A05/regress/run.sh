@@ -20,13 +20,13 @@ export TMPDIR=$W/tmp
 { [ -f $W/data/two_floors.pcd ] && [ -f $W/data/inj_field.pcd ]; } || python3 $W/regress/gen_data3.py $W/data
 # X を外から操作する道具（ネイティブのダイアログを見るため）
 [ -d $W/pylib/Xlib ] || pip install --break-system-packages --target $W/pylib python-xlib >/dev/null 2>&1
-ALL="t01_popstack t02_tools t03_files t04_color t05_measure t06_level_ceil t07_section_view t08_traj t09_misc t10_picker t11_errors t12_usecases t13_live_demo t14_fieldname_html t15_ceiling_scenes t16_parts t17_utm_coords t18_multi_extent e01_electron"
+ALL="t01_popstack t02_tools t03_files t04_color t05_measure t06_level_ceil t07_section_view t08_traj t09_misc t10_picker t11_errors t12_usecases t14_fieldname_html t15_ceiling_scenes t16_parts t17_utm_coords t18_multi_extent e01_electron"
 SEL="$*"
 for t in $ALL; do
   if [ -n "$SEL" ]; then m=0; for a in $SEL; do case $t in $a*) m=1;; esac; done; [ $m = 1 ] || continue; fi
   echo "== $t $(date +%H:%M:%S)"
   if [ $t = e01_electron ]; then
-    # ライブのカードを開くので自分の netns（a051）の中で。画面は xvfb の 150 番
+    # ほかの担当とぶつからないよう自分の netns（a051）の中で。画面は xvfb の 150 番
     ip netns list | grep -q '^a051' || $T/bin/mknet a05 105 3 >/dev/null
     ip netns exec a051 xvfb-run -a -n 150 -s "-screen 0 1600x1000x24" env PYTHONPATH=$W/pylib timeout 900 node $W/regress/$t.js > $W/logs/$t.log 2>&1
     rc=$?

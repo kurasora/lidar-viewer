@@ -19,8 +19,6 @@ echo "========== 5) 分類の色（点 vs 凡例）の食い違い"
 $T/bin/light node --no-warnings $W/regress/node/catcolor.mjs $W/regress/data/labels_far.pcd
 echo "========== 6) 小さな壊れた入力で終わらない/過大なメモリ"
 bash $W/regress/node/limits.sh
-echo "========== 7) ライブ: 壊れた配信メッセージで主プロセスが落ちる（netns a121/a122 が要る）"
-if ip netns list | grep -q '^a121'; then TIMEOUT=60 MEM=900 $T/bin/light bash $W/regress/live/run_decode_crash.sh; else echo "（netns a12* が無いので飛ばす: $T/bin/mknet a12 112 3 で作る）"; fi
 echo "========== 8) 画面（Chromium）での確認（heavy スロットが要る。混んでいれば飛ばしてよい）"
 echo "  手動: TIMEOUT=240 MEM=1600 $T/bin/heavy node $W/regress/browser/render_checks.js $W/regress/data"
 echo "========== 完了"

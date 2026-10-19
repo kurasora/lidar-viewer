@@ -1,4 +1,4 @@
-// 起動と終了の試験（ライブなし）。配布物の Linux 版（linux-unpacked）を Playwright で動かす
+// 起動と終了の試験。配布物の Linux 版（linux-unpacked）を Playwright で動かす
 //   heavy xvfb-run -a -n 200 node lifecycle.js [場面...]   （場面を省くと全部）
 //   環境変数: APPBIN（既定 release/linux-unpacked/lidar-viewer）、W（作業フォルダ）、BIGPCD（読み込み中に閉じる用の大きな PCD）
 // 出力: 1 場面 1 行の JSON（ok が false の項目が問題）

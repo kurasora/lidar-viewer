@@ -36,12 +36,14 @@ if (artifact && !process.env.NOSAMPLE) {
 const workerText = worker.outputFiles[0].text;
 const app = await esbuild.build({
   entryPoints: ['src/app.js'], bundle: true, format: 'iife', write: false, minify: true, target: 'chrome120',
-  define: { __WORKER_CODE__: JSON.stringify(artifact ? '' : workerText), __WORKER_GZ__: JSON.stringify(artifact ? gzipSync(Buffer.from(workerText), { level: 9 }).toString('base64') : ''), __ARTIFACT__: String(artifact), __SAMPLE__: sample, __SAMPLE_FILES__: sampleFiles },
+  define: { __WORKER_GZ__: JSON.stringify(artifact ? gzipSync(Buffer.from(workerText), { level: 9 }).toString('base64') : ''), __ARTIFACT__: String(artifact), __SAMPLE__: sample, __SAMPLE_FILES__: sampleFiles },
 });
 const js = app.outputFiles[0].text;
 if (!artifact) {
   mkdirSync('dist', { recursive: true });
   writeFileSync('dist/app.js', js);
+  // アプリ版の別スレッドは別のファイルにする。画面本体の CSP から 'unsafe-eval'（STEP の部品が使う）を外すため（S3-005・S1-007）
+  writeFileSync('dist/worker.js', workerText);
   copyFileSync('src/index.html', 'dist/index.html');
   copyFileSync('src/styles.css', 'dist/styles.css');
   console.log('built dist/');

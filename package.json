@@ -24,7 +24,6 @@
     "files": [
       "main.js",
       "preload.js",
-      "live.js",
       "assets/icon.png",
       "dist/**/*"
     ],
@@ -36,6 +35,13 @@
     ],
     "toolsets": {
       "appimage": "1.0.3"
+    },
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
     },
     "fileAssociations": [
       { "ext": "pcd", "name": "PCD 点群", "description": "PCD 点群（Point Cloud Library）", "mimeType": "application/x-pcd", "role": "Viewer", "rank": "Default" },
@@ -160,9 +166,6 @@
     "occt-import-js": "^0.0.23",
     "three": "0.160.1",
     "web-ifc": "^0.0.78"
-  },
-  "dependencies": {
-    "ws": "^8.18.0"
   },
   "homepage": "https://github.com/kurasora/lidar-viewer"
 }

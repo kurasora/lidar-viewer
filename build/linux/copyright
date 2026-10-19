@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: LiDAR Viewer
-Source: (配布元の URL をここに / project URL)
+Source: https://github.com/kurasora/lidar-viewer
 
 Files: *
 Copyright: fukuda

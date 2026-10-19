@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SAMPLE_GROUPS } from './samples.js';
 import { extractMcap } from './trajectory.js';
+import { Gunzip } from 'fflate';
 
 THREE.ColorManagement.enabled = false;
 const $ = id => document.getElementById(id);
@@ -14,7 +15,9 @@ const css = name => getComputedStyle(document.documentElement).getPropertyValue(
 // ------------------------------------------------------------------ 別スレッド
 // 試作ページ版は別スレッドのコードを gzip して埋め込んでいるので、展開してから起動する（それまでの送信は順に待たせる）
 const worker = (() => {
-  if (!__WORKER_GZ__) return new Worker(URL.createObjectURL(new Blob([__WORKER_CODE__], { type: 'text/javascript' })));
+  // アプリ版: 横に置いた worker.js から起動する（blob: から作ると画面の CSP を受け継ぎ、STEP の部品が使う文字列の実行のために
+  // 画面本体にも 'unsafe-eval' が要る。ファイルから作れば別スレッドだけで済む。S3-005・S1-007）
+  if (!__WORKER_GZ__) return new Worker('worker.js');
   // 別スレッドが使えない（DecompressionStream が無い・枠の CSP が blob: の Worker を禁じる）ときは「止まった」とし、
   // 以後の送信には原因の文で失敗を返す（黙って捨てると「開いています」のまま止まる。R14-002・R14-003）
   let dead = null, onMsg = null, onErr = null, cspWorker = false;
@@ -940,9 +943,22 @@ async function loadNext() {
     loadFailed(err && err.message || String(err));
   }
 }
+const MAX_SVG_BYTES = 100e6; // SVGZ を展開したあとの大きさの上限（100 MB）
 async function rasterizeSVG(file, ext) {
   let blob = file;
-  if (ext === 'svgz') { try { blob = await new Response(file.stream().pipeThrough(new DecompressionStream('gzip'))).blob(); } catch (e) { throw new Error('SVGZ を展開できませんでした（ファイルが壊れている可能性があります）'); } }
+  if (ext === 'svgz') { // 少しずつ展開して大きさを数え、上限を超えたら止める（小さなファイルが巨大に膨らむ「解凍爆弾」を防ぐ。S2-002）
+    // ブラウザの DecompressionStream は渡した分を一度に全部展開してしまうので使わない。16 KB ずつ渡す（1 回の展開は最大 16 MB 程度）
+    const parts = []; let total = 0, tooBig = false;
+    const gz = new Gunzip(d => { if (tooBig) return; total += d.length; if (total > MAX_SVG_BYTES) { tooBig = true; parts.length = 0; } else parts.push(d); });
+    try {
+      for (let o = 0; o < file.size && !tooBig; o += 1 << 16) {
+        const buf = new Uint8Array(await file.slice(o, o + (1 << 16)).arrayBuffer());
+        for (let q = 0; q < buf.length && !tooBig; q += 1 << 14) gz.push(buf.subarray(q, q + (1 << 14)), o + q + (1 << 14) >= file.size);
+      }
+    } catch (e) { throw new Error('SVGZ を展開できませんでした（ファイルが壊れている可能性があります）'); }
+    if (tooBig) throw new Error(`この SVGZ は展開すると大きすぎるため開けません（展開後 ${MAX_SVG_BYTES / 1e6} MB まで）`);
+    blob = new Blob(parts);
+  }
   const url = URL.createObjectURL(new Blob([await blob.arrayBuffer()], { type: 'image/svg+xml' }));
   try {
     const img = new Image();
@@ -960,7 +976,10 @@ async function readWithThree(file, ext, parts) {
   const urls = {};
   const manager = new THREE.LoadingManager();
   const partOf = n => parts[n] || Object.entries(parts).find(([k]) => k.toLowerCase() === n.toLowerCase())?.[1]; // 名前の大文字小文字は問わない
-  manager.setURLModifier(u => { let n = u.replace(/^.*[\\/]/, ''); try { n = decodeURIComponent(n); } catch (e) { /* そのまま */ } const p = partOf(n); if (p) return urls[n] || (urls[n] = URL.createObjectURL(p)); return u; });
+  // 模様の画像などの参照は、一緒に選んだファイルの中からだけ探す。ファイルに書かれた外の場所（file://・共有フォルダ・http・
+  // 絶対パス）へは読みに行かない（S3-001・S3-003）。部品が中で作る blob:・data: はそのまま。見つからなければ 1 画素の空の画像
+  const EMPTY_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+  manager.setURLModifier(u => { if (/^(blob|data):/i.test(u)) return u; let n = String(u).replace(/[?#].*$/, '').replace(/^.*[\\/]/, ''); try { n = decodeURIComponent(n); } catch (e) { /* そのまま */ } const p = n && partOf(n); if (p) return urls[n] || (urls[n] = URL.createObjectURL(p)); return EMPTY_IMG; });
   let root;
   try {
     if (ext === 'fbx') {
@@ -1155,7 +1174,7 @@ function removeFile(f, refresh = true) {
   if (refresh) afterRemove();
 }
 function afterRemove() {
-  $('empty').hidden = S.files.length + S.trajs.length > 0 || !!LV.src;
+  $('empty').hidden = S.files.length + S.trajs.length > 0;
   // 色の付け方が残りのファイルで使えなくなったら、黙って高さの色分けに戻す（閉じたことに対して色の知らせは出さない）
   const mode = $('colorMode').value;
   if ((mode === 'rgb' && !S.files.some(x => x.hasRgb)) || (mode === 'field' && !S.files.some(x => Object.keys(x.stats).length))) {
@@ -1191,7 +1210,7 @@ function removeTraj(t, refresh = true) {
   world.remove(t.group); t.group.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
   S.trajs = S.trajs.filter(x => x !== t);
   if (!S.files.length && !S.trajs.length) S.offset = null; // 何も残らなければシフトも消す（R6-001）
-  if (refresh) { renderFileList(); updateTrajMove(); $('empty').hidden = S.files.length + S.trajs.length > 0 || !!LV.src; requestRender(); }
+  if (refresh) { renderFileList(); updateTrajMove(); $('empty').hidden = S.files.length + S.trajs.length > 0; requestRender(); }
 }
 // ボタンを押した行が消えたあと、キーボードの位置を見失わないように次の場所へフォーカスを移す（R3-007・R8-008）
 function focusAfterList() {
@@ -1527,7 +1546,7 @@ let popName = null;
 let popStack = [];
 const popTabs = new Map();
 const POP_STEP = 30;   // 下のカードの見出しをのぞかせる高さ
-const POP_TITLES = { live: 'ライブ', open: 'ファイル', view: '表示', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離', info: '座標' };
+const POP_TITLES = { open: 'ファイル', view: '表示', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離', info: '座標' };
 let lastBelowCount = 0;
 let lastTop = null;
 function renderPop() {
@@ -1668,7 +1687,7 @@ function trajAtScreen(clientX, clientY, tol) {
   return best;
 }
 async function pickAt(clientX, clientY, quiet = false) {
-  const vis = S.files.filter(f => f.visible && !liveHides(f));
+  const vis = S.files.filter(f => f.visible);
   const tr = quiet ? null : trajAtScreen(clientX, clientY, Math.max(5, shared.uSize.value * 1.5));
   if (!vis.length) {
     // 軌跡だけのときは黙って戻らない（R17-005）
@@ -2429,337 +2448,6 @@ window.addEventListener('keydown', e => {
   else if (k === 'm') setTool('measure');
 });
 
-
-// ------------------------------------------------------------------ ライブ（LiDAR の生データをそのまま表示）
-//   アプリ版: preload が出す window.pcdLive から、LiDAR の直接受信・ほかのパソコンの配信を受け取る
-//   このページ版: デモ（前回の廊下の地図から作るにせの LiDAR）だけ
-//   直近の「重ねる時間」ぶんの点を輪のように使い回す入れ物にためて描く（古い点は消える）
-const LIVE_MAX = 1500000;
-const LV = {
-  pos: new Float32Array(LIVE_MAX * 3), col: new Uint8Array(LIVE_MAX * 4), refl: new Uint8Array(LIVE_MAX),
-  head: 0, total: 0, batches: [], persist: 1.0, color: 'refl', paused: false, src: null, rateN: 0, rate: 0, zLo: -1, zHi: 3, framed: false,
-};
-const liveGeom = new THREE.BufferGeometry();
-const livePosAttr = new THREE.BufferAttribute(LV.pos, 3).setUsage(THREE.DynamicDrawUsage);
-const liveColAttr = new THREE.BufferAttribute(LV.col, 4, true).setUsage(THREE.DynamicDrawUsage);
-liveGeom.setAttribute('position', livePosAttr);
-liveGeom.setAttribute('lcol', liveColAttr);
-liveGeom.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6);
-const liveMat = new THREE.ShaderMaterial({
-  uniforms: { uSize: shared.uSize, uPixelRatio: shared.uPixelRatio },
-  vertexShader: `attribute vec4 lcol; uniform float uSize, uPixelRatio; varying vec3 vC;
-    void main() { if (lcol.a < 0.5) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; return; }
-      vC = lcol.rgb; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_PointSize = uSize * uPixelRatio; }`,
-  fragmentShader: `varying vec3 vC; void main() { gl_FragColor = vec4(vC, 1.0); }`,
-});
-const livePoints = new THREE.Points(liveGeom, liveMat);
-livePoints.frustumCulled = false; livePoints.visible = false;
-scene.add(livePoints);
-const LIVE_LUT = (() => { const t = new Uint8Array(256 * 3); for (let i = 0; i < 256; i++) { const c = CMAPS.turbo(i / 255); for (let k = 0; k < 3; k++) t[3 * i + k] = Math.round(255 * Math.min(1, Math.max(0, c[k]))); } return t; })();
-function liveColor(i) {
-  const o = 4 * i;
-  let t;
-  if (LV.color === 'single') { LV.col[o] = 126; LV.col[o + 1] = 166; LV.col[o + 2] = 255; LV.col[o + 3] = 255; return; }
-  if (LV.color === 'refl') t = Math.min(1, LV.refl[i] / 150);
-  else t = Math.min(1, Math.max(0, (LV.pos[3 * i + 2] - LV.zLo) / ((LV.zHi - LV.zLo) || 1)));
-  const k = 3 * Math.round(t * 255);
-  LV.col[o] = LIVE_LUT[k]; LV.col[o + 1] = LIVE_LUT[k + 1]; LV.col[o + 2] = LIVE_LUT[k + 2]; LV.col[o + 3] = 255;
-}
-function liveMark(start, n) { // GPU に送り直す範囲
-  if (start + n <= LIVE_MAX) { livePosAttr.addUpdateRange(start * 3, n * 3); liveColAttr.addUpdateRange(start * 4, n * 4); }
-  else { const a = LIVE_MAX - start; liveMark(start, a); liveMark(0, n - a); return; }
-  livePosAttr.needsUpdate = true; liveColAttr.needsUpdate = true;
-}
-function liveIngest(b) {
-  if (!LV.src || LV.paused) return;
-  let n = Math.min(b.n, LIVE_MAX);
-  // 入りきらない古い点は上書きで消える
-  while (LV.batches.length && LV.total + n > LIVE_MAX) LV.total -= LV.batches.shift().n;
-  const start = LV.head;
-  let zs = [];
-  for (let j = 0; j < n; j++) {
-    const i = (start + j) % LIVE_MAX;
-    LV.pos[3 * i] = b.xyz[3 * j]; LV.pos[3 * i + 1] = b.xyz[3 * j + 1]; LV.pos[3 * i + 2] = b.xyz[3 * j + 2];
-    LV.refl[i] = b.refl[j];
-    if ((j & 31) === 0) zs.push(b.xyz[3 * j + 2]);
-    liveColor(i);
-  }
-  // 高さの色の範囲を、届いた点に少しずつ合わせる
-  if (zs.length > 20) { zs.sort((a, c) => a - c); const lo = zs[Math.floor(zs.length * 0.03)], hi = zs[Math.floor(zs.length * 0.97)]; LV.zLo += (lo - LV.zLo) * 0.1; LV.zHi += (hi - LV.zHi) * 0.1; }
-  LV.head = (start + n) % LIVE_MAX;
-  LV.batches.push({ start, n, t: performance.now() });
-  LV.total += n; LV.rateN += n;
-  liveMark(start, n);
-  if (!LV.framed && !S.files.length) frameLive();
-  requestRender();
-}
-function liveExpire(now) {
-  if (LV.paused || !LV.batches.length) return;
-  let changed = false;
-  while (LV.batches.length && now - LV.batches[0].t > LV.persist * 1000) {
-    const b = LV.batches.shift();
-    for (let j = 0; j < b.n; j++) LV.col[4 * ((b.start + j) % LIVE_MAX) + 3] = 0;
-    if (b.start + b.n <= LIVE_MAX) liveColAttr.addUpdateRange(b.start * 4, b.n * 4);
-    else { liveColAttr.addUpdateRange(b.start * 4, (LIVE_MAX - b.start) * 4); liveColAttr.addUpdateRange(0, (b.n - (LIVE_MAX - b.start)) * 4); }
-    LV.total -= b.n; changed = true;
-  }
-  if (changed) { liveColAttr.needsUpdate = true; requestRender(); }
-}
-function liveClear() {
-  LV.col.fill(0); LV.batches = []; LV.total = 0; LV.head = 0;
-  liveColAttr.clearUpdateRanges(); liveColAttr.needsUpdate = true; livePosAttr.clearUpdateRanges();
-  requestRender();
-}
-function liveRecolor() {
-  for (const b of LV.batches) for (let j = 0; j < b.n; j++) liveColor((b.start + j) % LIVE_MAX);
-  liveColAttr.clearUpdateRanges(); liveColAttr.needsUpdate = true; requestRender();
-}
-function frameLive() {
-  // 点群を開いていなければ、センサー（原点）を斜め上から見る
-  LV.framed = true;
-  controls.target.set(0, 0, 0);
-  cam.position.set(-16, -16, 14);
-  cam.up.set(0, 0, 1);
-  controls.update(); requestRender();
-}
-setInterval(() => { LV.rate = LV.rateN; LV.rateN = 0; if (LV.src) updateLiveNow(); }, 1000);
-
-const liveApi = window.pcdLive || null;
-let liveState = null, liveOpened = false;
-const stripIpc = m => String(m).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
-function liveListItem(name, sub, btnAttr, warn = '', disabled = false) {
-  return `<li><span class="lname">${escapeHtml(name)}</span><span class="lsub">${escapeHtml(sub)}</span><button type="button" ${btnAttr}${disabled ? ' disabled' : ''}>表示</button>${warn ? `<span class="lwarn">${escapeHtml(warn)}</span>` : ''}</li>`;
-}
-function renderLiveLists() {
-  const st = liveState;
-  $('liveNotApp').hidden = !!liveApi;
-  if (!liveApi) {
-    $('liveDevices').innerHTML = '<li class="none">アプリ版で使えます</li>';
-    $('livePeers').innerHTML = '<li class="none">アプリ版で使えます</li>';
-    return;
-  }
-  if (!st) return;
-  $('liveErr').hidden = !st.errors.length; $('liveErr').textContent = st.errors.join(' / ');
-  const busy = !!LV.busy;
-  $('liveDevices').innerHTML = st.devices.length ? st.devices.map(d => liveListItem(d.model, `SN ${d.sn} ・ ${d.ip}`, `data-lsn="${escapeHtml(d.sn)}"`,
-    d.hostIp ? '' : `この PC に ${d.ip.split('.').slice(0, 3).join('.')}.x の IP がありません。有線 LAN の IP を ${d.ip.split('.').slice(0, 3).join('.')}.50 などにしてください`, !d.hostIp || busy)).join('')
-    : '<li class="none">見つかりません（LAN ケーブルと LiDAR の電源を確かめてください。買ったままの MID-360 は 192.168.1.1xx なので、有線 LAN の IP を 192.168.1.50 などにすると見つかります）</li>';
-  $('livePeers').innerHTML = st.peers.length ? st.peers.map(p => liveListItem(`${p.name} の ${p.model}`, `${p.address}${p.auth ? ' ・ 合言葉つき' : ''}`, `data-lpeer="${escapeHtml(p.key)}"`, '', busy)).join('')
-    : '<li class="none">配信しているパソコンはありません</li>';
-  $('btnLiveDemo').disabled = busy;
-  document.querySelector('.livesec').classList.toggle('busy', busy);
-}
-// ライブで地図・軌跡を隠しているか（隠している点は座標・距離で選ばない）
-function liveHides(f) { return !!(LV.hidden && f && LV.hidden.includes(f.points)); }
-// つないでいる間（返事待ち）は、ほかの「表示」を押せなくする
-function liveSetBusy(on, msg) { LV.busy = on; renderLiveLists(); if (on && msg) status(msg); }
-function updateLiveNow() {
-  const on = !!LV.src;
-  $('liveNow').hidden = !on; $('livePick').hidden = on;
-  if (!on) return;
-  $('liveSrc').textContent = LV.src.label;
-  $('liveRate').textContent = LV.paused ? '一時停止中' : `${fmtN(LV.rate)} 点/秒`;
-  $('liveDot').className = 'ldot' + (LV.paused ? ' paused' : LV.rate ? '' : ' idle');
-  $('btnLivePause').textContent = LV.paused ? '再開' : '一時停止';
-  const sharable = LV.src.kind === 'lidar';
-  $('liveShareBox').hidden = !sharable;
-  if (sharable && liveState) {
-    if (!shareBusy) $('liveShare').checked = liveState.sharing;
-    $('liveShareClients').textContent = `${liveState.shareClients} 台`;
-    $('liveShareClientsRow').hidden = !liveState.sharing;
-    $('liveShareCodeRow').hidden = !liveState.sharing; $('liveShareCode').textContent = liveState.shareCode || '';
-  }
-  // 消えない警告（設定の返事がない・点が届かない・ほかの PC から切り替えた）
-  const st = LV.src.kind === 'lidar' ? liveState : null;
-  const warns = st ? [st.warn, st.lidarHint, st.source && st.source.tookFrom ? `${st.source.tookFrom} に送っていた点群をこのパソコンに切り替えています。「止める」で元に戻します` : null].filter(Boolean) : [];
-  $('liveWarn').hidden = !warns.length; $('liveWarn').textContent = warns.join(' ');
-  // 右上の点数: ライブの間は隠したファイルの点数ではなく、ライブの点数を出す
-  $('statPoints').textContent = `ライブ ${LV.paused ? '一時停止中' : `${fmtN(LV.rate)} 点/秒`}（いま ${fmtN(LV.total)} 点）`;
-}
-async function liveOpen() {
-  renderLiveLists();
-  if (!liveApi) return;
-  // 開き直したとき: 放したポートを開き直して一覧を出す
-  if (liveOpened) { liveApi.open().then(st => { liveState = st; renderLiveLists(); }).catch(() => {}); return; }
-  liveOpened = true;
-  liveApi.onState(st => {
-    liveState = st; renderLiveLists();
-    if (LV.src && st.mode === null && LV.src.kind !== 'demo') {
-      const pe = st.peerError;
-      liveStopped(pe ? pe.msg : '配信が終わりました');
-      if (pe) { if (pe.msg) status(pe.msg, true); if (pe.needCode) askPeerCode(pe.key); }
-    } else updateLiveNow();
-  });
-  liveApi.onPoints(b => liveIngest(b));
-  liveApi.onLog(t => status(t, /できません|戻せません|返事がありません/.test(t)));
-  try { liveState = await liveApi.open(); renderLiveLists(); } catch (e) { status('ライブを始められません: ' + stripIpc(e.message), true); }
-  // ライブのカードが開いている間・表示している間だけ、数秒ごとに open を呼ぶ（呼ばれなくなると主プロセスがポートを放す）
-  setInterval(async () => {
-    const b = document.querySelector('[data-open="live"]');
-    if (!LV.src && !LV.busy && !(b && b.classList.contains('open'))) return;
-    try { liveState = await liveApi.open(); renderLiveLists(); } catch (e) { /* 次の回に */ }
-  }, 4000);
-}
-function liveStarted(src) {
-  LV.src = src; LV.paused = false; LV.framed = false; liveClear();
-  livePoints.visible = true; $('empty').hidden = true;
-  // ライブの点は LiDAR から見た座標なので、開いている地図や軌跡とは重ならない。ライブの間は隠す
-  if (!LV.hidden) { LV.hidden = [...S.files.filter(f => f.points.visible).map(f => f.points), ...S.trajs.filter(t => t.group.visible).map(t => t.group)]; for (const o of LV.hidden) o.visible = false; }
-  updateLiveNow();
-  // 設定の返事がないなどの警告は、「表示しています」で上書きせずに赤で出す（カードの中にも残る）
-  const w = src.kind === 'lidar' && liveState && liveState.warn;
-  if (w) status(`${src.label}: ${w}`, true); else status(`${src.label} を表示しています`);
-}
-function liveStopped(msg) {
-  LV.src = null; demo.stop(); liveClear(); livePoints.visible = false;
-  if (LV.hidden) { for (const o of LV.hidden) o.visible = true; LV.hidden = null; }
-  $('empty').hidden = S.files.length > 0;
-  updateLiveNow();
-  updateStatus(); // 右上の点数をファイルの点数に戻す
-  if (msg) status(msg);
-}
-let takeSn = null;
-async function startLidar(sn, takeover = false) {
-  if (LV.busy) return;
-  $('liveTakeBox').hidden = true; takeSn = null;
-  try {
-    demo.stop();
-    liveSetBusy(true, 'LiDAR につないでいます…');
-    const st = await liveApi.startLidar(takeover ? { sn, takeover: true } : sn);
-    liveSetBusy(false);
-    liveState = st; liveStarted({ kind: 'lidar', label: `${st.source.model}（${st.source.ip}）` });
-  } catch (err) {
-    liveSetBusy(false);
-    const m = stripIpc(err.message), t = /^TAKEOVER:(.+)$/.exec(m);
-    if (/CANCELLED/.test(m)) return; // あとから押したほうを使う
-    if (t) { // ほかの PC（ロボットなど）に送っている LiDAR: 確かめてから切り替える
-      takeSn = sn;
-      $('liveTakeMsg').textContent = `この LiDAR は ${t[1]} に点群を送っています（ロボットの livox_ros_driver2 などが使っているかもしれません）。${t[1]} に送っている点群をこのパソコンに切り替えます。止めると元に戻します。`;
-      $('liveTakeBox').hidden = false;
-      status(`この LiDAR は ${t[1]} に送っています。切り替えるか選んでください`);
-      return;
-    }
-    status('LiDAR につなげません: ' + m, true);
-  }
-}
-$('liveDevices').addEventListener('click', e => {
-  const b = e.target.closest('button[data-lsn]'); if (!b || b.disabled) return;
-  startLidar(b.dataset.lsn);
-});
-$('btnLiveTake').addEventListener('click', () => { if (takeSn) startLidar(takeSn, true); });
-$('btnLiveTakeCancel').addEventListener('click', () => { $('liveTakeBox').hidden = true; takeSn = null; status('切り替えをやめました'); });
-// 配信を見る。合言葉が要るのに分からないときは、合言葉を入れる欄を出す
-let codeKey = null;
-function askPeerCode(key) { codeKey = key; $('liveCodeBox').hidden = false; $('liveCode').value = ''; $('liveCode').focus(); }
-async function startPeer(key, code) {
-  if (LV.busy) return;
-  try {
-    demo.stop(); $('liveTakeBox').hidden = true; takeSn = null;
-    liveSetBusy(true, '配信につないでいます…');
-    const st = await liveApi.startPeer(key, code);
-    liveSetBusy(false);
-    liveState = st; $('liveCodeBox').hidden = true; codeKey = null;
-    liveStarted({ kind: 'peer', label: `${st.source.name} の ${st.source.model}` });
-  } catch (err) {
-    liveSetBusy(false);
-    const m = stripIpc(err.message);
-    if (/CANCELLED/.test(m)) return;
-    if (/NEED_CODE/.test(m)) { askPeerCode(key); status('配信している画面に出ている 4 桁の合言葉を入れてください'); }
-    else status('配信につなげません: ' + m, true);
-  }
-}
-$('livePeers').addEventListener('click', e => {
-  const b = e.target.closest('button[data-lpeer]'); if (!b || b.disabled) return;
-  startPeer(b.dataset.lpeer);
-});
-$('btnLiveCode').addEventListener('click', () => {
-  const c = $('liveCode').value.trim();
-  if (!/^\d{4}$/.test(c)) { status('合言葉は 4 桁の数字です', true); return; }
-  if (codeKey) startPeer(codeKey, c);
-});
-$('liveCode').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnLiveCode').click(); });
-$('btnLiveCodeCancel').addEventListener('click', () => { $('liveCodeBox').hidden = true; codeKey = null; });
-$('btnLiveStop').addEventListener('click', async () => {
-  const restoring = LV.src && LV.src.kind === 'lidar' && liveState && liveState.source && liveState.source.tookFrom;
-  if (liveApi && LV.src && LV.src.kind !== 'demo') {
-    $('btnLiveStop').disabled = true; if (restoring) status(`点群の送り先を ${restoring} に戻しています…`);
-    try { liveState = await liveApi.stop(); } catch (e) { /* 止まっていればよい */ }
-    $('btnLiveStop').disabled = false;
-  }
-  shareBusy = false;
-  liveStopped(restoring ? `ライブを止めました（点群の送り先を ${restoring} に戻しました）` : 'ライブを止めました');
-});
-$('btnLivePause').addEventListener('click', () => { LV.paused = !LV.paused; if (!LV.paused) { const now = performance.now(); for (const b of LV.batches) b.t = now; } updateLiveNow(); });
-$('livePersist').addEventListener('input', e => { LV.persist = +e.target.value / 10; $('livePersistVal').textContent = `${LV.persist.toFixed(1)} 秒`; });
-document.querySelectorAll('[data-lcolor]').forEach(b => b.addEventListener('click', () => {
-  LV.color = b.dataset.lcolor;
-  document.querySelectorAll('[data-lcolor]').forEach(x => x.setAttribute('aria-checked', String(x === b)));
-  liveRecolor();
-}));
-let shareBusy = false;
-$('liveShare').addEventListener('change', async e => {
-  shareBusy = true;
-  try {
-    liveState = await liveApi.share(e.target.checked, +$('liveShareStep').value);
-    e.target.checked = !!liveState.sharing; // 途中で「止める」が来たときなど、主プロセスの状態に合わせる
-    if (LV.src) { updateLiveNow(); status(liveState.sharing ? '同じネットワークに配信しています' : '配信を止めました'); }
-  } catch (err) { e.target.checked = false; status('配信できません: ' + stripIpc(err.message), true); }
-  finally { shareBusy = false; }
-});
-$('liveShareStep').addEventListener('change', async () => { if ($('liveShare').checked) liveState = await liveApi.share(true, +$('liveShareStep').value); });
-// 今の点群を、ふつうのファイル（PCD）として開く（断面・距離などで調べられる）
-$('btnLiveSnap').addEventListener('click', () => {
-  const idx = [];
-  for (const b of LV.batches) for (let j = 0; j < b.n; j++) idx.push((b.start + j) % LIVE_MAX);
-  if (!idx.length) { status('まだ点が届いていません'); return; }
-  const body = new Float32Array(idx.length * 4);
-  idx.forEach((i, k) => { body[4 * k] = LV.pos[3 * i]; body[4 * k + 1] = LV.pos[3 * i + 1]; body[4 * k + 2] = LV.pos[3 * i + 2]; body[4 * k + 3] = LV.refl[i]; });
-  const n = idx.length, d = new Date(), p2 = x => String(x).padStart(2, '0');
-  const head = `# .PCD v0.7\nVERSION 0.7\nFIELDS x y z intensity\nSIZE 4 4 4 4\nTYPE F F F F\nCOUNT 1 1 1 1\nWIDTH ${n}\nHEIGHT 1\nVIEWPOINT 0 0 0 1 0 0 0\nPOINTS ${n}\nDATA binary\n`;
-  const name = `live_${d.getFullYear()}${p2(d.getMonth() + 1)}${p2(d.getDate())}_${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}.pcd`;
-  enqueue([new File([head, body], name)], 'cloud');
-});
-
-// ---- デモ: 前回の廊下の地図から、軌跡に沿って動くセンサーで見える点を作る（毎秒 20 万点）
-const demo = {
-  timer: null,
-  start() {
-    const f = S.files[0];
-    if (!f) { status('デモには点群（サンプルの廊下の地図など）を開いておく必要があります'); return false; }
-    const t = S.trajs[0];
-    const P = f.sample, N = P.length / 3, M = world.matrix;
-    // 地図の点を、ふだん画面に出している座標（水平補正後）に直して使う
-    const W = new Float32Array(Math.min(N, 400000) * 3), v = new THREE.Vector3();
-    for (let i = 0; i < W.length / 3; i++) { v.set(P[3 * i], P[3 * i + 1], P[3 * i + 2]).applyMatrix4(M); W[3 * i] = v.x; W[3 * i + 1] = v.y; W[3 * i + 2] = v.z; }
-    const path = t ? Array.from({ length: t.count }, (_, i) => v.set(t.P[3 * i], t.P[3 * i + 1], t.P[3 * i + 2]).applyMatrix4(M).toArray()) : [[0, 0, 0]];
-    let k = 0, pool = null, at = null;
-    this.timer = setInterval(() => {
-      const c = path[k = (k + 1) % path.length].slice(); c[2] += 0.4;
-      if (!at || Math.hypot(c[0] - at[0], c[1] - at[1]) > 2) {
-        const idx = []; for (let i = 0; i < W.length / 3; i++) { const dx = W[3 * i] - c[0], dy = W[3 * i + 1] - c[1]; if (dx * dx + dy * dy < 900) idx.push(i); }
-        pool = Uint32Array.from(idx); at = c;
-      }
-      if (!pool.length) return;
-      const n = 10000, xyz = new Float32Array(n * 3), rf = new Uint8Array(n);
-      for (let j = 0; j < n; j++) { const i = pool[(Math.random() * pool.length) | 0]; xyz[3 * j] = W[3 * i] - c[0]; xyz[3 * j + 1] = W[3 * i + 1] - c[1]; xyz[3 * j + 2] = W[3 * i + 2] - c[2]; rf[j] = 20 + ((i * 2654435761) >>> 24) % 120; }
-      liveIngest({ n, xyz, refl: rf });
-    }, 50);
-    return true;
-  },
-  stop() { clearInterval(this.timer); this.timer = null; },
-};
-$('btnLiveDemo').addEventListener('click', async () => {
-  if (LV.busy) return;
-  if (liveApi && LV.src && LV.src.kind !== 'demo') { try { liveState = await liveApi.stop(); } catch (e) { /* なし */ } }
-  demo.stop();
-  liveStarted({ kind: 'demo', label: 'デモ（にせの LiDAR）' });
-  if (!demo.start()) liveStopped();
-});
-// ライブ（LiDAR の直接表示・配信）は 0.4.1 では使わない（実装は残し、ボタンだけ隠す）。戻すときは true に
-const LIVE_ENABLED = false;
-document.querySelector('[data-open="live"]').hidden = !LIVE_ENABLED;
-if (LIVE_ENABLED) document.querySelector('[data-open="live"]').addEventListener('click', liveOpen);
-
 // ------------------------------------------------------------------ 描画
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
@@ -2796,7 +2484,6 @@ function syncRanges() {
 document.addEventListener('input', e => { if (e.target.matches && e.target.matches('input[type=range]')) syncRanges(); });
 (function loop(now) {
   syncRanges();
-  liveExpire(performance.now());
   stepAnim(now || performance.now());
   if (dirty) { dirty = false; updatePivot(); renderer.render(scene, cam); updateLabels(); placePickInfo(); }
   requestAnimationFrame(loop);

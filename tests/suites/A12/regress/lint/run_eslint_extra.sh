@@ -4,7 +4,7 @@ T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/tes
 mkdir -p $W/regress/out
 cd /home/claude/pcd-viewer
 $W/tools/node_modules/.bin/eslint --no-config-lookup -c $W/regress/lint/eslint.extra.config.mjs --format json \
-  main.js preload.js live.js build.mjs tools/fake_mid360.js 'src/**/*.js' > $W/regress/out/eslint_extra.json 2>&1
+  main.js preload.js build.mjs 'src/**/*.js' > $W/regress/out/eslint_extra.json 2>&1
 echo "eslint（追加規則）の終了コード: $?"; 
 # 1 行 1 件の読みやすい形にする
 node -e '

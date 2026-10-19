@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# heavy_all.sh の結果（lifecycle.jsonl・live/・sbx/）を、期待との比べ表にする
+# heavy_all.sh の結果（lifecycle.jsonl・sbx/）を、期待との比べ表にする
 #   python3 -I summarize_runtime.py <heavy の出力フォルダ>  → <フォルダ>/runtime_summary.md
 import sys, os, json, re
 
@@ -47,29 +47,6 @@ if os.path.exists(lf):
             key = f'{sc}.{k}'
             want, title, ref = WANT.get(key, (True, key, ''))
             row(key, title, v == want, json.dumps(v), ref)
-
-for role in ('host', 'viewer'):
-    p = os.path.join(d, 'live', role + '.jsonl')
-    if not os.path.exists(p): continue
-    for line in open(p, encoding='utf-8'):
-        try: j = json.loads(line)
-        except Exception: continue
-        if 'fatal' in j: row(role, 'ライブの場面', False, j['fatal'][:200]); continue
-        if role == 'host':
-            row('live.h1_device', 'にせ MID-360 が見つかる', j.get('h1_device', {}).get('ok'), j.get('h1_device', {}).get('dev', ''))
-            row('live.h1_points', '点が届く', j.get('h1_points', {}).get('ok'), j.get('h1_points', {}).get('rate', ''))
-            row('live.h1_clients', '見る側がつながる（配信の相手 1 台以上）', j.get('h1_clients', {}).get('ok'), j.get('h1_clients', {}).get('clients', ''))
-            c = j.get('h1_close', {})
-            row('live.h1_close', '配信中に閉じると 5 秒以内に終わり、ポートが空く', bool(c.get('exitMs') is not None and c['exitMs'] < 5000 and not c.get('mainAlive') and not c.get('portsAfter')), json.dumps(c, ensure_ascii=False)[:200])
-            row('live.h2_relaunch', '閉じた直後に起動し直してライブを開ける', j.get('h2_relaunch', {}).get('ok'), json.dumps(j.get('h2_relaunch'), ensure_ascii=False)[:200])
-            b = j.get('h3_bothOpen', {})
-            row('live.h3_conflict', '設定の置き場所が違う 2 つを同時にライブで開くと、2 つ目にポートが使用中と出る', bool((b.get('c2') or {}).get('err')), json.dumps({'c2err': (b.get('c2') or {}).get('err'), 'ports': b.get('ports')}, ensure_ascii=False)[:300], 'A10-017')
-        else:
-            row('live.v_peer', '見る側に配信が出る', j.get('v_peer', {}).get('ok'), j.get('v_peer', {}).get('peers', ''))
-            row('live.v_points', '見る側に点が届く', j.get('v_points', {}).get('ok'), j.get('v_points', {}).get('rate', ''))
-            e = j.get('v_end', {})
-            row('live.v_end', '配信元が閉じたら見る側が「配信が終わりました」で止まる', e.get('ok'), json.dumps(e, ensure_ascii=False)[:200])
-            row('live.v_peerGone', '配信元が一覧から消える', j.get('v_peerGone', {}).get('ok'), j.get('v_peerGone', {}).get('peers', ''))
 
 sb = os.path.join(d, 'sbx', 'sbx_result.txt')
 if os.path.exists(sb):

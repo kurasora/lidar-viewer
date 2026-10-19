@@ -3,7 +3,7 @@
 #   python3 wording_audit.py [アプリのフォルダ] > out/wording_audit.txt
 import re, sys, os, json, collections
 APP = sys.argv[1] if len(sys.argv) > 1 else '/home/claude/pcd-viewer'
-FILES = ['src/index.html', 'src/app.js', 'live.js', 'src/worker.js', 'src/trajectory.js', 'src/pcd.js'] + ['src/io/' + f for f in ('index.js', 'util.js', 'sink.js')] + ['src/io/formats/' + f for f in sorted(os.listdir(APP + '/src/io/formats'))]
+FILES = ['src/index.html', 'src/app.js', 'src/worker.js', 'src/trajectory.js', 'src/pcd.js'] + ['src/io/' + f for f in ('index.js', 'util.js', 'sink.js')] + ['src/io/formats/' + f for f in sorted(os.listdir(APP + '/src/io/formats'))]
 JA = re.compile(r'[぀-ヿ一-鿿]')
 strings = []  # (file, line, text)
 for f in FILES:

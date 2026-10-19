@@ -2,7 +2,7 @@
 import { evalDecls, readSrc, topLevel } from './extract.mjs';
 export function appFns() {
   const code = readSrc('src/app.js');
-  const names = ['fmtN', 'fmt', 'CMAPS', 'CAT_COLORS', 'FILE_COLORS', 'eqData', 'updateEq', 'cssGradient', 'percentile', 'findCeiling', 'extOf', 'IMAGE_EXT', 'isTrajectory', 'companionsOf', 'OPEN_TYPES', 'TRAJ_TYPES', 'pickerTypes', 'escapeHtml', 'stripIpc', 'LIVE_LUT'];
+  const names = ['fmtN', 'fmt', 'CMAPS', 'CAT_COLORS', 'FILE_COLORS', 'eqData', 'updateEq', 'cssGradient', 'percentile', 'findCeiling', 'extOf', 'IMAGE_EXT', 'isTrajectory', 'companionsOf', 'OPEN_TYPES', 'TRAJ_TYPES', 'pickerTypes', 'escapeHtml'];
   // eqTex は updateEq が needsUpdate を立てるだけの入れ物
   return evalDecls(code, names, {}, 'const eqTex = { needsUpdate: false };');
 }

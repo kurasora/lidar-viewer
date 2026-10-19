@@ -64,4 +64,3 @@ for (const [nm, txt] of [
   show('pickerTypes: 拡張子の形（. で始まり 16 文字以内・英数字）', t.flatMap(x => x.accept['application/octet-stream']).filter(e => !/^\.[a-z0-9]{1,15}$/.test(e)));
 }
 show('escapeHtml', A.escapeHtml(`<img src=x onerror="a('b')">&`));
-show('stripIpc', A.stripIpc("Error invoking remote method 'live:open': Error: ポートが使われています"));

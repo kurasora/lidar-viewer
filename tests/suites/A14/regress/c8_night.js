@@ -1,9 +1,9 @@
-// C8 深夜ツアー: 開く→閉じるを繰り返す、ライブのデモを長く流す。メモリ（画面のプロセス・GPU・主プロセス）の推移を見る
-//   CYCLES=30 DEMO_SEC=300 node c8_night.js
+// C8 深夜ツアー: 開く→閉じるを繰り返す。メモリ（画面のプロセス・GPU・主プロセス）の推移を見る
+//   CYCLES=30 node c8_night.js
 'use strict';
 const L = require('./lib.js');
 const fs = require('fs');
-const CYCLES = +(process.env.CYCLES || 30), DEMO_SEC = +(process.env.DEMO_SEC || 300);
+const CYCLES = +(process.env.CYCLES || 30);
 function rssTree(root) { // root とその子孫の RSS（MB）を種類ごとに
   const all = fs.readdirSync('/proc').filter(x => /^\d+$/.test(x)).map(Number);
   const info = {};
@@ -19,7 +19,7 @@ function rssTree(root) { // root とその子孫の RSS（MB）を種類ごと�
   const { app, p, errors } = await L.launch('c8');
   const mainPid = await app.evaluate(() => process.pid);
   const heap = () => p.evaluate(() => performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null);
-  const R = { cycles: [], demo: [] };
+  const R = { cycles: [] };
   R.start = { ...rssTree(mainPid), heap: await heap() };
   for (let i = 0; i < CYCLES; i++) {
     await L.open(p, [L.F + '/liosam/GlobalMap.pcd']);
@@ -35,17 +35,6 @@ function rssTree(root) { // root とその子孫の RSS（MB）を種類ごと�
     await L.sleep(500);
     R.cycles.push({ big: i + 1, ...rssTree(mainPid), heap: await heap() });
   }
-  // ライブのデモを長く
-  await L.open(p, ['/home/claude/pcd-viewer/sample/map.laz']);
-  await L.open(p, ['/home/claude/pcd-viewer/sample/trajectory.txt'], { input: '#trajInput' });
-  await p.click('[data-open="live"]'); await L.sleep(500);
-  await p.click('#btnLiveDemo');
-  const t0 = Date.now();
-  while (Date.now() - t0 < DEMO_SEC * 1000) {
-    await L.sleep(30000);
-    R.demo.push({ s: Math.round((Date.now() - t0) / 1000), ...rssTree(mainPid), heap: await heap(), rate: await p.evaluate(() => document.getElementById('liveRate').textContent) });
-  }
-  await L.shot(p, 'c8_demo_end');
   R.errors = errors.filter(e => !/GPU stall|swiftshader|Security Warning|GroupMarkerNotSet/i.test(e)).slice(0, 10);
   L.log(R);
   await app.close();

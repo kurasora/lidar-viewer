@@ -3,20 +3,11 @@
 //   ・各状態で、見えている要素すべての真ん中（と 3D 画面の格子点）に X のポインタを動かして止め（DWELL ミリ秒）、
 //     新しく出た override_redirect の窓（吹き出し）がないかを X の窓一覧で調べる
 //   ・DOM の中の title 属性・SVG の <title>・見えている <input type=file> も全状態で数える
-//   環境変数: DWELL（既定 1100）、LIVE=0 でライブの状態を省く、QUICK=1 で要素を間引く
+//   環境変数: DWELL（既定 1100）、QUICK=1 で要素を間引く
 const L = require('./lib.js');
 const S = require('./states.js');
-const { spawn } = require('child_process');
 const DWELL = +(process.env.DWELL || 1100);
 (async () => {
-  const kids = [];
-  const bg = (ns, args) => { const c = spawn('ip', ['netns', 'exec', ns, ...args], { stdio: 'ignore' }); kids.push(c); return c; };
-  const live = process.env.LIVE !== '0';
-  if (live) {
-    bg('a062', ['node', '/home/claude/pcd-viewer/tools/fake_mid360.js', '10.106.0.2', '47MDL9T0020193']);
-    bg('a063', ['node', '/home/claude/pcd-viewer/tools/fake_mid360.js', '192.168.1.160', '47MDL9T0099999']);
-    bg('a063', ['node', L.W + '/regress/fake_peer.js', '10.106.0.255', 'robot-pc', '9']);
-  }
   const { app, p, errors, close } = await L.electron({ w: 1280, h: 800, name: 'tooltip' });
   const cb = await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].getContentBounds());
   L.fs.mkdirSync(L.SHOTS + '/tooltip', { recursive: true });
@@ -85,12 +76,6 @@ const DWELL = +(process.env.DWELL || 1100);
 
   await hoverState('T00_empty');
   await L.openCard(p, 'open'); await hoverState('T01_open_empty');
-  if (live) {
-    await L.closeCards(p); await L.openCard(p, 'live');
-    await p.waitForFunction(() => document.querySelectorAll('#liveDevices li:not(.none)').length >= 2 && document.querySelectorAll('#livePeers li:not(.none)').length >= 1, null, { timeout: 15000 }).catch(() => {});
-    await L.shot(p, 'tooltip/T02_live_lists');
-    await hoverState('T02_live_lists');
-  }
   await L.closeCards(p);
   await L.openFiles(p, [L.FILES + '/corr_int_label.pcd']);
   await p.setInputFiles('#trajInput', '/home/claude/pcd-viewer/sample/trajectory.txt'); await L.waitIdle(p);
@@ -114,14 +99,6 @@ const DWELL = +(process.env.DWELL || 1100);
   if (q) { await p.mouse.click(q.x, q.y); await p.waitForTimeout(500); }
   await hoverState('T08_pick', { all: false });
   await p.click('[data-tool="info"]');
-  if (live) {
-    await L.openCard(p, 'live');
-    await p.click('#liveDevices button:not([disabled])').catch(() => {});
-    await p.waitForTimeout(3000);
-    await L.shot(p, 'tooltip/T09_live_now');
-    await hoverState('T09_live_now');
-    await p.click('#btnLiveStop').catch(() => {});
-  }
   // ネイティブの部品: 色の選択（input type=color）と select の一覧を開いた状態でも調べる
   await L.closeCards(p); await L.openCard(p, 'open');
   const col = await p.evaluate(() => { const r = document.querySelector('#fileList input[type=color]').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
@@ -162,5 +139,4 @@ const DWELL = +(process.env.DWELL || 1100);
   L.fs.writeFileSync(L.W + '/out/tooltip_app.json', JSON.stringify(report, null, 1));
   console.log('TOTAL tooltips:', report.states.reduce((a, s) => a + s.tooltips.length, 0), 'popup tooltips:', report.popups.map(x => x.tooltips.length), 'dom:', JSON.stringify(report.domTitles.filter(d => d.titleAttr.length || d.svgTitle.length || d.xlinkTitle || d.visibleFile || d.abbr)));
   await close();
-  for (const k of kids) try { k.kill(); } catch (e) { /* 終わっている */ }
 })().catch(e => { console.log('FATAL', e.stack); process.exit(1); });

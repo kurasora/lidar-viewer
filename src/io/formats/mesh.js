@@ -481,6 +481,7 @@ async function readGLTF_(src, sink, ctx) {
       buffers.push(new Uint8Array(await f.arrayBuffer()));
     }
   }
+  const bufBytes = buffers.reduce((s, b) => s + (b ? b.length : 0), 0);
   const view = (bvi, extra = 0) => {
     const bv = json.bufferViews?.[bvi];
     const buf = bv && buffers[bv.buffer];
@@ -496,8 +497,14 @@ async function readGLTF_(src, sink, ctx) {
     const [TA, sz, mx] = CT[a.componentType], nc = NC[a.type];
     const vw = a.bufferView !== undefined ? view(a.bufferView, a.byteOffset || 0) : null;
     const st = vw ? vw.stride || sz * nc : 0;
-    // 数がデータの大きさに合わないときは止める（巨大な確保を防ぐ）。データのない（sparse だけの）ものは 5,000 万まで
-    checkCount(a.count, vw ? Math.floor(Math.max(0, vw.dv.byteLength) / st) + 1 : 5e7, 'glTF の要素');
+    // 数が実際のデータの大きさに合わないときは止める（巨大な確保を防ぐ。S2-001・S2-003）。
+    // データのある accessor: 1 要素の大きさ（要素数 nc × 型の大きさ と 間隔 の大きい方）で、実際のバッファに入る数まで。
+    // データのない（0 か sparse だけの）accessor: 頂点の上限 3,000 万個まで、かつ 要素数×nc がバッファ全体のバイト数（最低 160 万）まで
+    if (vw) checkCount(a.count, Math.floor(Math.max(0, vw.dv.byteLength) / Math.max(st, sz * nc)) + 1, 'glTF の要素');
+    else {
+      checkCount(a.count, 3e7, 'glTF の要素');
+      if (a.count * nc > Math.max(1.6e6, bufBytes)) throw new Error(`glTF の要素の数（${a.count.toLocaleString()}）がファイルの大きさに合いません。ファイルが壊れている可能性があります`);
+    }
     const out = new Float64Array(a.count * nc);
     if (vw) {
       const get = reader(vw.dv, TA, sz);
@@ -580,15 +587,18 @@ async function readGLTF_(src, sink, ctx) {
       Vs.push(V); Cs.push(C); Ts.push(T); TXs.push(TX); UVs.push(UV); nv += cnt;
     }
   };
-  // EXT_mesh_gpu_instancing: TRANSLATION / ROTATION / SCALE の数だけ複製する
+  // EXT_mesh_gpu_instancing: TRANSLATION / ROTATION / SCALE の数だけ複製する。
+  // 複製数は 100 万まで（S2-001）。行列は先に全部作らず 1 つずつ作る（頂点の上限 3,000 万は emit が見る）
+  const MAX_INST = 1e6;
   const instances = n => {
     const ex = n.extensions?.EXT_mesh_gpu_instancing?.attributes;
     if (!ex) return null;
     const tr = ex.TRANSLATION !== undefined ? acc(ex.TRANSLATION).v : null, ro = ex.ROTATION !== undefined ? acc(ex.ROTATION).v : null, sc = ex.SCALE !== undefined ? acc(ex.SCALE).v : null;
     const cnt = Math.max(tr ? tr.length / 3 : 0, ro ? ro.length / 4 : 0, sc ? sc.length / 3 : 0);
-    const out = [];
-    for (let i = 0; i < cnt; i++) out.push(trs({ translation: tr ? [tr[3 * i], tr[3 * i + 1], tr[3 * i + 2]] : undefined, rotation: ro ? [ro[4 * i], ro[4 * i + 1], ro[4 * i + 2], ro[4 * i + 3]] : undefined, scale: sc ? [sc[3 * i], sc[3 * i + 1], sc[3 * i + 2]] : undefined }));
-    return out;
+    if (cnt > MAX_INST) throw new Error(`glTF の複製（EXT_mesh_gpu_instancing）が多すぎます（${Math.floor(cnt).toLocaleString()} 個。${MAX_INST.toLocaleString()} 個まで）`);
+    return (function* () {
+      for (let i = 0; i < cnt; i++) yield trs({ translation: tr ? [tr[3 * i], tr[3 * i + 1], tr[3 * i + 2]] : undefined, rotation: ro ? [ro[4 * i], ro[4 * i + 1], ro[4 * i + 2], ro[4 * i + 3]] : undefined, scale: sc ? [sc[3 * i], sc[3 * i + 1], sc[3 * i + 2]] : undefined });
+    })();
   };
   const visit = async (ni, parent, depth) => {
     const n = json.nodes?.[ni];

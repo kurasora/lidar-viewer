@@ -5,7 +5,6 @@
 //     USERDATA … 設定の置き場所（既定 自分の作業フォルダの下。必ず自分専用にする）
 //   メモ:
 //     ・ページの中の動作確認用の窓口: window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, cam, controlsTarget(), updateLive }
-//     ・ライブ（LiDAR・配信）のカードを開くと UDP 56000/56101/56201/56301/47800 を使う → 自分の netns の中でだけ開くこと
 //     ・本番の窓を作る main.js をそのまま使う（F12 で開発者ツールが開く作り）
 const pw = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const path = require('path');
@@ -27,7 +26,7 @@ const path = require('path');
     await p.waitForFunction(n => window.__pcd.S.files.length >= n || document.getElementById('statMsg').style.color, files.length, { timeout: 120000 }).catch(() => {});
     await p.waitForTimeout(1000);
   }
-  const st = await p.evaluate(() => ({ title: document.title, files: window.__pcd.S.files.map(f => ({ name: f.name, n: f.n })), msg: document.getElementById('statMsg').textContent, hasLiveApi: !!window.pcdLive }));
+  const st = await p.evaluate(() => ({ title: document.title, files: window.__pcd.S.files.map(f => ({ name: f.name, n: f.n })), msg: document.getElementById('statMsg').textContent, hasAppApi: !!window.pcdApp }));
   console.log(JSON.stringify({ ...st, errors }));
   // 主プロセス側の様子も見られる: await app.evaluate(({ app }) => app.getPath('userData'))
   await p.screenshot({ path: 'electron_app.png' });

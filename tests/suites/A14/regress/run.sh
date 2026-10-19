@@ -1,10 +1,9 @@
 #!/bin/bash
 # A14（探索的試験）の再現スクリプトをまとめて流す
-#   使い方: bash run.sh [all|gen|node|app|live] [--appdir <アプリのフォルダ>]
+#   使い方: bash run.sh [all|gen|node|app] [--appdir <アプリのフォルダ>]
 #     gen  … 試験用ファイルを作る（約 700 MB。files/ がなければ自動で作る）
 #     node … Node だけで動くもの（読み込み部品・軌跡・判定）: light で流す
-#     app  … アプリ版（Electron）で画面ごと動かすもの: heavy で流す（ライブのカードを開くものは netns の中）
-#     live … ライブ（にせ MID-360 と ROS2 ドライバの代わり、netns a14 / a14e）
+#     app  … アプリ版（Electron）で画面ごと動かすもの: heavy で流す
 #   結果: out/run_<日時>/ にログ、最後に「判定」の一覧（OK = 直っている／NG = まだ再現する）
 #   環境変数 APPDIR を付けると、写し（mkcopy して直したもの）を試せる: APPDIR=$W/proj bash run.sh app
 set -u
@@ -50,26 +49,14 @@ app_tests() {
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 244 node $R/c5b_coords.js > $O/c5b_coords.log 2>&1
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 248 node $R/c10_sights.js > $O/c10_sights.log 2>&1
   MEM=4000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 249 node $R/c7_wrong.js > $O/c7_wrong.log 2>&1
-  # ライブのカード（デモ）を開くものは netns の中で
-  $T/bin/mknet a14g 114 1 > /dev/null 2>&1
-  MEM=3500 TIMEOUT=900 $T/bin/heavy ip netns exec a14g1 xvfb-run -a -n 242 node $R/c6_bad.js > $O/c6_bad.log 2>&1
-  CYCLES=${CYCLES:-30} DEMO_SEC=${DEMO_SEC:-300} MEM=3000 TIMEOUT=1500 $T/bin/heavy ip netns exec a14g1 xvfb-run -a -n 245 node $R/c8_night.js > $O/c8_night.log 2>&1
-  $T/bin/rmnet a14g 1
-}
-
-live_tests() {
-  MEM=1200 TIMEOUT=300 $T/bin/light bash $R/live/c9_coexist.sh > $O/live_coexist.log 2>&1
-  grep -A11 '== 1:' $O/live_coexist.log | grep -q '"pktsPerSec":0' && judge NG A14-003 || judge OK A14-003
-  MEM=3500 TIMEOUT=900 $T/bin/heavy bash $R/live/c9_live_el.sh > $O/live_el.log 2>&1
-  MEM=600 TIMEOUT=120 $T/bin/light bash $R/live/c9_badpeer.sh > $O/live_badpeer.log 2>&1
-  $T/bin/rmnet a14e 3
+  MEM=3500 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 242 node $R/c6_bad.js > $O/c6_bad.log 2>&1
+  CYCLES=${CYCLES:-30} MEM=3000 TIMEOUT=1500 $T/bin/heavy xvfb-run -a -n 245 node $R/c8_night.js > $O/c8_night.log 2>&1
 }
 
 case $what in
   gen) gen ;;
   node) node_tests ;;
   app) app_tests ;;
-  live) live_tests ;;
-  all) gen; node_tests; app_tests; live_tests ;;
+  all) gen; node_tests; app_tests ;;
 esac
 echo "== 判定"; cat $O/judge.txt 2>/dev/null

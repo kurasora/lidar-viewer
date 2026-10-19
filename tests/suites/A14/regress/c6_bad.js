@@ -3,7 +3,6 @@
 //   b) 色を「反射」にしたまま、最後のファイルを閉じる／項目のないファイルだけ残す → 的外れな知らせが出ないか
 //   c) Ctrl+C（文字のコピー）・Ctrl+S・Ctrl+A などで、ショートカットが動いてしまわないか
 //   d) 水平補正の計算中にファイルを閉じる → あとで開いた別のファイルに古い補正が残らないか
-//   e) ライブのデモ中にファイルの表示を切る → デモを止めたら、切ったファイルが出てきてしまわないか
 //   f) 画像を保存（ダウンロードが始まるか）
 'use strict';
 const L = require('./lib.js');
@@ -16,7 +15,7 @@ const fs = require('fs');
   const pops = () => p.evaluate(() => ({ top: document.getElementById('pop').dataset.name, topY: document.getElementById('pop').style.top, tabs: [...document.querySelectorAll('#popStack .ptab')].map(t => t.dataset.name + '@' + t.style.top) }));
   // ---- a) カード
   await L.open(p, [L.F + '/liosam/GlobalMap.pcd']);
-  for (const n of ['open', 'view', 'color', 'display', 'section', 'level', 'live']) await p.click(`[data-open="${n}"]`);
+  for (const n of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${n}"]`);
   await p.click('[data-tool="measure"]');
   R.a_allOpen = await pops();
   await p.click('[data-open="color"]'); await L.sleep(300);       // 途中（色）を閉じる
@@ -86,17 +85,6 @@ const fs = require('fs');
   await L.shot(p, 'c6_d_stale_level');
   await p.evaluate(() => { const c = document.getElementById('autoLevel'); c.checked = true; });
   L.log({ part: 'd', ...R });
-  // ---- e) デモ中に表示を切る
-  await front('live'); await L.sleep(500);
-  await p.click('#btnLiveDemo'); await L.sleep(1500);
-  await front('open');
-  await p.click('#fileList [data-act=vis]'); await L.sleep(300); // 表示を切る（デモ中）
-  R.e_duringDemo = await p.evaluate(() => window.__pcd.S.files.map(f => ({ visible: f.visible, drawn: f.points.visible })));
-  await p.click('#popStack .ptab[data-name="live"]'); await L.sleep(300); // ライブのカードを手前に
-  await p.click('#btnLiveStop'); await L.sleep(500);
-  R.e_afterStop = await p.evaluate(() => window.__pcd.S.files.map(f => ({ visible: f.visible, drawn: f.points.visible, checkbox: document.querySelector(`#fileList li[data-id="${f.id}"] [data-act=vis]`).checked })));
-  await L.shot(p, 'c6_e_after_demo');
-  L.log({ part: 'e', ...R });
   // ---- f) 画像を保存
   await app.evaluate(({ session }) => { global.__dl = []; session.defaultSession.on('will-download', (e, item) => { global.__dl.push(item.getFilename()); item.setSavePath('/dev/null'); }); });
   await front('view'); await p.click('#btnShot'); await L.sleep(1500);

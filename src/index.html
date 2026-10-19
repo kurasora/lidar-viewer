@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' blob: 'wasm-unsafe-eval' 'unsafe-eval'; worker-src blob:; connect-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; frame-src 'none'; form-action 'none'; media-src 'none'; manifest-src 'none'">
 <meta name="color-scheme" content="dark">
 <title>LiDAR Viewer</title>
 <style>html, body { background: #0e1317 }</style>
@@ -35,39 +35,6 @@
       </details>
       <input id="fileInput" type="file" accept=".pcd,.las,.laz,.e57,.ply,.ptx,.txt,.asc,.neu,.xyz,.pts,.csv,.bin,.sbf,.data,.pn,.pv,.soi,.out,.wrl,.obj,.mtl,.stl,.off,.vtk,.drc,.fbx,.dae,.gltf,.glb,.dxf,.shp,.shx,.dbf,.prj,.ifc,.stp,.step,.pdms,.pdmsmac,.mac,.poly,.sx,.psz,.icm,.pov,.tif,.tiff,.bmp,.gif,.ico,.jpg,.jpeg,.png,.pbm,.pgm,.ppm,.svg,.webp,.tga,.xbm,.xpm,.cur,.icns,.wbmp,.svgz,.rdb,.rdbx,.rsp,.rds,.vxls,.ptch,.mtch,.dp" multiple hidden>
       <input id="trajInput" type="file" accept=".mcap,.txt,.csv,.tum" multiple hidden>
-    </section>
-    <section data-pop="live" class="popsec livesec">
-      <p class="hint" id="liveNotApp" hidden>LiDAR からの受信と、ほかのパソコンとの配信はアプリ版で使えます。このページでは、動きを試せるデモだけ使えます。</p>
-      <p class="hint warn" id="liveErr" hidden></p>
-      <div id="livePick">
-        <h3 class="lh">このパソコンにつながった LiDAR</h3>
-        <ul class="livelist" id="liveDevices"></ul>
-        <div class="livecode" id="liveTakeBox" hidden>
-          <p class="ltake" id="liveTakeMsg"></p>
-          <div class="btnrow"><button type="button" id="btnLiveTake" class="primary">切り替える</button><button type="button" id="btnLiveTakeCancel" class="small">やめる</button></div>
-        </div>
-        <h3 class="lh">ほかのパソコンの配信</h3>
-        <ul class="livelist" id="livePeers"></ul>
-        <div class="livecode" id="liveCodeBox" hidden>
-          <label for="liveCode">合言葉（配信している画面に出ている 4 桁の数字）</label>
-          <div class="btnrow"><input type="text" id="liveCode" inputmode="numeric" maxlength="4" autocomplete="off"><button type="button" id="btnLiveCode">つなぐ</button><button type="button" id="btnLiveCodeCancel" class="small">やめる</button></div>
-        </div>
-        <h3 class="lh">試す</h3>
-        <ul class="livelist"><li><span class="lname">デモ</span><span class="lsub">にせの LiDAR（前回の廊下の地図から作る）</span><button type="button" id="btnLiveDemo">表示</button></li></ul>
-      </div>
-      <div id="liveNow" hidden>
-        <div class="livestat"><span class="ldot" id="liveDot"></span><span class="lsrc" id="liveSrc"></span><span class="lrate" id="liveRate"></span></div>
-        <p class="hint warn" id="liveWarn" hidden></p>
-        <div class="row"><label for="livePersist">重ねる時間</label><input type="range" id="livePersist" min="1" max="50" step="1" value="10"><span class="val" id="livePersistVal">1.0 秒</span></div>
-        <div class="row"><label>色</label><div class="segc" role="group" aria-label="ライブの色"><button type="button" role="radio" data-lcolor="refl" aria-checked="true">反射</button><button type="button" role="radio" data-lcolor="height" aria-checked="false">高さ</button><button type="button" role="radio" data-lcolor="single" aria-checked="false">1 色</button></div><span></span></div>
-        <div class="btnrow"><button type="button" id="btnLivePause">一時停止</button><button type="button" id="btnLiveSnap">今の点群を開く</button><button type="button" id="btnLiveStop">止める</button></div>
-        <div id="liveShareBox">
-          <label class="check"><input type="checkbox" id="liveShare"> 同じネットワークのパソコンに配信する</label>
-          <div class="row"><label for="liveShareStep">配信の間引き</label><select id="liveShareStep"><option value="1">そのまま</option><option value="2">1/2</option><option value="4">1/4</option></select></div>
-          <p class="hint" id="liveShareClientsRow" hidden>見ている人: <b id="liveShareClients">0 台</b></p>
-          <p class="hint" id="liveShareCodeRow" hidden>見る側で入れる合言葉: <b id="liveShareCode" class="code"></b></p>
-        </div>
-      </div>
     </section>
     <section data-pop="view" class="popsec">
       <div class="ctabs" role="tablist" aria-label="視点の設定">
@@ -309,7 +276,6 @@
     <div class="labels" id="labels"></div>
     <nav class="dock" id="dock" aria-label="道具">
       <button type="button" data-open="open"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 7h7l2 2h9v10H3z"/></svg>ファイル</button>
-      <button type="button" data-open="live" id="dockLive"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8 8a5.5 5.5 0 0 0 0 8M16 8a5.5 5.5 0 0 1 0 8M5 5a9.5 9.5 0 0 0 0 14M19 5a9.5 9.5 0 0 1 0 14"/></svg>ライブ</button>
       <span class="sep"></span>
       <button type="button" data-tool="info" aria-pressed="false"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg>座標</button>
       <button type="button" data-tool="measure" aria-pressed="false"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>距離</button>

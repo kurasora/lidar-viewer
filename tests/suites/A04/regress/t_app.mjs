@@ -58,9 +58,8 @@ test('OK-AP07', 'pickerTypes: 「すべて」を先頭に、形式ごとに 1 �
   eq([t.length, t[0].description, new Set(all).size === all.length], [A.OPEN_TYPES.length + 1, 'すべて', true]);
   for (const x of t) for (const e of x.accept['application/octet-stream']) ok(/^\.[a-z0-9]{1,15}$/.test(e), e);
 });
-test('OK-AP08', 'escapeHtml・stripIpc', () => {
+test('OK-AP08', 'escapeHtml', () => {
   eq(A.escapeHtml(`<a href="x">'&`), '&lt;a href=&quot;x&quot;&gt;&#39;&amp;');
-  eq(A.stripIpc("Error invoking remote method 'live:open': Error: ポートが使われています"), 'ポートが使われています');
 });
 test('A04-044', 'companionsOf: glTF と一緒に選んだ、glTF が参照しない CloudCompare の .bin・写真は単独で開く（付属扱いにしない）', () => {
   const f = A.companionsOf([{ name: 'model.gltf' }, { name: 'cloud.bin' }, { name: 'photo.jpg' }]);

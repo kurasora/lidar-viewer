@@ -3,7 +3,6 @@
 //   2 ドラッグ＆ドロップ（ハンドラーの動き。DataTransfer に File を入れて drop を送る）
 //   3 画像の保存（隠れているか／押せたら何が起きるか）、alert/confirm/prompt/print、ポップアップ、全画面
 //   4 localStorage: 例外を投げる（sandbox に allow-same-origin がない・getter が例外）、変な値、保存と復元
-//   5 ライブのカード（window.pcdLive なし）とデモ、今の点群を開く、止める
 //   6 title（吹き出し）が残っていないか、キー操作
 //   出力: out/iframe.json
 'use strict';
@@ -61,28 +60,6 @@ const SAMPLE = '/home/claude/pcd-viewer/sample/formats';
     R.shot.forced = await frame.evaluate(async () => { document.getElementById('btnShot').click(); await new Promise(r => setTimeout(r, 1500)); return { msg: document.getElementById('statMsg').textContent, aclick: window.__a13.log.filter(x => x.k === 'a.click') }; });
     await page.waitForTimeout(1500);
     R.shot.downloads = logs.downloads.slice(d0); R.shot.console = logs.console.slice(c0).filter(s => /download|sandbox/i.test(s));
-    // 5) ライブのカード
-    await frame.click('[data-open="live"]');
-    await page.waitForTimeout(500);
-    R.live = await frame.evaluate(() => ({ notApp: !document.getElementById('liveNotApp').hidden, notAppText: document.getElementById('liveNotApp').textContent, devices: document.getElementById('liveDevices').textContent, peers: document.getElementById('livePeers').textContent, demoBtn: !!document.getElementById('btnLiveDemo'), pcdLive: typeof window.pcdLive }));
-    await page.screenshot({ path: `${L.OUT}/iframe_live_card.png` });
-    await frame.click('#btnLiveDemo');
-    await page.waitForTimeout(3500);
-    R.live.demo = await frame.evaluate(() => ({ now: !document.getElementById('liveNow').hidden, src: document.getElementById('liveSrc').textContent, rate: document.getElementById('liveRate').textContent, shareBox: !document.getElementById('liveShareBox').hidden, msg: document.getElementById('statMsg').textContent, hiddenFiles: window.__pcd.S.files.filter(f => !f.points.visible).length, files: window.__pcd.S.files.length }));
-    await page.screenshot({ path: `${L.OUT}/iframe_live_demo.png` });
-    let seq = await frame.evaluate(() => window.__pcd.S.seq);
-    await frame.click('#btnLiveSnap');
-    await L.waitIdle(frame, { seq0: seq });
-    R.live.snap = await L.fileStats(frame).then(s => ({ last: s.files.at(-1) && { name: s.files.at(-1).name, n: s.files.at(-1).n, fields: s.files.at(-1).fields }, msg: s.msg }));
-    R.live.snapVisibleDuringLive = await frame.evaluate(() => { const S = window.__pcd.S; const f = S.files.at(-1); return { snapVisible: f.points.visible, liveOn: !document.getElementById('liveNow').hidden }; });
-    await frame.click('#btnLiveStop');
-    await page.waitForTimeout(800);
-    R.live.stop = await frame.evaluate(() => ({ now: !document.getElementById('liveNow').hidden, pick: !document.getElementById('livePick').hidden, msg: document.getElementById('statMsg').textContent, visibleFiles: window.__pcd.S.files.filter(f => f.points.visible).length, files: window.__pcd.S.files.length }));
-    // 全部閉じてからデモ
-    await L.closeAll(frame);
-    await frame.click('#btnLiveDemo');
-    await page.waitForTimeout(800);
-    R.live.demoNoFile = await frame.evaluate(() => ({ now: !document.getElementById('liveNow').hidden, msg: document.getElementById('statMsg').textContent }));
     // 6) title・キー操作・呼び出しの記録
     R.titles = await frame.evaluate(() => document.querySelectorAll('[title]').length);
     R.calls = await frame.evaluate(() => window.__a13.log.filter(x => x.k !== 'csp'));

@@ -1,6 +1,6 @@
-// e01 Electron 固有（自分の netns の中で動かす: ライブのカードを開くため）
+// e01 Electron 固有（自分の netns の中で動かす）
 //   窓の名前・最小の大きさ・F12・ページが置き換わらない（落としたとき・location・window.open）・再読み込みのキー・
-//   ファイルを開く（ドロップ／種類の画面）・画像の保存・ライブのカード・二重起動・窓を閉じたら終わる
+//   ファイルを開く（ドロップ／種類の画面）・画像の保存・二重起動・窓を閉じたら終わる
 //   heavy ip netns exec a051 xvfb-run -a -n 150 -s "-screen 0 1600x1000x24" node e01_electron.js
 const L = require('./lib.js');
 const D = L.DATA;
@@ -12,16 +12,16 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   const R = L.recorder('e01_electron');
   const UD = L.W + '/ud-e01';
   const { app, p, errors, close } = await L.electron({ userdata: UD });
-  const info = await p.evaluate(() => ({ title: document.title, live: !!window.pcdLive, sofp: typeof window.showOpenFilePicker, top: window.top === window, url: location.href }));
+  const info = await p.evaluate(() => ({ title: document.title, app: !!window.pcdApp, sofp: typeof window.showOpenFilePicker, top: window.top === window, url: location.href }));
   const win = await app.evaluate(({ BrowserWindow }) => { const w = BrowserWindow.getAllWindows()[0]; return { title: w.getTitle(), min: w.getMinimumSize(), size: w.getSize(), menu: w.isMenuBarVisible() }; });
-  R.ok('EL1 窓の名前は LiDAR Viewer・ライブの窓口あり', info.title === 'LiDAR Viewer' && win.title === 'LiDAR Viewer' && info.live, { info, win });
+  R.ok('EL1 窓の名前は LiDAR Viewer・アプリ版の窓口（pcdApp）あり', info.title === 'LiDAR Viewer' && win.title === 'LiDAR Viewer' && info.app, { info, win });
   // ---- 最小の大きさ ----
   const sz = await app.evaluate(({ BrowserWindow }) => { const w = BrowserWindow.getAllWindows()[0]; w.setSize(500, 400); return { size: w.getSize(), content: w.getContentSize(), min: w.getMinimumSize() }; });
   await p.waitForTimeout(800);
   const vp = await p.evaluate(() => [innerWidth, innerHeight]);
   R.ok('EL2 最小の大きさ 900×600（それより小さくできない）', sz.min[0] === 900 && sz.min[1] === 600 && sz.size[0] >= 900 && sz.size[1] >= 600, { ...sz, viewport: vp });
   await L.open(p, [`${D}/c_xyzi.pcd`]);
-  for (const n of ['open', 'live', 'view', 'color', 'display', 'section', 'level']) if (n !== 'live') await p.click(`[data-open="${n}"]`);
+  for (const n of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${n}"]`);
   await p.click('[data-tool="measure"]'); await p.waitForTimeout(900);
   const geo = await p.evaluate(() => { const r = e => { const b = e.getBoundingClientRect(); return [Math.round(b.left), Math.round(b.top), Math.round(b.right), Math.round(b.bottom)]; }; return { pop: r(document.getElementById('pop')), dock: r(document.getElementById('dock')), hud: r(document.querySelector('.hud')), vw: innerWidth, vh: innerHeight }; });
   R.ok('EL3 最小の窓でカードを 7 枚重ねても、カード・ドックが窓の中に収まる', geo.pop[3] <= geo.dock[1] && geo.dock[2] <= geo.vw && geo.dock[0] >= 0, geo);
@@ -83,15 +83,6 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   const dl = await app.evaluate(() => global.__dl);
   const sm = (await L.msg(p)).text;
   R.ok('EL12 「画像を保存」でダウンロードが始まる（名前 pcd_…png）', dl.length === 1 && /^pcd_\d{8}_\d{6}\.png$/.test(dl[0].name), { dl, msg: sm });
-  // ---- ライブのカード（netns の中） ----
-  await p.click('[data-open="live"]'); await p.waitForTimeout(3000);
-  const lv = await p.evaluate(() => ({ notApp: !document.getElementById('liveNotApp').hidden, err: document.getElementById('liveErr').hidden ? '' : document.getElementById('liveErr').textContent, dev: document.getElementById('liveDevices').textContent, peers: document.getElementById('livePeers').textContent }));
-  R.ok('EL13 アプリ版のライブのカード: LiDAR・配信の一覧（見つからない旨）', !lv.notApp && /見つかりません/.test(lv.dev) && /配信しているパソコンはありません/.test(lv.peers), lv);
-  await p.click('#btnLiveDemo'); await p.waitForTimeout(1500);
-  const demo = await p.evaluate(() => ({ now: !document.getElementById('liveNow').hidden, rate: document.getElementById('liveRate').textContent, share: !document.getElementById('liveShareBox').hidden }));
-  await p.click('#btnLiveStop'); await p.waitForTimeout(400);
-  R.ok('EL14 アプリ版でもデモが動き、配信の欄はデモでは出ない', demo.now && !demo.share, demo);
-  await p.click('#popClose');
   // ---- 二重起動 ----
   const t0 = Date.now();
   const second = await new Promise(res => {
@@ -107,7 +98,7 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   R.ok('ページのエラーなし', !errors.length, errors.slice(0, 5));
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].close());
   const ex = await exited;
-  R.ok('EL16 窓を閉じるとアプリが終わる（ライブのカードを開いたあとでも、15 秒以内・終了コード 0）', !ex.timeout && ex.code === 0, ex);
+  R.ok('EL16 窓を閉じるとアプリが終わる（15 秒以内・終了コード 0）', !ex.timeout && ex.code === 0, ex);
   if (ex.timeout) await close().catch(() => {});
   process.exitCode = R.done() ? 1 : 0;
 })().catch(e => { console.log('FATAL', e); process.exit(2); });

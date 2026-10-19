@@ -35,12 +35,11 @@ async function run(p, pre, opts = {}) {
   };
   await snap('00_empty');
   await L.openCard(p, 'open'); await snap('01_open_empty');
-  await L.openCard(p, 'live'); await snap('01b_live_empty');
   await L.closeCards(p);
   await L.openFiles(p, [L.FILES + '/corr_int_label.pcd']);
   await p.setInputFiles('#trajInput', '/home/claude/pcd-viewer/sample/trajectory.txt'); await L.waitIdle(p);
   await snap('02_loaded');
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level', 'live']) { await L.closeCards(p); await L.openCard(p, c); await snap('03_' + c); }
+  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) { await L.closeCards(p); await L.openCard(p, c); await snap('03_' + c); }
   // 開くカードで情報の欄も開く
   await L.closeCards(p); await L.openCard(p, 'open');
   await p.evaluate(() => { document.getElementById('infoBox').open = true; });
@@ -51,7 +50,7 @@ async function run(p, pre, opts = {}) {
   await p.click('#tabSec');
   // 8 枚重ね
   await L.closeCards(p);
-  for (const c of ['live', 'open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${c}"]`);
+  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${c}"]`);
   await p.click('[data-tool="measure"]');
   await snap('05_stack8');
   // 距離を 2 本

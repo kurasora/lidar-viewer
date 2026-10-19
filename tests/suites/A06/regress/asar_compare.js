@@ -6,7 +6,7 @@ for (const rel of ['linux-unpacked/resources/app.asar', 'linux-arm64-unpacked/re
   const a = '/home/claude/pcd-viewer/release/' + rel;
   if (!fs.existsSync(a)) { console.log(rel, 'なし'); continue; }
   const res = {};
-  for (const f of ['dist/index.html', 'dist/styles.css', 'dist/app.js', 'main.js', 'preload.js', 'live.js', 'package.json']) {
+  for (const f of ['dist/index.html', 'dist/styles.css', 'dist/app.js', 'main.js', 'preload.js', 'package.json']) {
     try { const b = asar.extractFile(a, f); const cur = fs.readFileSync('/home/claude/pcd-viewer/' + f); res[f] = h(b) === h(cur) ? '同じ' : `違う（asar ${b.length} / 今 ${cur.length}）`; } catch (e) { res[f] = '読めない ' + e.message; }
   }
   console.log(rel, JSON.stringify(res));

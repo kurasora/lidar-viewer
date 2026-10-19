@@ -4,7 +4,7 @@
 
 ## 1 本で流す
 ```
-bash $W/regress/run.sh all        # 試験用ファイルを作り（なければ）、Node → アプリ版 → ライブ の順に流す
+bash $W/regress/run.sh all        # 試験用ファイルを作り（なければ）、Node → アプリ版 の順に流す
 bash $W/regress/run.sh node       # Node だけ（数十秒）
 APPDIR=$W/proj bash $W/regress/run.sh app   # 直した写し（$T/bin/mkcopy $W/proj して node build.mjs）を試す
 ```
@@ -28,26 +28,17 @@ APPDIR=$W/proj bash $W/regress/run.sh app   # 直した写し（$T/bin/mkcopy $W
 |---|---|---|
 | `level_check.js <フォルダ>…` | heavy（Chromium、X 不要） | A14-001 床の検出 |
 | `c1_money.js` / `c1_pick_hidden.js` | heavy + xvfb（Electron） | A14-001・A14-002 |
-| `live/c9_coexist.sh` | light（netns a14 を作って消す） | A14-003 |
 | `c5_shift.js` | heavy + xvfb | A14-004 |
 | `field_precision.mjs <ファイル>…` | light（Node） | A14-005 |
 | `c4_is_traj.mjs` | light（Node） | A14-006 |
 | `c7_traj_parse.mjs` / `c7_wrong.js` | light / heavy | A14-007 ほか反対側のツアー |
 | `c5b_coords.js` | heavy + xvfb | A14-008 |
-| `c6_bad.js` | heavy + **netns の中**（ライブのデモを開くため） | 悪い地区ツアーの各項目 |
-| `c8_night.js` | heavy + netns | 深夜ツアー（メモリの推移） |
+| `c6_bad.js` | heavy + xvfb | 悪い地区ツアーの各項目 |
+| `c8_night.js` | heavy + xvfb | 深夜ツアー（メモリの推移） |
 | `c10_sights.js` `c12_misc.js` `c3_fields.js` `c1c_outdoor.js` | heavy | 名所・裏通り・使い勝手 |
-| `live/c9_live_el.sh` | heavy（netns a14e: にせ LiDAR・LiDAR の PC・受ける PC） | ライブ（アプリ版） |
-| `live/c9_badpeer.sh` | light（netns a14h） | 壊れた配信（担当外の確認） |
 | `lib.js` | — | Electron を動かす共通部品（launch / open / drop / waitIdle / screenOf / click / shot） |
 | `bg.sh <名前> <light|heavy|bigmem> <コマンド>` | — | 見張り付きでバックグラウンド実行し out/<名前>.log へ（heavy の順番待ちが長いとき用） |
 
 ## 次回の探索のチャーター（実機の確認のあと）
-1. **本物の MID-360 で**: 「表示」→ ROS2（livox_ros_driver2 + FAST-LIO）を動かしているロボットの PC への点群が止まるか（A14-003）。止めたあと戻るか。LiDAR の電源を入れ直したあと、点群の送り先は残るか
-2. **同じ PC で livox_ros_driver2 と同時に**: ドライバを先に起動 → ライブを開く／ライブを開いた後にドライバを起動。EADDRINUSE になるか、黙って取り合うか（SDK2 が SO_REUSEADDR を使うか）
-3. **Windows の実機**: MID-360 と直結した LAN がパブリックに分類されたとき、ファイアウォールの確認画面で既定のまま進めると見つからないか。知らせは何と出るか
-4. **mac の実機**: ローカルネットワークの許可の確認が出るか。断ったときの表示
-5. **PC の IP が LiDAR と別のネットワーク**（DHCP のまま・169.254.x.x）: 一覧に出て「192.168.1.50 などにしてください」と案内されるか、「見つかりません」になるか
-6. **本物の FAST-LIO の地図**（i-Cart mini の高さに MID-360）で、自動の水平補正の床の高さ（A14-001）と、天井を隠したまま真上からの計測（A14-002）
-7. **学内 Wi-Fi 越しの配信**（ブロードキャストが通らない環境で、受け手に出るか）
-8. **大きな bag**（/livox/lidar を含む数 GB の .mcap）を「軌跡を開く」で開いたときの時間とメモリ
+1. **本物の FAST-LIO の地図**（i-Cart mini の高さに MID-360）で、自動の水平補正の床の高さ（A14-001）と、天井を隠したまま真上からの計測（A14-002）
+2. **大きな bag**（/livox/lidar を含む数 GB の .mcap）を「軌跡を開く」で開いたときの時間とメモリ

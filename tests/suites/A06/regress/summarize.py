@@ -69,16 +69,6 @@ chk('テーマ', 'OS の明るい/暗いで見た目が同じ（いつも暗い�
 for d in ('1', '2'):
     s = load(f'scroll_slider_d{d}.json')
     chk('つまみ', f'スクロールバー・つまみが操作どおり動く（DPR {d}）', (s['afterDrag'] > 0 and s['afterWheel'] > s['afterDrag'] and s['sliderAfterDrag']['v'] != '2' and s['sliderEnd']['v'] == '12') if s else None)
-lm = load('live_msgs.json')
-if lm:
-    b = lm['disabledBtn']
-    dis = [x for x in b if x['disabled']]; en = [x for x in b if not x['disabled']]
-    chk('A06-012', '押せない「表示」が押せる見た目と違う', bool(dis and en) and (dis[0]['opacity'] != en[0]['opacity'] or dis[0]['color'] != en[0]['color'] or dis[0]['cursor'] != en[0]['cursor']))
-    sh = lm.get('shareState') or {}
-    if sh.get('clientsRect'): chk('A06-013', '「n 台」が配信の間引きと同じ行にある', abs(sh['clientsRect'][1] - sh['stepRect'][1]) < 8, f"台={sh['clientsRect']} 間引き={sh['stepRect']}")
-    chk('A06-014', 'ライブ中の右上の点数がファイルの点数でない', '5,000' not in sh.get('hud', ''), sh.get('hud'))
-    pf = ' → '.join(x[1] for x in lm.get('peerFailLog', []))
-    chk('A06-041', '配信につながらないとき「配信が終わりました」だけにならない', bool(pf) and not pf.rstrip().endswith('配信が終わりました'), pf[:200])
 mg = load('messages.json')
 if mg:
     r = {x['step']: x for x in mg['res']}

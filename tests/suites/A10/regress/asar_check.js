@@ -35,12 +35,8 @@ const big = files.filter(f => f.size > 5e6).map(f => `${f.path} ${(f.size / 1e6)
 bad(true, '5 MB を超えるファイル（参考）', big);
 bad(!('devDependencies' in pkg) && !('scripts' in pkg) && !('build' in pkg), 'asar の package.json に devDependencies / scripts / build が残っていない', Object.keys(pkg));
 bad(pkg.name === 'lidar-viewer' && pkg.productName === 'LiDAR Viewer', 'package.json の name / productName', { name: pkg.name, productName: pkg.productName, version: pkg.version, desktopName: pkg.desktopName || null });
-const need = ['main.js', 'preload.js', 'live.js', 'dist/index.html', 'dist/app.js', 'dist/styles.css', 'assets/icon.png', 'package.json'];
-bad(need.every(n => files.some(f => f.path === n)), '必要なファイルがそろっている', need.filter(n => !files.some(f => f.path === n)));
-const nmFiles = files.filter(f => f.path.startsWith('node_modules/ws/'));
-const nmJunk = nmFiles.filter(f => !/\.(js|json|mjs|cjs)$/.test(f.path) || /\/(test|bench|example|doc)s?\//.test(f.path));
-bad(true, 'ws の中の .js/.json 以外（参考）', nmJunk.map(f => f.path));
-if (expectIntegrity) bad(headerHash === expectIntegrity, 'asar の完全性の値（ヘッダーの sha256）が埋め込みの値と一致', { header: headerHash, embedded: expectIntegrity });
+const need = ['main.js', 'preload.js', 'dist/index.html', 'dist/app.js', 'dist/styles.css', 'assets/icon.png', 'package.json'];
+bad(need.every(n => files.some(f => f.path === n)), '必要なファイルがそろっている', need.filter(n => !files.some(f => f.path === n)));if (expectIntegrity) bad(headerHash === expectIntegrity, 'asar の完全性の値（ヘッダーの sha256）が埋め込みの値と一致', { header: headerHash, embedded: expectIntegrity });
 // 中のテキストに旧名が残っていないか（ファイルごとの出現数）
 const oldName = [];
 for (const f of files) {

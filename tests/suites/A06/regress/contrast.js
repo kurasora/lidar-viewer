@@ -89,14 +89,14 @@ const PAGEFN = () => {
     // 誤りの知らせ（赤）
     await L.openAs(p, L.FILES + '/scan.rdb', ['scan.rdb']);
     await collect('error', lv);
-    for (const c of ['open', 'live', 'view', 'color', 'display', 'section', 'level']) {
+    for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) {
       await L.closeCards(p); await L.openCard(p, c);
       if (c === 'open') await p.evaluate(() => { document.getElementById('infoBox').open = true; });
       const r = await collect(c, lv); if (c === 'display' && lv === 14) ui = r.ui;
     }
     await L.closeCards(p); await L.openCard(p, 'color'); await p.click('#tabColorDetail'); await collect('color_detail', lv); await p.click('#tabColorBasic');
     await L.closeCards(p);
-    for (const c of ['live', 'open', 'view']) await p.click(`[data-open="${c}"]`);
+    for (const c of ['open', 'view']) await p.click(`[data-open="${c}"]`);
     await collect('stack', lv);
     await L.closeCards(p);
   }

@@ -222,13 +222,6 @@
   "nolevel": true
  },
  {
-  "label": "live/demo_pick_hidden_map",
-  "files": [
-   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p1/room.pcd"
-  ],
-  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p14/s_livepick.js"
- },
- {
   "label": "stale/pickbox_after_level_reset",
   "files": [
    "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/utm_room_f8.pcd"

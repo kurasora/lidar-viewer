@@ -13,7 +13,7 @@ export TMPDIR=$W/tmp
 if [ -z "${SKIP_GEN:-}" ]; then
   echo "[1/4] 試験用ファイルを作る"; MEM=1500 TIMEOUT=1800 $T/bin/light bash $R/gen_all.sh || echo "gen_all に失敗"
 fi
-echo "[2/4] Node の試験（worker.js・Sink・読み込み部品・live.js）"
+echo "[2/4] Node の試験（worker.js・Sink・読み込み部品）"
 MEM=1500 TIMEOUT=1800 $T/bin/light bash $R/node_all.sh || echo "node_all に失敗"
 if [ -n "${BIG:-}" ]; then
   echo "[2b] 大きな画像（bigmem）"

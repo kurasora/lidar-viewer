@@ -23,9 +23,9 @@ echo "== Chromium の組";              TIMEOUT=2400 $T/bin/heavy bash $R/chromi
 # Electron（X が要る）
 echo "== Electron の組";              TIMEOUT=1800 $T/bin/heavy xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" bash $R/electron_batch.sh > $O/electron_batch.log 2>&1; tail -c 2000 $O/electron_batch.log
 echo "== 吹き出しの陽性対照";          $T/bin/heavy xvfb-run -a -n 160 -s "-screen 0 1280x800x24" node $R/tooltip_control.js > $O/tooltip_control.log 2>&1; grep -c override $O/tooltip_control.log
-# ライブを開く試験は自分の netns の中で
+# ほかの担当とぶつからないよう自分の netns の中で
 ip netns list | grep -q '^a061' || $T/bin/mknet a06 106 3
 echo "== 吹き出し（本物のマウス・全状態）"; TIMEOUT=2700 MEM=2000 $T/bin/heavy ip netns exec a061 xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" node $R/tooltip_app.js > $O/tooltip_app.log 2>&1; tail -3 $O/tooltip_app.log
-echo "== Electron の組 2（ライブ・開く画面）"; TIMEOUT=1200 $T/bin/heavy ip netns exec a061 xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" bash $R/electron_batch2.sh > $O/electron_batch2.log 2>&1; tail -c 1500 $O/electron_batch2.log
+echo "== Electron の組 2（開く画面）"; TIMEOUT=1200 $T/bin/heavy ip netns exec a061 xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" bash $R/electron_batch2.sh > $O/electron_batch2.log 2>&1; tail -c 1500 $O/electron_batch2.log
 $T/bin/rmnet a06 3
 echo "== まとめ"; python3 $R/summarize.py $W | tee $O/summary.txt

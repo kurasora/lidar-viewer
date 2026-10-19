@@ -2,8 +2,8 @@
 //   heavy node t01_popstack.js [歩数=220] [種=1]
 const L = require('./lib.js');
 const STEPS = +(process.argv[2] || 220), SEED = +(process.argv[3] || 1);
-const DOCK = ['open', 'live', 'view', 'color', 'display', 'section', 'level'];
-const TITLES = { live: 'ライブ', open: 'ファイル', view: '視点', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離' };
+const DOCK = ['open', 'view', 'color', 'display', 'section', 'level'];
+const TITLES = { open: 'ファイル', view: '視点', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離' };
 let s = SEED >>> 0 || 1; const rnd = () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
 const pick = a => a[Math.floor(rnd() * a.length)];
 
