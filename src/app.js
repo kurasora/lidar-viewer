@@ -387,7 +387,7 @@ const clipZ = makeDual($('clipZ'), '高さ z', ' m', updateClip, () => disp(2));
 const clipX = makeDual($('clipX'), 'x', ' m', updateClip, () => disp(0));
 const clipY = makeDual($('clipY'), 'y', ' m', updateClip, () => disp(1));
 const clipD = [clipX, clipY, clipZ];
-const colorRange = makeDual($('colorRange'), '範囲', '', () => { const [a, b] = colorRange.get(); shared.uMin.value = a; shared.uMax.value = b; refreshEq(); drawLegend(); requestRender(); }, () => valueShift(), v => fmtColorVal(v));
+const colorRange = makeDual($('colorRange'), '色の範囲', '', () => { const [a, b] = colorRange.get(); shared.uMin.value = a; shared.uMax.value = b; refreshEq(); drawLegend(); requestRender(); }, () => valueShift(), v => fmtColorVal(v));
 function colorSample() {
   if (S.colorMode === 'height') return S.zSample;
   if (S.colorMode !== 'field') return null;
@@ -868,7 +868,7 @@ function finishBatch() {
   if (fl.length) {
     const el = $('loadErrors');
     if (el) { el.hidden = false; el.innerHTML = `<b>開けなかったファイル</b><ul>${fl.map(x => `<li><span class="n">${escapeHtml(x.name)}</span>${escapeHtml(x.message)}</li>`).join('')}</ul>`; }
-    if (loadBatch.total > 1) status(`${loadBatch.total} 個のうち ${fl.length} 個を開けませんでした（${fl.slice(0, 3).map(x => x.name).join('、')}${fl.length > 3 ? ' ほか' : ''}）。理由は「開く」のカードにあります`, true);
+    if (loadBatch.total > 1) status(`${loadBatch.total} 個のうち ${fl.length} 個を開けませんでした（${fl.slice(0, 3).map(x => x.name).join('、')}${fl.length > 3 ? ' ほか' : ''}）。理由は「ファイル」のカードにあります`, true);
   }
   loadBatch.total = 0; loadBatch.failed = [];
 }
@@ -1113,7 +1113,7 @@ function onTrajInner(m, info) {
   hideProgress();
   renderFileList();
   const canCloud = info.file && /^(txt|csv)$/.test(extOf(info.name));
-  status(`軌跡 ${info.name} を開きました（${m.topic}、${fmtN(n)} 姿勢、${fmt(len, 1)} m、${fmt(dur, 1)} 秒）${m.note ? `。${m.note}` : ''}${info.auto && canCloud ? '。点群なら「開く」の一覧で「点群として開き直す」を押してください' : ''}`, false, true);
+  status(`軌跡 ${info.name} を開きました（${m.topic}、${fmtN(n)} 姿勢、${fmt(len, 1)} m、${fmt(dur, 1)} 秒）${m.note ? `。${m.note}` : ''}${info.auto && canCloud ? '。点群なら「ファイル」の一覧で「点群として開き直す」を押してください' : ''}`, false, true);
   // 点群がないときは、軌跡が見えるように視点を合わせる
   if (!S.files.length && S.trajs.length === 1) setView('iso', false);
   $('empty').hidden = true;
@@ -2033,13 +2033,15 @@ function applyLevel(auto = false, keepView = false) {
   world.updateMatrixWorld(true);
   placeOriginAxes();
   // 回した後の座標では前の切り出しの箱は同じ場所を指さないので全範囲に戻す。黙って戻さず知らせる（R11-004）
+  // 断面（水平・横断・縦断）も、回した後の座標では同じ面を指さないので、切り出しと同じく表示をやめて元に戻す
   const clipWas = clipD.some(d => !d.full()), secWas = $('secOn').checked;
+  if (secWas) { $('secOn').checked = false; syncAxisButtons(); }
   updateBounds(true);
   renderPins(); // 出ている座標も新しい基準で出し直す
   applyColor(true);
   renderMeasures();
   if (auto || !keepView) setView('iso'); else setView('keep'); // 設定（床を 0・廊下の向き）の切り替えでは視点の向きを変えない（R7-009）
-  const extra = (clipWas ? '。切り出しは全範囲に戻しました' : '') + (secWas ? '。断面の位置は新しい座標の範囲の同じ割合の所に移りました' : '');
+  const extra = (clipWas ? '。切り出しは全範囲に戻しました' : '') + (secWas ? '。断面の表示はやめました' : '');
   status((r ? '水平補正しました' : '水平補正を元に戻しました') + extra, false, auto); // 自動の補正では、開けなかった赤い知らせを消さない（R3-002）
 }
 $('btnLevelReset').addEventListener('click', () => { if (!S.levelInfo) { status('水平補正はしていません（元に戻すものがありません）'); return; } S.levelInfo = null; applyLevel(); }); // R12-009

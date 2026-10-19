@@ -18,7 +18,7 @@
     <section data-pop="open" class="popsec">
       <h3 class="sechead">開く</h3>
       <div class="bigbtns">
-        <button id="btnOpen" type="button" class="primary"><span>点群のファイル</span><span class="ext">.pcd .las .laz .e57 .ply ほか</span></button>
+        <button id="btnOpen" type="button" class="primary"><span>点群のファイル</span><span class="ext">.pcd .las .laz .e57 ほか</span></button>
         <button id="btnTraj" type="button"><span>軌跡のファイル</span><span class="ext">.mcap .txt .csv .tum</span></button>
         <button id="btnSample" type="button" hidden><span>サンプル</span><span class="ext">廊下の地図と軌跡</span></button>
       </div>
@@ -191,6 +191,7 @@
       </div>
       <div id="rangeBox">
         <div class="dual" id="colorRange"></div>
+        <p class="hint">2 つのつまみの間を、下の凡例の左端の色から右端の色まで塗り分けます。つまみより外の点は、端の色のままです。狭めると、その間の細かい違いが色で見やすくなります。</p>
         <button type="button" id="btnAutoRange" class="small">自動調整</button>
       </div>
       </div>

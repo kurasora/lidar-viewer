@@ -173,8 +173,9 @@ details > * + * { margin-top: 8px }
 .pophead .x:hover { color: var(--fg) }
 .popsec { padding: 10px 14px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px }
 .bigbtns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px }
-.bigbtns button { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 12px; text-align: left; min-width: 0 }
-.bigbtns .ext { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 0; text-align: right; white-space: normal }
+.bigbtns button { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 7px 10px; text-align: left; min-width: 0 }
+.bigbtns .ext { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 0; text-align: right; white-space: nowrap }
+.bigbtns button > span:first-child { white-space: nowrap }
 .bigbtns button > span:first-child { flex-shrink: 0 }
 .bigbtns button.primary .ext { color: var(--accent-fg); opacity: 0.75 }
 #dropHint { margin: 0 }
@@ -301,11 +302,6 @@ details > * + * { margin-top: 8px }
 .hud > span:empty { display: none }
 .empty p { background: color-mix(in srgb, var(--scene) 70%, transparent); border-radius: 6px; padding: 0 6px }
 .empty .big, .empty p { justify-self: center }
-/* カードが開いているときは、空の画面の案内・操作の案内をカードの右側の空きの中央に寄せる（カードの下に隠れない） */
-@media (min-width: 700px) {
-  .app:has(.pop:not([hidden])) .empty { padding-left: 348px }
-  .app:has(.pop:not([hidden])) .navhint { left: calc(50% + 167px); max-width: calc(100% - 362px) }
-}
 .navhint span { white-space: nowrap }
 /* 読み込みの進み具合が分からない段階（並べ替えなど）は帯を動かし続ける */
 .progress.indet .pbar b { width: 35% !important; transition: none; animation: pbarIndet 1.1s ease-in-out infinite alternate }
