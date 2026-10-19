@@ -247,8 +247,7 @@
         <button type="button" id="btnLevel">点群の傾きを補正する</button>
         <button type="button" id="btnLevelReset" class="small">元に戻す</button>
       </div>
-      <input type="checkbox" id="autoLevel" checked hidden>
-      <div class="seg"><button type="button" id="btnAutoLevel" class="on" aria-pressed="true">開始時に補正を自動適用</button></div>
+      <label class="check"><input type="checkbox" id="autoLevel" checked> 開始時に補正を自動適用</label>
       <input type="checkbox" id="alignCorr" checked hidden><!-- 廊下の向きは常に x 軸にそろえる（チェックは出さない） -->
       <input type="checkbox" id="floorZero" hidden><!-- 原点は補正の前後で変えない（床を z = 0 にしない） -->
       <input type="checkbox" id="coordFile" hidden><!-- 座標は補正後の座標で出す（チェックは出さない） -->
