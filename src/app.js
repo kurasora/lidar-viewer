@@ -868,7 +868,7 @@ function finishBatch() {
   if (fl.length) {
     const el = $('loadErrors');
     if (el) { el.hidden = false; el.innerHTML = `<b>開けなかったファイル</b><ul>${fl.map(x => `<li><span class="n">${escapeHtml(x.name)}</span>${escapeHtml(x.message)}</li>`).join('')}</ul>`; }
-    if (loadBatch.total > 1) status(`${loadBatch.total} 個のうち ${fl.length} 個を開けませんでした（${fl.slice(0, 3).map(x => x.name).join('、')}${fl.length > 3 ? ' ほか' : ''}）。理由は「ファイル」のカードにあります`, true);
+    if (loadBatch.total > 1) status(`${loadBatch.total} 個のうち ${fl.length} 個を開けませんでした（${fl.slice(0, 3).map(x => x.name).join('、')}${fl.length > 3 ? ' ほか' : ''}）`, true);
   }
   loadBatch.total = 0; loadBatch.failed = [];
 }
