@@ -1580,9 +1580,9 @@ function renderPop() {
 }
 // カードを出したら、フォーカスをカードの見出しに移す（Tab ですぐ中の部品へ進める）
 function focusPop() { if (popName) $('popTitle').focus({ preventScroll: true }); }
+// 開けるカードは常に 1 枚。別のカードを開くと、それまでのカードは閉じ、そのメニューのボタンも解除される
 function bringPop(name) {
-  popStack = popStack.filter(n => n !== name);
-  popStack.push(name);
+  popStack = [name];
   renderPop();
   focusPop();
 }
@@ -2086,6 +2086,10 @@ function toggleCeil() {
   status(S.hideCeil ? `天井（${S.levelInfo ? '水平補正後の' : ''}高さ ${fmt(S.ceilZ + disp(2))} m より上）を隠しました` : '天井を表示しています');
 }
 $('btnCeil').addEventListener('click', toggleCeil);
+// 開始時の自動補正: 天井を隠すボタンと同じく、押すたびに入・切が切り替わり、色で状態が分かる
+function syncAutoLevel() { const on = $('autoLevel').checked, b = $('btnAutoLevel'); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
+$('btnAutoLevel').addEventListener('click', () => { $('autoLevel').checked = !$('autoLevel').checked; syncAutoLevel(); });
+syncAutoLevel();
 $('btnClipReset').addEventListener('click', () => { clipD.forEach(d => d.set(-Infinity, Infinity)); updateClip(); });
 const sizeState = { px: 2, m: 4 }; // m は cm
 function applySize() {
