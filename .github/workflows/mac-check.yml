@@ -1,0 +1,46 @@
+# Mac で LiDAR Viewer が起動して地図を開けるかを、GitHub の Mac で自動で確かめる（手で実行する）
+name: mac-check
+on:
+  workflow_dispatch:
+jobs:
+  mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14   # Apple シリコン
+            arch: arm64
+          - runner: macos-13   # Intel
+            arch: x64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: 作る（署名なし。配布物と同じ設定）
+        run: |
+          node build.mjs
+          node build/gen-licenses.cjs
+          npx electron-builder --mac zip --${{ matrix.arch }} --publish never
+      - name: 起動して地図を開く
+        run: |
+          APP=$(ls -d release/mac*/"LiDAR Viewer.app" | head -1)
+          echo "APP=$APP"
+          codesign -dv "$APP" 2>&1 || true
+          export PCDV_USERDATA="$RUNNER_TEMP/ud"
+          "$APP/Contents/MacOS/LiDAR Viewer" "$PWD/sample/formats/cc_cloud.csv" > app.log 2>&1 &
+          P=$!
+          sleep 25
+          screencapture -x screen.png || true
+          if kill -0 $P 2>/dev/null; then echo "起動したまま動いています"; else echo "起動しなかった、または落ちました"; cat app.log; exit 1; fi
+          kill $P; sleep 3
+          cat app.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mac-${{ matrix.arch }}
+          path: |
+            screen.png
+            app.log
