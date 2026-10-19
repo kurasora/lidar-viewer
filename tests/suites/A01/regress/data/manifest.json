@@ -1,0 +1,8890 @@
+[
+ {
+  "id": "pcd/xyz_f4_bin",
+  "files": [
+   "pcd/xyz_f4_bin.pcd"
+  ],
+  "desc": "x y z（F4）だけ（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/xyz_f4_bin.expect.npz"
+ },
+ {
+  "id": "pcd/xyz_f4_ascii",
+  "files": [
+   "pcd/xyz_f4_ascii.pcd"
+  ],
+  "desc": "x y z（F4）だけ（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/xyz_f4_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/xyz_f4_bc",
+  "files": [
+   "pcd/xyz_f4_bc.pcd"
+  ],
+  "desc": "x y z（F4）だけ（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/xyz_f4_bc.expect.npz"
+ },
+ {
+  "id": "pcd/types_bin",
+  "files": [
+   "pcd/types_bin.pcd"
+  ],
+  "desc": "値の欄に全部の型（U1 U2 U4 I1 I2 I4 F4 F8 U8 I8、最小・最大を含む）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/types_bin.expect.npz"
+ },
+ {
+  "id": "pcd/types_ascii",
+  "files": [
+   "pcd/types_ascii.pcd"
+  ],
+  "desc": "値の欄に全部の型（U1 U2 U4 I1 I2 I4 F4 F8 U8 I8、最小・最大を含む）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/types_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/types_bc",
+  "files": [
+   "pcd/types_bc.pcd"
+  ],
+  "desc": "値の欄に全部の型（U1 U2 U4 I1 I2 I4 F4 F8 U8 I8、最小・最大を含む）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/types_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_F8_bin",
+  "files": [
+   "pcd/coord_F8_bin.pcd"
+  ],
+  "desc": "座標の型が F8（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_F8_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_F8_ascii",
+  "files": [
+   "pcd/coord_F8_ascii.pcd"
+  ],
+  "desc": "座標の型が F8（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_F8_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_F8_bc",
+  "files": [
+   "pcd/coord_F8_bc.pcd"
+  ],
+  "desc": "座標の型が F8（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_F8_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I2_bin",
+  "files": [
+   "pcd/coord_I2_bin.pcd"
+  ],
+  "desc": "座標の型が I2（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I2_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I2_ascii",
+  "files": [
+   "pcd/coord_I2_ascii.pcd"
+  ],
+  "desc": "座標の型が I2（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I2_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I2_bc",
+  "files": [
+   "pcd/coord_I2_bc.pcd"
+  ],
+  "desc": "座標の型が I2（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I2_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I4_bin",
+  "files": [
+   "pcd/coord_I4_bin.pcd"
+  ],
+  "desc": "座標の型が I4（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I4_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I4_ascii",
+  "files": [
+   "pcd/coord_I4_ascii.pcd"
+  ],
+  "desc": "座標の型が I4（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I4_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I4_bc",
+  "files": [
+   "pcd/coord_I4_bc.pcd"
+  ],
+  "desc": "座標の型が I4（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I4_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U2_bin",
+  "files": [
+   "pcd/coord_U2_bin.pcd"
+  ],
+  "desc": "座標の型が U2（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U2_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U2_ascii",
+  "files": [
+   "pcd/coord_U2_ascii.pcd"
+  ],
+  "desc": "座標の型が U2（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U2_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U2_bc",
+  "files": [
+   "pcd/coord_U2_bc.pcd"
+  ],
+  "desc": "座標の型が U2（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U2_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U4_bin",
+  "files": [
+   "pcd/coord_U4_bin.pcd"
+  ],
+  "desc": "座標の型が U4（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U4_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U4_ascii",
+  "files": [
+   "pcd/coord_U4_ascii.pcd"
+  ],
+  "desc": "座標の型が U4（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U4_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U4_bc",
+  "files": [
+   "pcd/coord_U4_bc.pcd"
+  ],
+  "desc": "座標の型が U4（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U4_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I1_bin",
+  "files": [
+   "pcd/coord_I1_bin.pcd"
+  ],
+  "desc": "座標の型が I1（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I1_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I1_ascii",
+  "files": [
+   "pcd/coord_I1_ascii.pcd"
+  ],
+  "desc": "座標の型が I1（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I1_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I1_bc",
+  "files": [
+   "pcd/coord_I1_bc.pcd"
+  ],
+  "desc": "座標の型が I1（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I1_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U1_bin",
+  "files": [
+   "pcd/coord_U1_bin.pcd"
+  ],
+  "desc": "座標の型が U1（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U1_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U1_ascii",
+  "files": [
+   "pcd/coord_U1_ascii.pcd"
+  ],
+  "desc": "座標の型が U1（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U1_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U1_bc",
+  "files": [
+   "pcd/coord_U1_bc.pcd"
+  ],
+  "desc": "座標の型が U1（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U1_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I8_bin",
+  "files": [
+   "pcd/coord_I8_bin.pcd"
+  ],
+  "desc": "座標の型が I8（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I8_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I8_ascii",
+  "files": [
+   "pcd/coord_I8_ascii.pcd"
+  ],
+  "desc": "座標の型が I8（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I8_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_I8_bc",
+  "files": [
+   "pcd/coord_I8_bc.pcd"
+  ],
+  "desc": "座標の型が I8（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_I8_bc.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U8_bin",
+  "files": [
+   "pcd/coord_U8_bin.pcd"
+  ],
+  "desc": "座標の型が U8（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U8_bin.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U8_ascii",
+  "files": [
+   "pcd/coord_U8_ascii.pcd"
+  ],
+  "desc": "座標の型が U8（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U8_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/coord_U8_bc",
+  "files": [
+   "pcd/coord_U8_bc.pcd"
+  ],
+  "desc": "座標の型が U8（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/coord_U8_bc.expect.npz"
+ },
+ {
+  "id": "pcd/count_gt1_bin",
+  "files": [
+   "pcd/count_gt1_bin.pcd"
+  ],
+  "desc": "COUNT>1 の欄（normal×3 を x の前、fpfh×33、詰め物 _×4）＋ rgb(U4)＋ intensity(U2)（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/count_gt1_bin.expect.npz"
+ },
+ {
+  "id": "pcd/count_gt1_ascii",
+  "files": [
+   "pcd/count_gt1_ascii.pcd"
+  ],
+  "desc": "COUNT>1 の欄（normal×3 を x の前、fpfh×33、詰め物 _×4）＋ rgb(U4)＋ intensity(U2)（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/count_gt1_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/count_gt1_bc",
+  "files": [
+   "pcd/count_gt1_bc.pcd"
+  ],
+  "desc": "COUNT>1 の欄（normal×3 を x の前、fpfh×33、詰め物 _×4）＋ rgb(U4)＋ intensity(U2)（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/count_gt1_bc.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_float_bin",
+  "files": [
+   "pcd/rgb_float_bin.pcd"
+  ],
+  "desc": "rgb を float に詰めたもの（TYPE F、α=255。PCL は ascii に書くとき TYPE U の整数にする）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_float_bin.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_float_ascii",
+  "files": [
+   "pcd/rgb_float_ascii.pcd"
+  ],
+  "desc": "rgb を float に詰めたもの（TYPE F、α=255。PCL は ascii に書くとき TYPE U の整数にする）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_float_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_float_bc",
+  "files": [
+   "pcd/rgb_float_bc.pcd"
+  ],
+  "desc": "rgb を float に詰めたもの（TYPE F、α=255。PCL は ascii に書くとき TYPE U の整数にする）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_float_bc.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_float_text_ascii",
+  "files": [
+   "pcd/rgb_float_text_ascii.pcd"
+  ],
+  "desc": "ascii で rgb を float の文字（2.34e-38 など、TYPE F）で書いたもの（Open3D の書き方）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_float_text_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_u4_bin",
+  "files": [
+   "pcd/rgb_u4_bin.pcd"
+  ],
+  "desc": "rgb を U4（α=255）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_u4_bin.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_u4_ascii",
+  "files": [
+   "pcd/rgb_u4_ascii.pcd"
+  ],
+  "desc": "rgb を U4（α=255）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_u4_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/rgb_u4_bc",
+  "files": [
+   "pcd/rgb_u4_bc.pcd"
+  ],
+  "desc": "rgb を U4（α=255）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgb_u4_bc.expect.npz"
+ },
+ {
+  "id": "pcd/rgba_u4_bin",
+  "files": [
+   "pcd/rgba_u4_bin.pcd"
+  ],
+  "desc": "rgba を U4（α=255）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgba_u4_bin.expect.npz"
+ },
+ {
+  "id": "pcd/rgba_u4_ascii",
+  "files": [
+   "pcd/rgba_u4_ascii.pcd"
+  ],
+  "desc": "rgba を U4（α=255）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgba_u4_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/rgba_u4_bc",
+  "files": [
+   "pcd/rgba_u4_bc.pcd"
+  ],
+  "desc": "rgba を U4（α=255）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/rgba_u4_bc.expect.npz"
+ },
+ {
+  "id": "pcd/organized_bin",
+  "files": [
+   "pcd/organized_bin.pcd"
+  ],
+  "desc": "整列した点群 100×50、NaN の穴 1,234 個（bin）",
+  "kind": "cloud",
+  "node": true,
+  "n": 3766,
+  "total": 3766,
+  "skipped": 1234,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/organized_bin.expect.npz"
+ },
+ {
+  "id": "pcd/organized_ascii",
+  "files": [
+   "pcd/organized_ascii.pcd"
+  ],
+  "desc": "整列した点群 100×50、NaN の穴 1,234 個（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 3766,
+  "total": 3766,
+  "skipped": 1234,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/organized_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/organized_bc",
+  "files": [
+   "pcd/organized_bc.pcd"
+  ],
+  "desc": "整列した点群 100×50、NaN の穴 1,234 個（bc）",
+  "kind": "cloud",
+  "node": true,
+  "n": 3766,
+  "total": 3766,
+  "skipped": 1234,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/organized_bc.expect.npz"
+ },
+ {
+  "id": "pcd/nan_x_only_bin",
+  "files": [
+   "pcd/nan_x_only_bin.pcd"
+  ],
+  "desc": "x だけ NaN の点 50 個",
+  "kind": "cloud",
+  "node": true,
+  "n": 4950,
+  "total": 4950,
+  "skipped": 50,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/nan_x_only_bin.expect.npz"
+ },
+ {
+  "id": "pcd/viewpoint_bin",
+  "files": [
+   "pcd/viewpoint_bin.pcd"
+  ],
+  "desc": "VIEWPOINT 10 20 30 + z 軸 90 度（PCL は点を変換しない）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/viewpoint_bin.expect.npz"
+ },
+ {
+  "id": "pcd/points_less_ascii",
+  "files": [
+   "pcd/points_less_ascii.pcd"
+  ],
+  "desc": "ascii: POINTS 4000 なのにデータは 5000 行（PCL は 4000 点を読む）",
+  "kind": "cloud",
+  "node": true,
+  "n": 4000,
+  "total": 4000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/points_less_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/points_less_bin",
+  "files": [
+   "pcd/points_less_bin.pcd"
+  ],
+  "desc": "binary: POINTS 4000 なのにデータは 5000 点分（PCL は 4000 点を読む）",
+  "kind": "cloud",
+  "node": true,
+  "n": 4000,
+  "total": 4000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/points_less_bin.expect.npz"
+ },
+ {
+  "id": "pcd/points_more_ascii",
+  "files": [
+   "pcd/points_more_ascii.pcd"
+  ],
+  "desc": "ascii: POINTS 6000 なのにデータは 5000 行（PCL は読み込みエラー）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "5000 点を黙って出すか、途中で切れている旨を知らせるか"
+  },
+  "nocheck_points": false,
+  "expect": "pcd/points_more_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/points_more_bin",
+  "files": [
+   "pcd/points_more_bin.pcd"
+  ],
+  "desc": "binary: POINTS 6000 なのにデータは 5000 点分（PCL は読み込みエラー）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": "途中で切れ",
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "切れている旨のエラー、または読めた分を表示"
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "pcd/no_points_line",
+  "files": [
+   "pcd/no_points_line.pcd"
+  ],
+  "desc": "POINTS 行がない（WIDTH×HEIGHT を使う）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/no_points_line.expect.npz"
+ },
+ {
+  "id": "pcd/points0",
+  "files": [
+   "pcd/points0.pcd"
+  ],
+  "desc": "POINTS 0（空の点群。PCL では正しいファイル）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": ".",
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "「点がありません」などの分かりやすい知らせが期待"
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "pcd/hdr_crlf_tabs_ascii",
+  "files": [
+   "pcd/hdr_crlf_tabs_ascii.pcd"
+  ],
+  "desc": "CRLF・タブ区切り・頭書きの途中のコメント・余分な空白（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_crlf_tabs_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_crlf_bin",
+  "files": [
+   "pcd/hdr_crlf_bin.pcd"
+  ],
+  "desc": "CRLF の頭書き（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_crlf_bin.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_v05",
+  "files": [
+   "pcd/hdr_v05.pcd"
+  ],
+  "desc": "VERSION .5（COUNT・VIEWPOINT なし）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_v05.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_v06",
+  "files": [
+   "pcd/hdr_v06.pcd"
+  ],
+  "desc": "VERSION .6（VIEWPOINT なし）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_v06.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_columns",
+  "files": [
+   "pcd/hdr_columns.pcd"
+  ],
+  "desc": "FIELDS の代わりに COLUMNS（古い書き方）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_columns.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_bom",
+  "files": [
+   "pcd/hdr_bom.pcd"
+  ],
+  "desc": "先頭に BOM",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_bom.expect.npz"
+ },
+ {
+  "id": "pcd/hdr_upper_xyz",
+  "files": [
+   "pcd/hdr_upper_xyz.pcd"
+  ],
+  "desc": "欄の名前が大文字 X Y Z",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/hdr_upper_xyz.expect.npz"
+ },
+ {
+  "id": "pcd/ascii_exp",
+  "files": [
+   "pcd/ascii_exp.pcd"
+  ],
+  "desc": "ascii: 指数表記・途中の空行・行末の空白",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/ascii_exp.expect.npz"
+ },
+ {
+  "id": "pcd/order_zyx_bin",
+  "files": [
+   "pcd/order_zyx_bin.pcd"
+  ],
+  "desc": "欄の順序が intensity z y x（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/order_zyx_bin.expect.npz"
+ },
+ {
+  "id": "pcd/order_zyx_ascii",
+  "files": [
+   "pcd/order_zyx_ascii.pcd"
+  ],
+  "desc": "欄の順序が intensity z y x（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/order_zyx_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/order_zyx_bc",
+  "files": [
+   "pcd/order_zyx_bc.pcd"
+  ],
+  "desc": "欄の順序が intensity z y x（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/order_zyx_bc.expect.npz"
+ },
+ {
+  "id": "pcd/utm_f8_bin",
+  "files": [
+   "pcd/utm_f8_bin.pcd"
+  ],
+  "desc": "UTM の大きな座標（F8）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/utm_f8_bin.expect.npz"
+ },
+ {
+  "id": "pcd/utm_f8_ascii",
+  "files": [
+   "pcd/utm_f8_ascii.pcd"
+  ],
+  "desc": "UTM の大きな座標（F8）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/utm_f8_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/utm_f8_bc",
+  "files": [
+   "pcd/utm_f8_bc.pcd"
+  ],
+  "desc": "UTM の大きな座標（F8）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/utm_f8_bc.expect.npz"
+ },
+ {
+  "id": "pcd/timestamp_f8_bin",
+  "files": [
+   "pcd/timestamp_f8_bin.pcd"
+  ],
+  "desc": "絶対時刻の欄 timestamp（F8、1.7e9 秒 + 0.01 秒刻み）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "field_tol": {
+    "timestamp": 0.01
+   }
+  },
+  "nocheck_points": false,
+  "expect": "pcd/timestamp_f8_bin.expect.npz"
+ },
+ {
+  "id": "pcd/dup_field_bin",
+  "files": [
+   "pcd/dup_field_bin.pcd"
+  ],
+  "desc": "同じ名前の欄 intensity が 2 つ（1 つ目を使う）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/dup_field_bin.expect.npz"
+ },
+ {
+  "id": "pcd/fastlio_xyzinormal_bin",
+  "files": [
+   "pcd/fastlio_xyzinormal_bin.pcd"
+  ],
+  "desc": "FAST-LIO の地図と同じ PointXYZINormal（詰め物 _ が 3 か所）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/fastlio_xyzinormal_bin.expect.npz"
+ },
+ {
+  "id": "pcd/fastlio_xyzinormal_ascii",
+  "files": [
+   "pcd/fastlio_xyzinormal_ascii.pcd"
+  ],
+  "desc": "FAST-LIO の地図と同じ PointXYZINormal（詰め物 _ が 3 か所）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/fastlio_xyzinormal_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/fastlio_xyzinormal_bc",
+  "files": [
+   "pcd/fastlio_xyzinormal_bc.pcd"
+  ],
+  "desc": "FAST-LIO の地図と同じ PointXYZINormal（詰め物 _ が 3 か所）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/fastlio_xyzinormal_bc.expect.npz"
+ },
+ {
+  "id": "pcd/livox_xyzrtlt_bin",
+  "files": [
+   "pcd/livox_xyzrtlt_bin.pcd"
+  ],
+  "desc": "Livox の PointXYZRTLT（timestamp は ns の F8、1.7e18）（binary）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/livox_xyzrtlt_bin.expect.npz"
+ },
+ {
+  "id": "pcd/livox_xyzrtlt_ascii",
+  "files": [
+   "pcd/livox_xyzrtlt_ascii.pcd"
+  ],
+  "desc": "Livox の PointXYZRTLT（timestamp は ns の F8、1.7e18）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/livox_xyzrtlt_ascii.expect.npz"
+ },
+ {
+  "id": "pcd/livox_xyzrtlt_bc",
+  "files": [
+   "pcd/livox_xyzrtlt_bc.pcd"
+  ],
+  "desc": "Livox の PointXYZRTLT（timestamp は ns の F8、1.7e18）（binary_compressed）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "pcd/livox_xyzrtlt_bc.expect.npz"
+ },
+ {
+  "id": "las/v1.1_pf0",
+  "files": [
+   "las/v1.1_pf0.las"
+  ],
+  "desc": "LAS 1.1 点の形式 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.1_pf0.expect.npz"
+ },
+ {
+  "id": "laz/v1.1_pf0",
+  "files": [
+   "laz/v1.1_pf0.laz"
+  ],
+  "desc": "LAZ 1.1 点の形式 0",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.1_pf0.expect.npz"
+ },
+ {
+  "id": "las/v1.1_pf1",
+  "files": [
+   "las/v1.1_pf1.las"
+  ],
+  "desc": "LAS 1.1 点の形式 1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.1_pf1.expect.npz"
+ },
+ {
+  "id": "laz/v1.1_pf1",
+  "files": [
+   "laz/v1.1_pf1.laz"
+  ],
+  "desc": "LAZ 1.1 点の形式 1",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.1_pf1.expect.npz"
+ },
+ {
+  "id": "las/v1.2_pf0",
+  "files": [
+   "las/v1.2_pf0.las"
+  ],
+  "desc": "LAS 1.2 点の形式 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.2_pf0.expect.npz"
+ },
+ {
+  "id": "laz/v1.2_pf0",
+  "files": [
+   "laz/v1.2_pf0.laz"
+  ],
+  "desc": "LAZ 1.2 点の形式 0",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.2_pf0.expect.npz"
+ },
+ {
+  "id": "las/v1.2_pf1",
+  "files": [
+   "las/v1.2_pf1.las"
+  ],
+  "desc": "LAS 1.2 点の形式 1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.2_pf1.expect.npz"
+ },
+ {
+  "id": "laz/v1.2_pf1",
+  "files": [
+   "laz/v1.2_pf1.laz"
+  ],
+  "desc": "LAZ 1.2 点の形式 1",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.2_pf1.expect.npz"
+ },
+ {
+  "id": "las/v1.2_pf2",
+  "files": [
+   "las/v1.2_pf2.las"
+  ],
+  "desc": "LAS 1.2 点の形式 2",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.2_pf2.expect.npz"
+ },
+ {
+  "id": "laz/v1.2_pf2",
+  "files": [
+   "laz/v1.2_pf2.laz"
+  ],
+  "desc": "LAZ 1.2 点の形式 2",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.2_pf2.expect.npz"
+ },
+ {
+  "id": "las/v1.2_pf3",
+  "files": [
+   "las/v1.2_pf3.las"
+  ],
+  "desc": "LAS 1.2 点の形式 3",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.2_pf3.expect.npz"
+ },
+ {
+  "id": "laz/v1.2_pf3",
+  "files": [
+   "laz/v1.2_pf3.laz"
+  ],
+  "desc": "LAZ 1.2 点の形式 3",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.2_pf3.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf0",
+  "files": [
+   "las/v1.3_pf0.las"
+  ],
+  "desc": "LAS 1.3 点の形式 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf0.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf0",
+  "files": [
+   "laz/v1.3_pf0.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 0",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf0.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf1",
+  "files": [
+   "las/v1.3_pf1.las"
+  ],
+  "desc": "LAS 1.3 点の形式 1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf1.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf1",
+  "files": [
+   "laz/v1.3_pf1.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 1",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf1.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf2",
+  "files": [
+   "las/v1.3_pf2.las"
+  ],
+  "desc": "LAS 1.3 点の形式 2",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf2.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf2",
+  "files": [
+   "laz/v1.3_pf2.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 2",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf2.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf3",
+  "files": [
+   "las/v1.3_pf3.las"
+  ],
+  "desc": "LAS 1.3 点の形式 3",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf3.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf3",
+  "files": [
+   "laz/v1.3_pf3.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 3",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf3.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf4",
+  "files": [
+   "las/v1.3_pf4.las"
+  ],
+  "desc": "LAS 1.3 点の形式 4",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf4.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf4",
+  "files": [
+   "laz/v1.3_pf4.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 4",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf4.expect.npz"
+ },
+ {
+  "id": "las/v1.3_pf5",
+  "files": [
+   "las/v1.3_pf5.las"
+  ],
+  "desc": "LAS 1.3 点の形式 5",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.3_pf5.expect.npz"
+ },
+ {
+  "id": "laz/v1.3_pf5",
+  "files": [
+   "laz/v1.3_pf5.laz"
+  ],
+  "desc": "LAZ 1.3 点の形式 5",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.3_pf5.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf0",
+  "files": [
+   "las/v1.4_pf0.las"
+  ],
+  "desc": "LAS 1.4 点の形式 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf0.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf0",
+  "files": [
+   "laz/v1.4_pf0.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 0",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf0.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf1",
+  "files": [
+   "las/v1.4_pf1.las"
+  ],
+  "desc": "LAS 1.4 点の形式 1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf1.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf1",
+  "files": [
+   "laz/v1.4_pf1.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 1",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf1.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf2",
+  "files": [
+   "las/v1.4_pf2.las"
+  ],
+  "desc": "LAS 1.4 点の形式 2",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf2.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf2",
+  "files": [
+   "laz/v1.4_pf2.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 2",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf2.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf3",
+  "files": [
+   "las/v1.4_pf3.las"
+  ],
+  "desc": "LAS 1.4 点の形式 3",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf3.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf3",
+  "files": [
+   "laz/v1.4_pf3.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 3",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf3.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf4",
+  "files": [
+   "las/v1.4_pf4.las"
+  ],
+  "desc": "LAS 1.4 点の形式 4",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf4.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf4",
+  "files": [
+   "laz/v1.4_pf4.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 4",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf4.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf5",
+  "files": [
+   "las/v1.4_pf5.las"
+  ],
+  "desc": "LAS 1.4 点の形式 5",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf5.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf5",
+  "files": [
+   "laz/v1.4_pf5.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 5",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf5.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf6",
+  "files": [
+   "las/v1.4_pf6.las"
+  ],
+  "desc": "LAS 1.4 点の形式 6",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf6.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf6",
+  "files": [
+   "laz/v1.4_pf6.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 6",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf6.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf7",
+  "files": [
+   "las/v1.4_pf7.las"
+  ],
+  "desc": "LAS 1.4 点の形式 7",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf7.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf7",
+  "files": [
+   "laz/v1.4_pf7.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 7",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf7.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf8",
+  "files": [
+   "las/v1.4_pf8.las"
+  ],
+  "desc": "LAS 1.4 点の形式 8",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf8.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf8",
+  "files": [
+   "laz/v1.4_pf8.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 8",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf8.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf9",
+  "files": [
+   "las/v1.4_pf9.las"
+  ],
+  "desc": "LAS 1.4 点の形式 9",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf9.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf9",
+  "files": [
+   "laz/v1.4_pf9.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 9",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf9.expect.npz"
+ },
+ {
+  "id": "las/v1.4_pf10",
+  "files": [
+   "las/v1.4_pf10.las"
+  ],
+  "desc": "LAS 1.4 点の形式 10",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.4_pf10.expect.npz"
+ },
+ {
+  "id": "laz/v1.4_pf10",
+  "files": [
+   "laz/v1.4_pf10.laz"
+  ],
+  "desc": "LAZ 1.4 点の形式 10",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/v1.4_pf10.expect.npz"
+ },
+ {
+  "id": "las/v1.0_pf0",
+  "files": [
+   "las/v1.0_pf0.las"
+  ],
+  "desc": "LAS 1.0 点の形式 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.0_pf0.expect.npz"
+ },
+ {
+  "id": "las/v1.0_pf1",
+  "files": [
+   "las/v1.0_pf1.las"
+  ],
+  "desc": "LAS 1.0 点の形式 1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/v1.0_pf1.expect.npz"
+ },
+ {
+  "id": "las/rgb8_pf2",
+  "files": [
+   "las/rgb8_pf2.las"
+  ],
+  "desc": "色が 8 bit（0〜255）の LAS（点の形式 2）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb8_pf2.expect.npz"
+ },
+ {
+  "id": "las/rgb8_pf3",
+  "files": [
+   "las/rgb8_pf3.las"
+  ],
+  "desc": "色が 8 bit（0〜255）の LAS（点の形式 3）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb8_pf3.expect.npz"
+ },
+ {
+  "id": "las/rgb8_pf7",
+  "files": [
+   "las/rgb8_pf7.las"
+  ],
+  "desc": "色が 8 bit（0〜255）の LAS（点の形式 7）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb8_pf7.expect.npz"
+ },
+ {
+  "id": "las/rgb16_first20k_black",
+  "files": [
+   "las/rgb16_first20k_black.las"
+  ],
+  "desc": "16 bit の色。先頭 2 万点が色なし（0,0,0）、残り 5,000 点は普通の色（8 bit×257）",
+  "kind": "cloud",
+  "node": true,
+  "n": 25000,
+  "total": 25000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb16_first20k_black.expect.npz"
+ },
+ {
+  "id": "las/rgb16_first20k_black_x256",
+  "files": [
+   "las/rgb16_first20k_black_x256.las"
+  ],
+  "desc": "16 bit の色。先頭 2 万点が色なし（0,0,0）、残り 5,000 点は普通の色（8 bit×256）",
+  "kind": "cloud",
+  "node": true,
+  "n": 25000,
+  "total": 25000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb16_first20k_black_x256.expect.npz"
+ },
+ {
+  "id": "las/rgb16_first20k_black_raw16",
+  "files": [
+   "las/rgb16_first20k_black_raw16.las"
+  ],
+  "desc": "16 bit の色。先頭 2 万点が色なし（0,0,0）、残り 5,000 点は普通の色（16 bit の生の値）",
+  "kind": "cloud",
+  "node": true,
+  "n": 25000,
+  "total": 25000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb16_first20k_black_raw16.expect.npz"
+ },
+ {
+  "id": "las/rgb16_first20k_dark",
+  "files": [
+   "las/rgb16_first20k_dark.las"
+  ],
+  "desc": "16 bit の色。先頭 2 万点が暗い（0〜255/65535）、残り 5,000 点は普通の色（8 bit×257）",
+  "kind": "cloud",
+  "node": true,
+  "n": 25000,
+  "total": 25000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb16_first20k_dark.expect.npz"
+ },
+ {
+  "id": "las/rgb_max255",
+  "files": [
+   "las/rgb_max255.las"
+  ],
+  "desc": "色の最大値がちょうど 255（8 bit／16 bit の判定の境界）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb_max255.expect.npz"
+ },
+ {
+  "id": "las/rgb_max256",
+  "files": [
+   "las/rgb_max256.las"
+  ],
+  "desc": "色の最大値がちょうど 256（8 bit／16 bit の判定の境界）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/rgb_max256.expect.npz"
+ },
+ {
+  "id": "las/extrabytes",
+  "files": [
+   "las/extrabytes.las"
+  ],
+  "desc": "extra bytes（reflectance f4・deviation u2・vec 3×f8）つきの LAS 1.4 点の形式 3",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "info_fields": [
+    "reflectance",
+    "deviation"
+   ]
+  },
+  "nocheck_points": false,
+  "expect": "las/extrabytes.expect.npz"
+ },
+ {
+  "id": "laz/extrabytes",
+  "files": [
+   "laz/extrabytes.laz"
+  ],
+  "desc": "extra bytes つきの LAZ",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/extrabytes.expect.npz"
+ },
+ {
+  "id": "las/utm_1e-7",
+  "files": [
+   "las/utm_1e-7.las"
+  ],
+  "desc": "scale 1e-07・offset [np.float64(539000.0), np.float64(3836000.0), np.float64(30.0)]",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/utm_1e-7.expect.npz"
+ },
+ {
+  "id": "las/utm_1mm",
+  "files": [
+   "las/utm_1mm.las"
+  ],
+  "desc": "scale 0.001・offset [np.float64(539000.0), np.float64(3836000.0), np.float64(30.0)]",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/utm_1mm.expect.npz"
+ },
+ {
+  "id": "laz/utm_1mm",
+  "files": [
+   "laz/utm_1mm.laz"
+  ],
+  "desc": "LAZ: scale 0.001・offset UTM",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "laz/utm_1mm.expect.npz"
+ },
+ {
+  "id": "las/utm_neg",
+  "files": [
+   "las/utm_neg.las"
+  ],
+  "desc": "scale 0.001・offset [np.float64(-539000.0), np.float64(-3836000.0), np.float64(-30.0)]",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/utm_neg.expect.npz"
+ },
+ {
+  "id": "las/jgd_plane",
+  "files": [
+   "las/jgd_plane.las"
+  ],
+  "desc": "scale 0.0001・offset [np.float64(-37000.0), np.float64(-12000.0), np.float64(40.0)]",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/jgd_plane.expect.npz"
+ },
+ {
+  "id": "las/scale1",
+  "files": [
+   "las/scale1.las"
+  ],
+  "desc": "scale 1.0・offset [np.int64(0), np.int64(0), np.int64(0)]",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/scale1.expect.npz"
+ },
+ {
+  "id": "las/first_origin_then_utm",
+  "files": [
+   "las/first_origin_then_utm.las"
+  ],
+  "desc": "最初の点だけ (0,0,0)、残り 4,999 点は UTM（座標は cm 単位で書いたもの）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "las/first_origin_then_utm.expect.npz"
+ },
+ {
+  "id": "e57/cart_double",
+  "files": [
+   "e57/cart_double.e57"
+  ],
+  "desc": "直交座標 Float double・pose なし",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/cart_double.expect.npz"
+ },
+ {
+  "id": "e57/cart_single",
+  "files": [
+   "e57/cart_single.e57"
+  ],
+  "desc": "直交座標 Float single",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/cart_single.expect.npz"
+ },
+ {
+  "id": "e57/cart_scaled",
+  "files": [
+   "e57/cart_scaled.e57"
+  ],
+  "desc": "直交座標 ScaledInteger（scale 0.0001、ビット幅 [19, 17, 16]）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/cart_scaled.expect.npz"
+ },
+ {
+  "id": "e57/cart_scaled21",
+  "files": [
+   "e57/cart_scaled21.e57"
+  ],
+  "desc": "直交座標 ScaledInteger 21 bit（scale 0.001、offset 5、範囲 ±2^20）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/cart_scaled21.expect.npz"
+ },
+ {
+  "id": "e57/cart_integer",
+  "files": [
+   "e57/cart_integer.e57"
+  ],
+  "desc": "直交座標 Integer（-20000〜100000、17 bit。単位は書かれた整数のまま）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/cart_integer.expect.npz"
+ },
+ {
+  "id": "e57/sph_double",
+  "files": [
+   "e57/sph_double.e57"
+  ],
+  "desc": "球座標（range・azimuth・elevation が double）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/sph_double.expect.npz"
+ },
+ {
+  "id": "e57/sph_scaled",
+  "files": [
+   "e57/sph_scaled.e57"
+  ],
+  "desc": "球座標（range が ScaledInteger、角度が single）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/sph_scaled.expect.npz"
+ },
+ {
+  "id": "e57/invalid_cart",
+  "files": [
+   "e57/invalid_cart.e57"
+  ],
+  "desc": "cartesianInvalidState（2 を 715 点、1 を 455 点）",
+  "kind": "cloud",
+  "node": true,
+  "n": 3895,
+  "total": 3895,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "1（方向だけ有効）・2 の点を除くのは CloudCompare と同じ"
+  },
+  "nocheck_points": false,
+  "expect": "e57/invalid_cart.expect.npz"
+ },
+ {
+  "id": "e57/invalid_sph",
+  "files": [
+   "e57/invalid_sph.e57"
+  ],
+  "desc": "sphericalInvalidState",
+  "kind": "cloud",
+  "node": true,
+  "n": 3895,
+  "total": 3895,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/invalid_sph.expect.npz"
+ },
+ {
+  "id": "e57/multi_pose",
+  "files": [
+   "e57/multi_pose.e57"
+  ],
+  "desc": "スキャン 3 つ（z 回転＋移動、斜めの軸の回転＋移動、移動だけ）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/multi_pose.expect.npz"
+ },
+ {
+  "id": "e57/pose_unnormalized",
+  "files": [
+   "e57/pose_unnormalized.e57"
+  ],
+  "desc": "pose の四元数の長さが 1.000001",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/pose_unnormalized.expect.npz"
+ },
+ {
+  "id": "e57/color8",
+  "files": [
+   "e57/color8.e57"
+  ],
+  "desc": "色 8 bit（colorLimits 0〜255）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/color8.expect.npz"
+ },
+ {
+  "id": "e57/color16",
+  "files": [
+   "e57/color16.e57"
+  ],
+  "desc": "色 16 bit（colorLimits 0〜65535、値は 8 bit×257）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/color16.expect.npz"
+ },
+ {
+  "id": "e57/color_nolimits",
+  "files": [
+   "e57/color_nolimits.e57"
+  ],
+  "desc": "色 8 bit（colorLimits なし、項目の範囲 0〜255）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/color_nolimits.expect.npz"
+ },
+ {
+  "id": "e57/color_proto16_lim255",
+  "files": [
+   "e57/color_proto16_lim255.e57"
+  ],
+  "desc": "色: 項目は 0〜65535、colorLimits は 0〜255（値は 8 bit）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/color_proto16_lim255.expect.npz"
+ },
+ {
+  "id": "e57/color_mixed",
+  "files": [
+   "e57/color_mixed.e57"
+  ],
+  "desc": "スキャン 1 は色なし・スキャン 2 は色あり（色なしは灰色 200 になる作り）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/color_mixed.expect.npz"
+ },
+ {
+  "id": "e57/intensity",
+  "files": [
+   "e57/intensity.e57"
+  ],
+  "desc": "強度 Integer 0〜2047（11 bit）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/intensity.expect.npz"
+ },
+ {
+  "id": "e57/intensity_float",
+  "files": [
+   "e57/intensity_float.e57"
+  ],
+  "desc": "強度 Float single 0〜1",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/intensity_float.expect.npz"
+ },
+ {
+  "id": "e57/intensity_scaled",
+  "files": [
+   "e57/intensity_scaled.e57"
+  ],
+  "desc": "強度 ScaledInteger（0〜1000 × 0.001、10 bit）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/intensity_scaled.expect.npz"
+ },
+ {
+  "id": "e57/const_field",
+  "files": [
+   "e57/const_field.e57"
+  ],
+  "desc": "強度の範囲が 7〜7（0 bit。値はすべて 7）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/const_field.expect.npz"
+ },
+ {
+  "id": "e57/int_default_range",
+  "files": [
+   "e57/int_default_range.e57"
+  ],
+  "desc": "強度 Integer の minimum/maximum を省略（既定の int64 の範囲、64 bit で詰められる）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/int_default_range.expect.npz"
+ },
+ {
+  "id": "e57/big300k",
+  "files": [
+   "e57/big300k.e57"
+  ],
+  "desc": "30 万点（21 bit 座標・11 bit 強度・色。パケット・ページをまたぐ）",
+  "kind": "cloud",
+  "node": true,
+  "n": 300000,
+  "total": 300000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/big300k.expect.npz"
+ },
+ {
+  "id": "e57/utm_cart",
+  "files": [
+   "e57/utm_cart.e57"
+  ],
+  "desc": "UTM の座標（double）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/utm_cart.expect.npz"
+ },
+ {
+  "id": "e57/utm_pose",
+  "files": [
+   "e57/utm_pose.e57"
+  ],
+  "desc": "局所座標 + pose の平行移動が UTM",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/utm_pose.expect.npz"
+ },
+ {
+  "id": "e57/empty_scan",
+  "files": [
+   "e57/empty_scan.e57"
+  ],
+  "desc": "1 つ目のスキャンは点が 0 個",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/empty_scan.expect.npz"
+ },
+ {
+  "id": "e57/rowcol_time",
+  "files": [
+   "e57/rowcol_time.e57"
+  ],
+  "desc": "rowIndex・columnIndex・timeStamp つき（座標に影響しないこと）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "e57/rowcol_time.expect.npz"
+ },
+ {
+  "id": "ply/basic_ascii",
+  "files": [
+   "ply/basic_ascii.ply"
+  ],
+  "desc": "x y z（float）+ uchar の色 + scalar_Intensity（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/basic_ascii.expect.npz"
+ },
+ {
+  "id": "ply/basic_ble",
+  "files": [
+   "ply/basic_ble.ply"
+  ],
+  "desc": "x y z（float）+ uchar の色 + scalar_Intensity（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/basic_ble.expect.npz"
+ },
+ {
+  "id": "ply/basic_bbe",
+  "files": [
+   "ply/basic_bbe.ply"
+  ],
+  "desc": "x y z（float）+ uchar の色 + scalar_Intensity（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/basic_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_char_ble",
+  "files": [
+   "ply/type_char_ble.ply"
+  ],
+  "desc": "座標の型 char（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_char_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_char_bbe",
+  "files": [
+   "ply/type_char_bbe.ply"
+  ],
+  "desc": "座標の型 char（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_char_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_char_ascii",
+  "files": [
+   "ply/type_char_ascii.ply"
+  ],
+  "desc": "座標の型 char（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_char_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_int8_ble",
+  "files": [
+   "ply/type_int8_ble.ply"
+  ],
+  "desc": "座標の型 int8（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int8_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_int8_bbe",
+  "files": [
+   "ply/type_int8_bbe.ply"
+  ],
+  "desc": "座標の型 int8（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int8_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_int8_ascii",
+  "files": [
+   "ply/type_int8_ascii.ply"
+  ],
+  "desc": "座標の型 int8（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int8_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_uchar_ble",
+  "files": [
+   "ply/type_uchar_ble.ply"
+  ],
+  "desc": "座標の型 uchar（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uchar_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_uchar_bbe",
+  "files": [
+   "ply/type_uchar_bbe.ply"
+  ],
+  "desc": "座標の型 uchar（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uchar_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_uchar_ascii",
+  "files": [
+   "ply/type_uchar_ascii.ply"
+  ],
+  "desc": "座標の型 uchar（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uchar_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_uint8_ble",
+  "files": [
+   "ply/type_uint8_ble.ply"
+  ],
+  "desc": "座標の型 uint8（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint8_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_uint8_bbe",
+  "files": [
+   "ply/type_uint8_bbe.ply"
+  ],
+  "desc": "座標の型 uint8（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint8_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_uint8_ascii",
+  "files": [
+   "ply/type_uint8_ascii.ply"
+  ],
+  "desc": "座標の型 uint8（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint8_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_short_ble",
+  "files": [
+   "ply/type_short_ble.ply"
+  ],
+  "desc": "座標の型 short（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_short_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_short_bbe",
+  "files": [
+   "ply/type_short_bbe.ply"
+  ],
+  "desc": "座標の型 short（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_short_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_short_ascii",
+  "files": [
+   "ply/type_short_ascii.ply"
+  ],
+  "desc": "座標の型 short（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_short_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_int16_ble",
+  "files": [
+   "ply/type_int16_ble.ply"
+  ],
+  "desc": "座標の型 int16（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int16_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_int16_bbe",
+  "files": [
+   "ply/type_int16_bbe.ply"
+  ],
+  "desc": "座標の型 int16（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int16_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_int16_ascii",
+  "files": [
+   "ply/type_int16_ascii.ply"
+  ],
+  "desc": "座標の型 int16（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int16_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_ushort_ble",
+  "files": [
+   "ply/type_ushort_ble.ply"
+  ],
+  "desc": "座標の型 ushort（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_ushort_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_ushort_bbe",
+  "files": [
+   "ply/type_ushort_bbe.ply"
+  ],
+  "desc": "座標の型 ushort（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_ushort_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_ushort_ascii",
+  "files": [
+   "ply/type_ushort_ascii.ply"
+  ],
+  "desc": "座標の型 ushort（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_ushort_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_uint16_ble",
+  "files": [
+   "ply/type_uint16_ble.ply"
+  ],
+  "desc": "座標の型 uint16（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint16_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_uint16_bbe",
+  "files": [
+   "ply/type_uint16_bbe.ply"
+  ],
+  "desc": "座標の型 uint16（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint16_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_uint16_ascii",
+  "files": [
+   "ply/type_uint16_ascii.ply"
+  ],
+  "desc": "座標の型 uint16（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint16_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_int_ble",
+  "files": [
+   "ply/type_int_ble.ply"
+  ],
+  "desc": "座標の型 int（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_int_bbe",
+  "files": [
+   "ply/type_int_bbe.ply"
+  ],
+  "desc": "座標の型 int（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_int_ascii",
+  "files": [
+   "ply/type_int_ascii.ply"
+  ],
+  "desc": "座標の型 int（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_int32_ble",
+  "files": [
+   "ply/type_int32_ble.ply"
+  ],
+  "desc": "座標の型 int32（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int32_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_int32_bbe",
+  "files": [
+   "ply/type_int32_bbe.ply"
+  ],
+  "desc": "座標の型 int32（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int32_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_int32_ascii",
+  "files": [
+   "ply/type_int32_ascii.ply"
+  ],
+  "desc": "座標の型 int32（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_int32_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_uint_ble",
+  "files": [
+   "ply/type_uint_ble.ply"
+  ],
+  "desc": "座標の型 uint（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_uint_bbe",
+  "files": [
+   "ply/type_uint_bbe.ply"
+  ],
+  "desc": "座標の型 uint（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_uint_ascii",
+  "files": [
+   "ply/type_uint_ascii.ply"
+  ],
+  "desc": "座標の型 uint（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_uint32_ble",
+  "files": [
+   "ply/type_uint32_ble.ply"
+  ],
+  "desc": "座標の型 uint32（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint32_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_uint32_bbe",
+  "files": [
+   "ply/type_uint32_bbe.ply"
+  ],
+  "desc": "座標の型 uint32（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint32_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_uint32_ascii",
+  "files": [
+   "ply/type_uint32_ascii.ply"
+  ],
+  "desc": "座標の型 uint32（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_uint32_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_float_ble",
+  "files": [
+   "ply/type_float_ble.ply"
+  ],
+  "desc": "座標の型 float（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_float_bbe",
+  "files": [
+   "ply/type_float_bbe.ply"
+  ],
+  "desc": "座標の型 float（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_float_ascii",
+  "files": [
+   "ply/type_float_ascii.ply"
+  ],
+  "desc": "座標の型 float（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_float32_ble",
+  "files": [
+   "ply/type_float32_ble.ply"
+  ],
+  "desc": "座標の型 float32（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float32_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_float32_bbe",
+  "files": [
+   "ply/type_float32_bbe.ply"
+  ],
+  "desc": "座標の型 float32（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float32_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_float32_ascii",
+  "files": [
+   "ply/type_float32_ascii.ply"
+  ],
+  "desc": "座標の型 float32（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float32_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_double_ble",
+  "files": [
+   "ply/type_double_ble.ply"
+  ],
+  "desc": "座標の型 double（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_double_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_double_bbe",
+  "files": [
+   "ply/type_double_bbe.ply"
+  ],
+  "desc": "座標の型 double（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_double_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_double_ascii",
+  "files": [
+   "ply/type_double_ascii.ply"
+  ],
+  "desc": "座標の型 double（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_double_ascii.expect.npz"
+ },
+ {
+  "id": "ply/type_float64_ble",
+  "files": [
+   "ply/type_float64_ble.ply"
+  ],
+  "desc": "座標の型 float64（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float64_ble.expect.npz"
+ },
+ {
+  "id": "ply/type_float64_bbe",
+  "files": [
+   "ply/type_float64_bbe.ply"
+  ],
+  "desc": "座標の型 float64（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float64_bbe.expect.npz"
+ },
+ {
+  "id": "ply/type_float64_ascii",
+  "files": [
+   "ply/type_float64_ascii.ply"
+  ],
+  "desc": "座標の型 float64（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/type_float64_ascii.expect.npz"
+ },
+ {
+  "id": "ply/elem_before_vertex_ble",
+  "files": [
+   "ply/elem_before_vertex_ble.ply"
+  ],
+  "desc": "vertex の前に camera 要素（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_before_vertex_ble.expect.npz"
+ },
+ {
+  "id": "ply/list_before_x_ble",
+  "files": [
+   "ply/list_before_x_ble.ply"
+  ],
+  "desc": "vertex の中で x より前に list（長さ 0〜3）（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/list_before_x_ble.expect.npz"
+ },
+ {
+  "id": "ply/elem_after_ble",
+  "files": [
+   "ply/elem_after_ble.ply"
+  ],
+  "desc": "vertex の後ろに face 0 枚と edge 要素（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_after_ble.expect.npz"
+ },
+ {
+  "id": "ply/elem_before_vertex_ascii",
+  "files": [
+   "ply/elem_before_vertex_ascii.ply"
+  ],
+  "desc": "vertex の前に camera 要素（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_before_vertex_ascii.expect.npz"
+ },
+ {
+  "id": "ply/list_before_x_ascii",
+  "files": [
+   "ply/list_before_x_ascii.ply"
+  ],
+  "desc": "vertex の中で x より前に list（長さ 0〜3）（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/list_before_x_ascii.expect.npz"
+ },
+ {
+  "id": "ply/elem_after_ascii",
+  "files": [
+   "ply/elem_after_ascii.ply"
+  ],
+  "desc": "vertex の後ろに face 0 枚と edge 要素（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_after_ascii.expect.npz"
+ },
+ {
+  "id": "ply/elem_before_vertex_bbe",
+  "files": [
+   "ply/elem_before_vertex_bbe.ply"
+  ],
+  "desc": "vertex の前に camera 要素（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_before_vertex_bbe.expect.npz"
+ },
+ {
+  "id": "ply/list_before_x_bbe",
+  "files": [
+   "ply/list_before_x_bbe.ply"
+  ],
+  "desc": "vertex の中で x より前に list（長さ 0〜3）（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/list_before_x_bbe.expect.npz"
+ },
+ {
+  "id": "ply/elem_after_bbe",
+  "files": [
+   "ply/elem_after_bbe.ply"
+  ],
+  "desc": "vertex の後ろに face 0 枚と edge 要素（binary_big_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/elem_after_bbe.expect.npz"
+ },
+ {
+  "id": "ply/color_rgb_short_ble",
+  "files": [
+   "ply/color_rgb_short_ble.ply"
+  ],
+  "desc": "色 rgb_short（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_rgb_short_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_rgb_short_ascii",
+  "files": [
+   "ply/color_rgb_short_ascii.ply"
+  ],
+  "desc": "色 rgb_short（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_rgb_short_ascii.expect.npz"
+ },
+ {
+  "id": "ply/color_diffuse_ble",
+  "files": [
+   "ply/color_diffuse_ble.ply"
+  ],
+  "desc": "色 diffuse（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_diffuse_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_diffuse_ascii",
+  "files": [
+   "ply/color_diffuse_ascii.ply"
+  ],
+  "desc": "色 diffuse（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_diffuse_ascii.expect.npz"
+ },
+ {
+  "id": "ply/color_alpha_ble",
+  "files": [
+   "ply/color_alpha_ble.ply"
+  ],
+  "desc": "色 alpha（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_alpha_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_alpha_ascii",
+  "files": [
+   "ply/color_alpha_ascii.ply"
+  ],
+  "desc": "色 alpha（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_alpha_ascii.expect.npz"
+ },
+ {
+  "id": "ply/color_float01_ble",
+  "files": [
+   "ply/color_float01_ble.ply"
+  ],
+  "desc": "色 float01（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare は ×255 して読む",
+   "color_tol": 1
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_float01_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_float01_ascii",
+  "files": [
+   "ply/color_float01_ascii.ply"
+  ],
+  "desc": "色 float01（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare は ×255 して読む",
+   "color_tol": 1
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_float01_ascii.expect.npz"
+ },
+ {
+  "id": "ply/color_double01_ble",
+  "files": [
+   "ply/color_double01_ble.ply"
+  ],
+  "desc": "色 double01（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare は ×255 して読む",
+   "color_tol": 1
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_double01_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_double01_ascii",
+  "files": [
+   "ply/color_double01_ascii.ply"
+  ],
+  "desc": "色 double01（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare は ×255 して読む",
+   "color_tol": 1
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_double01_ascii.expect.npz"
+ },
+ {
+  "id": "ply/color_ushort16_ble",
+  "files": [
+   "ply/color_ushort16_ble.ply"
+  ],
+  "desc": "色 ushort16（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare 2.11 も下位 8 bit を取る（同じ）",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_ushort16_ble.expect.npz"
+ },
+ {
+  "id": "ply/color_ushort16_ascii",
+  "files": [
+   "ply/color_ushort16_ascii.ply"
+  ],
+  "desc": "色 ushort16（ascii）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare 2.11 も下位 8 bit を取る（同じ）",
+   "color_tol": 0
+  },
+  "nocheck_points": false,
+  "expect": "ply/color_ushort16_ascii.expect.npz"
+ },
+ {
+  "id": "ply/fields_ble",
+  "files": [
+   "ply/fields_ble.ply"
+  ],
+  "desc": "値の欄 label(int) quality(float) ring(ushort) time(double)、法線 nx ny nz",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/fields_ble.expect.npz"
+ },
+ {
+  "id": "ply/crlf_ascii",
+  "files": [
+   "ply/crlf_ascii.ply"
+  ],
+  "desc": "CRLF の ascii PLY（comment 2 行）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/crlf_ascii.expect.npz"
+ },
+ {
+  "id": "ply/crlf_ble",
+  "files": [
+   "ply/crlf_ble.ply"
+  ],
+  "desc": "CRLF の頭書き（binary_little_endian）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/crlf_ble.expect.npz"
+ },
+ {
+  "id": "ply/upper_xyz_ble",
+  "files": [
+   "ply/upper_xyz_ble.ply"
+  ],
+  "desc": "欄の名前が大文字 X Y Z・obj_info 行",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/upper_xyz_ble.expect.npz"
+ },
+ {
+  "id": "ply/utm_double_ble",
+  "files": [
+   "ply/utm_double_ble.ply"
+  ],
+  "desc": "UTM の座標（double）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/utm_double_ble.expect.npz"
+ },
+ {
+  "id": "ply/first_origin_utm_ble",
+  "files": [
+   "ply/first_origin_utm_ble.ply"
+  ],
+  "desc": "最初の点だけ (0,0,0)、残りは UTM（double）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/first_origin_utm_ble.expect.npz"
+ },
+ {
+  "id": "ply/empty_ble",
+  "files": [
+   "ply/empty_ble.ply"
+  ],
+  "desc": "頂点 0 個（正しい PLY）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": ".",
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "「点がありません」のような知らせが期待"
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "ply/html_field_name_ble",
+  "files": [
+   "ply/html_field_name_ble.ply"
+  ],
+  "desc": "欄の名前が HTML の PLY（細工したファイル）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "場面試験 html_field_name で画面への差し込みを確かめる"
+  },
+  "nocheck_points": false,
+  "expect": "ply/html_field_name_ble.expect.npz"
+ },
+ {
+  "id": "ply/xss_field_name_ble",
+  "files": [
+   "ply/xss_field_name_ble.ply"
+  ],
+  "desc": "欄の名前に img の onerror（細工したファイル）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "bxss.js で実行されるかを確かめる"
+  },
+  "nocheck_points": false,
+  "expect": "ply/xss_field_name_ble.expect.npz"
+ },
+ {
+  "id": "ply/gsplat_ble",
+  "files": [
+   "ply/gsplat_ble.ply"
+  ],
+  "desc": "3D Gaussian Splatting の PLY（float の欄 62 個）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/gsplat_ble.expect.npz"
+ },
+ {
+  "id": "ply/many70_ascii",
+  "files": [
+   "ply/many70_ascii.ply"
+  ],
+  "desc": "ascii で欄が 70 個（最後の欄 v66 に 0〜4999）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ply/many70_ascii.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_txt",
+  "files": [
+   "ascii/sep_space.txt"
+  ],
+  "desc": "x y z だけ、区切り space（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_xyz",
+  "files": [
+   "ascii/sep_space.xyz"
+  ],
+  "desc": "x y z だけ、区切り space（.xyz）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_xyz.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_asc",
+  "files": [
+   "ascii/sep_space.asc"
+  ],
+  "desc": "x y z だけ、区切り space（.asc）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_asc.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_neu",
+  "files": [
+   "ascii/sep_space.neu"
+  ],
+  "desc": "x y z だけ、区切り space（.neu）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_neu.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_csv",
+  "files": [
+   "ascii/sep_space.csv"
+  ],
+  "desc": "x y z だけ、区切り space（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_csv.expect.npz"
+ },
+ {
+  "id": "ascii/sep_space_pts",
+  "files": [
+   "ascii/sep_space.pts"
+  ],
+  "desc": "x y z だけ、区切り space（.pts）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_space_pts.expect.npz"
+ },
+ {
+  "id": "ascii/sep_tab_txt",
+  "files": [
+   "ascii/sep_tab.txt"
+  ],
+  "desc": "x y z だけ、区切り tab（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_tab_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_tab_csv",
+  "files": [
+   "ascii/sep_tab.csv"
+  ],
+  "desc": "x y z だけ、区切り tab（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_tab_csv.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_txt",
+  "files": [
+   "ascii/sep_comma.txt"
+  ],
+  "desc": "x y z だけ、区切り comma（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_xyz",
+  "files": [
+   "ascii/sep_comma.xyz"
+  ],
+  "desc": "x y z だけ、区切り comma（.xyz）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_xyz.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_asc",
+  "files": [
+   "ascii/sep_comma.asc"
+  ],
+  "desc": "x y z だけ、区切り comma（.asc）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_asc.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_neu",
+  "files": [
+   "ascii/sep_comma.neu"
+  ],
+  "desc": "x y z だけ、区切り comma（.neu）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_neu.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_csv",
+  "files": [
+   "ascii/sep_comma.csv"
+  ],
+  "desc": "x y z だけ、区切り comma（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_csv.expect.npz"
+ },
+ {
+  "id": "ascii/sep_comma_pts",
+  "files": [
+   "ascii/sep_comma.pts"
+  ],
+  "desc": "x y z だけ、区切り comma（.pts）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_comma_pts.expect.npz"
+ },
+ {
+  "id": "ascii/sep_semicolon_txt",
+  "files": [
+   "ascii/sep_semicolon.txt"
+  ],
+  "desc": "x y z だけ、区切り semicolon（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_semicolon_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_semicolon_csv",
+  "files": [
+   "ascii/sep_semicolon.csv"
+  ],
+  "desc": "x y z だけ、区切り semicolon（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_semicolon_csv.expect.npz"
+ },
+ {
+  "id": "ascii/sep_multispace_txt",
+  "files": [
+   "ascii/sep_multispace.txt"
+  ],
+  "desc": "x y z だけ、区切り multispace（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_multispace_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_multispace_csv",
+  "files": [
+   "ascii/sep_multispace.csv"
+  ],
+  "desc": "x y z だけ、区切り multispace（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_multispace_csv.expect.npz"
+ },
+ {
+  "id": "ascii/sep_mixed_txt",
+  "files": [
+   "ascii/sep_mixed.txt"
+  ],
+  "desc": "x y z だけ、区切り mixed（.txt）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_mixed_txt.expect.npz"
+ },
+ {
+  "id": "ascii/sep_mixed_csv",
+  "files": [
+   "ascii/sep_mixed.csv"
+  ],
+  "desc": "x y z だけ、区切り mixed（.csv）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/sep_mixed_csv.expect.npz"
+ },
+ {
+  "id": "ascii/head_cc_slash",
+  "files": [
+   "ascii/head_cc_slash.txt"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: '//X Y Z R G B Intensity'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_cc_slash.expect.npz"
+ },
+ {
+  "id": "ascii/head_hash",
+  "files": [
+   "ascii/head_hash.txt"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: '# x y z red green blue intensity'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_hash.expect.npz"
+ },
+ {
+  "id": "ascii/head_plain_csv",
+  "files": [
+   "ascii/head_plain_csv.csv"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: 'X,Y,Z,Red,Green,Blue,Intensity'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_plain_csv.expect.npz"
+ },
+ {
+  "id": "ascii/head_quoted_csv",
+  "files": [
+   "ascii/head_quoted_csv.csv"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: '\"X\",\"Y\",\"Z\",\"R\",\"G\",\"B\",\"Intensity\"'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_quoted_csv.expect.npz"
+ },
+ {
+  "id": "ascii/head_none",
+  "files": [
+   "ascii/head_none.txt"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: None",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_none.expect.npz"
+ },
+ {
+  "id": "ascii/head_east_north",
+  "files": [
+   "ascii/head_east_north.txt"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: 'Easting Northing Elevation R G B Intensity'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_east_north.expect.npz"
+ },
+ {
+  "id": "ascii/head_slash_space",
+  "files": [
+   "ascii/head_slash_space.txt"
+  ],
+  "desc": "7 列（x y z r g b 強度）、見出し: '// X Y Z R G B Intensity'",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_slash_space.expect.npz"
+ },
+ {
+  "id": "ascii/head_spaces",
+  "files": [
+   "ascii/head_spaces.csv"
+  ],
+  "desc": "CSV の見出しの名前に空白（Point X,Point Y,Point Z,Red,Green,Blue,Scalar field）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_spaces.expect.npz"
+ },
+ {
+  "id": "ascii/head_sf_space",
+  "files": [
+   "ascii/head_sf_space.asc"
+  ],
+  "desc": "CloudCompare の見出し //X Y Z Scalar field（値の欄の名前に空白）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "欄の名前は「Scalar field」が期待"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/head_sf_space.expect.npz"
+ },
+ {
+  "id": "ascii/cc_csv_las_fields",
+  "files": [
+   "ascii/cc_csv_las_fields.csv"
+  ],
+  "desc": "CloudCompare の CSV 書き出し（LAS 由来の欄 Return Number・Classification、名前に空白）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "欄の名前と値の対応"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/cc_csv_las_fields.expect.npz"
+ },
+ {
+  "id": "ascii/head_rf_gf_bf",
+  "files": [
+   "ascii/head_rf_gf_bf.txt"
+  ],
+  "desc": "CloudCompare の float の色の見出し //X Y Z Rf Gf Bf（0〜1）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "color_tol": 1,
+   "note": "CloudCompare は Rf Gf Bf を 0〜1 の色として読む"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/head_rf_gf_bf.expect.npz"
+ },
+ {
+  "id": "ascii/rgb_float01",
+  "files": [
+   "ascii/rgb_float01.txt"
+  ],
+  "desc": "見出し //X Y Z R G B で値は 0〜1 の小数",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "color_tol": 1,
+   "note": "色として読むか、少なくとも黒にならないこと"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/rgb_float01.expect.npz"
+ },
+ {
+  "id": "ascii/leica_pts",
+  "files": [
+   "ascii/leica.pts"
+  ],
+  "desc": "PTS（先頭行 = 点数、x y z 強度(-2048〜2047) r g b）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/leica_pts.expect.npz"
+ },
+ {
+  "id": "ascii/pts_count_wrong",
+  "files": [
+   "ascii/pts_count_wrong.pts"
+  ],
+  "desc": "PTS の点数の行が 4000（実際は 5000 行）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "5000 点を読むのは CloudCompare と同じ"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/pts_count_wrong.expect.npz"
+ },
+ {
+  "id": "ascii/pts4",
+  "files": [
+   "ascii/pts4.pts"
+  ],
+  "desc": "PTS（x y z 強度 の 4 列）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/pts4.expect.npz"
+ },
+ {
+  "id": "ascii/pts_i255",
+  "files": [
+   "ascii/pts_i255.pts"
+  ],
+  "desc": "PTS（x y z 強度 r g b、強度が 0〜255 の整数）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/pts_i255.expect.npz"
+ },
+ {
+  "id": "ascii/xyzirgb_i255",
+  "files": [
+   "ascii/xyzirgb_i255.txt"
+  ],
+  "desc": "7 列（x y z 強度 r g b、強度が 0〜255 の整数、見出しなし）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "見出しがないので推測。CloudCompare の推測と比べる"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/xyzirgb_i255.expect.npz"
+ },
+ {
+  "id": "ascii/exp_extra",
+  "files": [
+   "ascii/exp_extra.txt"
+  ],
+  "desc": "指数表記・余分な列（9 列）・空行・途中の注釈 # と //・行頭の空白・行末のカンマ",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/exp_extra.expect.npz"
+ },
+ {
+  "id": "ascii/bom_utf8",
+  "files": [
+   "ascii/bom_utf8.txt"
+  ],
+  "desc": "先頭に UTF-8 の BOM（見出しなし）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/bom_utf8.expect.npz"
+ },
+ {
+  "id": "ascii/bom_utf8_head",
+  "files": [
+   "ascii/bom_utf8_head.txt"
+  ],
+  "desc": "先頭に UTF-8 の BOM + 見出し //X Y Z",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/bom_utf8_head.expect.npz"
+ },
+ {
+  "id": "ascii/utf16le",
+  "files": [
+   "ascii/utf16le.txt"
+  ],
+  "desc": "UTF-16 LE（BOM 付き。Windows のメモ帳の「Unicode」）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "読めるか、少なくとも分かりやすい知らせ"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/utf16le.expect.npz"
+ },
+ {
+  "id": "ascii/crlf",
+  "files": [
+   "ascii/crlf.txt"
+  ],
+  "desc": "CRLF の改行",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/crlf.expect.npz"
+ },
+ {
+  "id": "ascii/cr_only",
+  "files": [
+   "ascii/cr_only.txt"
+  ],
+  "desc": "改行が CR だけ（古い Mac）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "読めるか、少なくとも分かりやすい知らせ"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/cr_only.expect.npz"
+ },
+ {
+  "id": "ascii/decimal_comma",
+  "files": [
+   "ascii/decimal_comma.csv"
+  ],
+  "desc": "小数点がカンマ・区切りがセミコロン（欧州の Excel の CSV）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "正しく読むか、読めない旨を知らせる（黙って違う座標にしない）"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/decimal_comma.expect.npz"
+ },
+ {
+  "id": "ascii/cols4",
+  "files": [
+   "ascii/cols4.xyz"
+  ],
+  "desc": "4 列（x y z 強度）見出しなし",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/cols4.expect.npz"
+ },
+ {
+  "id": "ascii/cols6_rgb",
+  "files": [
+   "ascii/cols6_rgb.xyz"
+  ],
+  "desc": "6 列（x y z r g b）見出しなし",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/cols6_rgb.expect.npz"
+ },
+ {
+  "id": "ascii/cols6_normals",
+  "files": [
+   "ascii/cols6_normals.xyz"
+  ],
+  "desc": "6 列（x y z nx ny nz）見出しなし",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/cols6_normals.expect.npz"
+ },
+ {
+  "id": "ascii/cols9",
+  "files": [
+   "ascii/cols9.txt"
+  ],
+  "desc": "9 列（x y z r g b nx ny nz）見出しなし",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/cols9.expect.npz"
+ },
+ {
+  "id": "ascii/csv8_points",
+  "files": [
+   "ascii/csv8_points.csv"
+  ],
+  "desc": "CSV の点群 8 列（X,Y,Z,R,G,B,Intensity,Classification、見出しあり）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/csv8_points.expect.npz"
+ },
+ {
+  "id": "ascii/csv8_noheader",
+  "files": [
+   "ascii/csv8_noheader.csv"
+  ],
+  "desc": "CSV の点群 8 列（見出しなし）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/csv8_noheader.expect.npz"
+ },
+ {
+  "id": "ascii/name_demo_scan",
+  "files": [
+   "ascii/demo_scan.csv"
+  ],
+  "desc": "ファイル名が demo_scan.csv の普通の点群（3 列）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/name_demo_scan.expect.npz"
+ },
+ {
+  "id": "ascii/name_academic_lab",
+  "files": [
+   "ascii/academic_lab.csv"
+  ],
+  "desc": "ファイル名が academic_lab.csv の普通の点群（3 列）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/name_academic_lab.expect.npz"
+ },
+ {
+  "id": "ascii/name_grid_room",
+  "files": [
+   "ascii/grid_room.csv"
+  ],
+  "desc": "ファイル名が grid_room.csv の普通の点群（3 列）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/name_grid_room.expect.npz"
+ },
+ {
+  "id": "ascii/utm_mm",
+  "files": [
+   "ascii/utm_mm.txt"
+  ],
+  "desc": "UTM の座標（小数 3 桁 = mm）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/utm_mm.expect.npz"
+ },
+ {
+  "id": "ascii/jgd_plane",
+  "files": [
+   "ascii/jgd_plane.csv"
+  ],
+  "desc": "平面直角座標（-37000, -12000 付近）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/jgd_plane.expect.npz"
+ },
+ {
+  "id": "ascii/first_origin_utm",
+  "files": [
+   "ascii/first_origin_utm.txt"
+  ],
+  "desc": "最初の行だけ 0 0 0、残りは UTM",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/first_origin_utm.expect.npz"
+ },
+ {
+  "id": "ascii/text_column",
+  "files": [
+   "ascii/text_column.txt"
+  ],
+  "desc": "4 列目が文字（wall/floor/ceiling）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "読めるか、少なくとも分かりやすい知らせ"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/text_column.expect.npz"
+ },
+ {
+  "id": "ascii/with_nan",
+  "files": [
+   "ascii/with_nan.txt"
+  ],
+  "desc": "nan の行が 2 つ",
+  "kind": "cloud",
+  "node": true,
+  "n": 4998,
+  "total": 4998,
+  "skipped": 2,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/with_nan.expect.npz"
+ },
+ {
+  "id": "ascii/first_nan",
+  "files": [
+   "ascii/first_nan.txt"
+  ],
+  "desc": "最初の行が nan nan nan",
+  "kind": "cloud",
+  "node": true,
+  "n": 4999,
+  "total": 4999,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/first_nan.expect.npz"
+ },
+ {
+  "id": "ascii/jp_header_utf8",
+  "files": [
+   "ascii/jp_header_utf8.csv"
+  ],
+  "desc": "日本語の見出し（UTF-8）X座標,Y座標,Z座標,強度",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/jp_header_utf8.expect.npz"
+ },
+ {
+  "id": "ascii/jp_header_sjis",
+  "files": [
+   "ascii/jp_header_sjis.csv"
+  ],
+  "desc": "日本語の見出し（Shift_JIS、日本語版 Excel の CSV）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "欄の名前が文字化けしないか"
+  },
+  "nocheck_points": false,
+  "expect": "ascii/jp_header_sjis.expect.npz"
+ },
+ {
+  "id": "ascii/head_id",
+  "files": [
+   "ascii/head_id.csv"
+  ],
+  "desc": "見出し id,x,y,z（x が 2 列目）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ascii/head_id.expect.npz"
+ },
+ {
+  "id": "ptx/2scans_rgb",
+  "files": [
+   "ptx/2scans_rgb.ptx"
+  ],
+  "desc": "2 スキャン（回転 + 移動）・色あり・空のマス 0 0 0",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ptx/2scans_rgb.expect.npz"
+ },
+ {
+  "id": "ptx/2scans_norgb",
+  "files": [
+   "ptx/2scans_norgb.ptx"
+  ],
+  "desc": "2 スキャン・色なし（x y z 強度）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ptx/2scans_norgb.expect.npz"
+ },
+ {
+  "id": "ptx/first_invalid_4col",
+  "files": [
+   "ptx/first_invalid_4col.ptx"
+  ],
+  "desc": "最初のマスだけ空で 4 列（0 0 0 0.5）、ほかのマスは 7 列（色あり、空のマスも 0 0 0 0.5 0 0 0）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "CloudCompare 2.11 は最初の「有効な点」の列数で色の有無を決めるので色を読む"
+  },
+  "nocheck_points": false,
+  "expect": "ptx/first_invalid_4col.expect.npz"
+ },
+ {
+  "id": "ptx/sensor_differs",
+  "files": [
+   "ptx/sensor_differs.ptx"
+  ],
+  "desc": "スキャナー位置・軸の行が 4×4 の変換と違う",
+  "kind": "cloud",
+  "node": true,
+  "n": 2500,
+  "total": 2500,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ptx/sensor_differs.expect.npz"
+ },
+ {
+  "id": "ptx/utm",
+  "files": [
+   "ptx/utm.ptx"
+  ],
+  "desc": "4×4 の平行移動が UTM",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ptx/utm.expect.npz"
+ },
+ {
+  "id": "ptx/3scans_crlf",
+  "files": [
+   "ptx/3scans_crlf.ptx"
+  ],
+  "desc": "CRLF・スキャン 3 つ（2 つ目は 0 × 0）",
+  "kind": "cloud",
+  "node": true,
+  "n": 2600,
+  "total": 2600,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "ptx/3scans_crlf.expect.npz"
+ },
+ {
+  "id": "cc/bin_basic",
+  "files": [
+   "cc/bin_basic.bin"
+  ],
+  "desc": "CloudCompare の BIN（色 + Intensity）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/bin_basic.expect.npz"
+ },
+ {
+  "id": "cc/bin_utm_shift",
+  "files": [
+   "cc/bin_utm_shift.bin"
+  ],
+  "desc": "CloudCompare の BIN（UTM、グローバルシフト自動）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 2e-05,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/bin_utm_shift.expect.npz"
+ },
+ {
+  "id": "cc/bin_two",
+  "files": [
+   "cc/bin_two.bin"
+  ],
+  "desc": "CloudCompare の BIN（点群 2 つ）",
+  "kind": "cloud",
+  "node": true,
+  "n": 10000,
+  "total": 10000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/bin_two.expect.npz"
+ },
+ {
+  "id": "cc/bin_local_utm",
+  "files": [
+   "cc/bin_local_utm.bin"
+  ],
+  "desc": "CloudCompare の BIN（ローカルの点群 + UTM の点群、UTM 側だけシフトあり）",
+  "kind": "cloud",
+  "node": true,
+  "n": 10000,
+  "total": 10000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 2e-05,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/bin_local_utm.expect.npz"
+ },
+ {
+  "id": "cc/bin_two_sf",
+  "files": [
+   "cc/bin_two_sf.bin"
+  ],
+  "desc": "CloudCompare の BIN（値の欄 2 つ: Intensity, Return）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/bin_two_sf.expect.npz"
+ },
+ {
+  "id": "cc/sbf_basic",
+  "files": [
+   "cc/sbf_basic.sbf",
+   "cc/sbf_basic.sbf.data"
+  ],
+  "desc": "CloudCompare の SBF（.sbf + .sbf.data）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/sbf_basic.expect.npz"
+ },
+ {
+  "id": "cc/sbf_basic_dataonly",
+  "files": [
+   "cc/sbf_basic.sbf.data"
+  ],
+  "desc": "SBF の .sbf.data だけを選ぶ",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": ".sbf がなくても座標は読める作り"
+  },
+  "nocheck_points": false,
+  "expect": "cc/sbf_basic_dataonly.expect.npz"
+ },
+ {
+  "id": "cc/sbf_basic_headeronly",
+  "files": [
+   "cc/sbf_basic.sbf"
+  ],
+  "desc": "SBF の .sbf だけを選ぶ（.data なし）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": "\\.data",
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "「.data も一緒に選んで」と知らせる作り"
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "cc/sbf_utm_shift",
+  "files": [
+   "cc/sbf_utm_shift.sbf",
+   "cc/sbf_utm_shift.sbf.data"
+  ],
+  "desc": "CloudCompare の SBF（UTM、グローバルシフト）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 2e-05,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/sbf_utm_shift.expect.npz"
+ },
+ {
+  "id": "cc/sbf_utm_shift_dataonly",
+  "files": [
+   "cc/sbf_utm_shift.sbf.data"
+  ],
+  "desc": "UTM の SBF の .sbf.data だけを選ぶ",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 2e-05,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/sbf_utm_shift_dataonly.expect.npz"
+ },
+ {
+  "id": "cc/sbf_two_sf",
+  "files": [
+   "cc/sbf_two_sf.sbf",
+   "cc/sbf_two_sf.sbf.data"
+  ],
+  "desc": "CloudCompare の SBF（値の欄 2 つ）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/sbf_two_sf.expect.npz"
+ },
+ {
+  "id": "cc/asc_sfspace",
+  "files": [
+   "cc/asc_sfspace.asc"
+  ],
+  "desc": "CloudCompare の ASC（見出しつき、値の欄の名前に空白がありうる）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "値の欄の名前"
+  },
+  "nocheck_points": false,
+  "expect": "cc/asc_sfspace.expect.npz"
+ },
+ {
+  "id": "cc/ply_utm_shift",
+  "files": [
+   "cc/ply_utm_shift.ply"
+  ],
+  "desc": "CloudCompare が書いた PLY（UTM をグローバルシフトして読み込んだもの）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 2e-05,
+  "mm": true,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/ply_utm_shift.expect.npz"
+ },
+ {
+  "id": "cc/ply_cc_ascii",
+  "files": [
+   "cc/ply_cc_ascii.ply"
+  ],
+  "desc": "CloudCompare が書いた ascii の PLY",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": 1e-05,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "cc/ply_cc_ascii.expect.npz"
+ },
+ {
+  "id": "misc/pn",
+  "files": [
+   "misc/cloud.pn"
+  ],
+  "desc": "PN（x y z nx ny nz の float）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/pn.expect.npz"
+ },
+ {
+  "id": "misc/pv",
+  "files": [
+   "misc/cloud.pv"
+  ],
+  "desc": "PV（x y z 値 の float）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/pv.expect.npz"
+ },
+ {
+  "id": "misc/pv_as_pn",
+  "files": [
+   "misc/cloud_pv_as.pn"
+  ],
+  "desc": "PV の中身を .pn の名前にしたもの（4 の倍数だが 24 の倍数でない大きさ）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": "倍数",
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "形式が違う旨の知らせ"
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "misc/soi",
+  "files": [
+   "misc/2scans.soi"
+  ],
+  "desc": "Mensi Soisic（2 スキャン、濃淡 → 灰色）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/soi.expect.npz"
+ },
+ {
+  "id": "misc/bundler",
+  "files": [
+   "misc/bundler.out"
+  ],
+  "desc": "Bundler v0.3（カメラ 2 台・点 5,000、点ごとに 位置・色・見えたカメラ の 3 行）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/bundler.expect.npz"
+ },
+ {
+  "id": "misc/bundler_nocolor",
+  "files": [
+   "misc/bundler_nocolor.out"
+  ],
+  "desc": "Bundler: 100 番目の点だけ色の行がない（CloudCompare は黒にして続きを読む）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/bundler_nocolor.expect.npz"
+ },
+ {
+  "id": "misc/salome",
+  "files": [
+   "misc/lines.poly"
+  ],
+  "desc": "Salome Hydro（線 5 本: 軌跡 + 四角形 4 つ）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "lines": "misc/lines.segs.npy"
+  },
+  "nocheck_points": true,
+  "expect": "misc/salome.expect.npz"
+ },
+ {
+  "id": "misc/sinusx",
+  "files": [
+   "misc/lines.sx"
+  ],
+  "desc": "SinusX（線 5 本、四角形は「閉じた線」CP 1 1）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "lines": "misc/lines_sx.segs.npy"
+  },
+  "nocheck_points": true
+ },
+ {
+  "id": "misc/ccbin_v1",
+  "files": [
+   "misc/old_v1.bin"
+  ],
+  "desc": "CloudCompare の古い BIN（v1、点群 2 つ: 色 + 値 / 法線だけ）",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "misc/ccbin_v1.expect.npz"
+ },
+ {
+  "id": "cap/las50k_cap10000",
+  "files": [
+   "cap/las50k.las"
+  ],
+  "desc": "LAS 5 万点を上限 10,000 点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 10000,
+  "total": 50000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": 10000,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": true,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/las50k_cap10000.expect.npz"
+ },
+ {
+  "id": "cap/las50k_cap49999",
+  "files": [
+   "cap/las50k.las"
+  ],
+  "desc": "LAS 5 万点を上限 49,999 点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 49999,
+  "total": 50000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": 49999,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": true,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/las50k_cap49999.expect.npz"
+ },
+ {
+  "id": "cap/las50k_cap50000",
+  "files": [
+   "cap/las50k.las"
+  ],
+  "desc": "LAS 5 万点を上限 50,000 点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 50000,
+  "total": 50000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": 50000,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": false,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/las50k_cap50000.expect.npz"
+ },
+ {
+  "id": "cap/las50k_cap50001",
+  "files": [
+   "cap/las50k.las"
+  ],
+  "desc": "LAS 5 万点を上限 50,001 点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 50000,
+  "total": 50000,
+  "skipped": null,
+  "rgb": true,
+  "fields": null,
+  "error": null,
+  "cap": 50001,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": false,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/las50k_cap50001.expect.npz"
+ },
+ {
+  "id": "cap/pcd50k_cap10000",
+  "files": [
+   "cap/pcd50k.pcd"
+  ],
+  "desc": "PCD 5 万点を上限 1 万点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 10000,
+  "total": 50000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": 10000,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": true,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/pcd50k_cap10000.expect.npz"
+ },
+ {
+  "id": "cap/xyz50k_cap10000",
+  "files": [
+   "cap/xyz50k.xyz"
+  ],
+  "desc": "文字の点群 5 万点を上限 1 万点で開く",
+  "kind": "cloud",
+  "node": true,
+  "n": 10000,
+  "total": 50000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": 10000,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": true,
+   "strata": 10
+  },
+  "nocheck_points": false,
+  "expect": "cap/xyz50k_cap10000.expect.npz"
+ },
+ {
+  "id": "cap/pcd50k_cap1",
+  "files": [
+   "cap/pcd50k.pcd"
+  ],
+  "desc": "PCD 5 万点を上限 1 点で開く（境界）",
+  "kind": "cloud",
+  "node": true,
+  "n": 1,
+  "total": 50000,
+  "skipped": null,
+  "rgb": false,
+  "fields": null,
+  "error": null,
+  "cap": 1,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "sampled": true,
+   "no_browser": true
+  },
+  "nocheck_points": false,
+  "expect": "cap/pcd50k_cap1.expect.npz"
+ },
+ {
+  "id": "traj/tum_txt",
+  "files": [
+   "traj/tum.txt"
+  ],
+  "desc": "TUM 形式（.txt、空白区切り 8 列）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/tum_txt.expect.npz"
+ },
+ {
+  "id": "traj/tum_tum",
+  "files": [
+   "traj/tum.tum"
+  ],
+  "desc": "TUM 形式（.tum）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/tum_tum.expect.npz"
+ },
+ {
+  "id": "traj/tum_header",
+  "files": [
+   "traj/tum_header.txt"
+  ],
+  "desc": "TUM 形式 + # の見出し",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/tum_header.expect.npz"
+ },
+ {
+  "id": "traj/tum_crlf",
+  "files": [
+   "traj/tum_crlf.txt"
+  ],
+  "desc": "TUM 形式（CRLF）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/tum_crlf.expect.npz"
+ },
+ {
+  "id": "traj/csv_header",
+  "files": [
+   "traj/traj.csv"
+  ],
+  "desc": "CSV（見出し timestamp,x,y,z,qx,qy,qz,qw）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/csv_header.expect.npz"
+ },
+ {
+  "id": "traj/csv_semicolon",
+  "files": [
+   "traj/traj_semicolon.csv"
+  ],
+  "desc": "CSV（セミコロン区切り）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "読めるか、分かりやすい知らせ"
+  },
+  "nocheck_points": false,
+  "expect": "traj/csv_semicolon.expect.npz"
+ },
+ {
+  "id": "traj/tab",
+  "files": [
+   "traj/traj_tab.txt"
+  ],
+  "desc": "TUM 形式（タブ区切り）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/tab.expect.npz"
+ },
+ {
+  "id": "traj/t_xyz",
+  "files": [
+   "traj/t_xyz.txt"
+  ],
+  "desc": "4 列（時刻 x y z）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/t_xyz.expect.npz"
+ },
+ {
+  "id": "traj/kitti",
+  "files": [
+   "traj/kitti.txt"
+  ],
+  "desc": "KITTI 形式（3×4 の行列 12 列、時刻なし）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "正しく読むか、読めない旨を知らせる（黙って違う軌跡にしない）"
+  },
+  "nocheck_points": false,
+  "expect": "traj/kitti.expect.npz"
+ },
+ {
+  "id": "traj/fastlio_pos_log",
+  "files": [
+   "traj/fastlio_pos_log.txt"
+  ],
+  "desc": "FAST-LIO の Log/pos_log.txt（時刻・オイラー角 3・位置 3・… 25 列）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "正しく読むか、読めない旨を知らせる"
+  },
+  "nocheck_points": false,
+  "expect": "traj/fastlio_pos_log.expect.npz"
+ },
+ {
+  "id": "traj/tum_ns",
+  "files": [
+   "traj/tum_ns.txt"
+  ],
+  "desc": "時刻が ns の整数（ROS 2 の stamp をそのまま書いたもの）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "秒の表示が 1e9 倍にならないか"
+  },
+  "nocheck_points": false,
+  "expect": "traj/tum_ns.expect.npz"
+ },
+ {
+  "id": "traj/utm",
+  "files": [
+   "traj/utm.txt"
+  ],
+  "desc": "UTM の軌跡（539000, 3836000 付近）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/utm.expect.npz"
+ },
+ {
+  "id": "traj/mcap_odom_chunk_none",
+  "files": [
+   "traj/odom_chunk_none.mcap"
+  ],
+  "desc": "MCAP: /Odometry（chunk_none、チャンク 4 KB）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": ""
+  },
+  "nocheck_points": false,
+  "expect": "traj/mcap_odom_chunk_none.expect.npz"
+ },
+ {
+  "id": "traj/mcap_odom_nochunk",
+  "files": [
+   "traj/odom_nochunk.mcap"
+  ],
+  "desc": "MCAP: /Odometry（nochunk、チャンク 4 KB）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": ""
+  },
+  "nocheck_points": false,
+  "expect": "traj/mcap_odom_nochunk.expect.npz"
+ },
+ {
+  "id": "traj/mcap_odom_zstd",
+  "files": [
+   "traj/odom_zstd.mcap"
+  ],
+  "desc": "MCAP: /Odometry（zstd、チャンク 4 KB）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "圧縮は対応外と知らせるのは仕様どおり"
+  },
+  "nocheck_points": false,
+  "expect": "traj/mcap_odom_zstd.expect.npz"
+ },
+ {
+  "id": "traj/mcap_odom_lz4",
+  "files": [
+   "traj/odom_lz4.mcap"
+  ],
+  "desc": "MCAP: /Odometry（lz4、チャンク 4 KB）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "note": "圧縮は対応外と知らせるのは仕様どおり"
+  },
+  "nocheck_points": false,
+  "expect": "traj/mcap_odom_lz4.expect.npz"
+ },
+ {
+  "id": "traj/mcap_posestamped",
+  "files": [
+   "traj/posestamped.mcap"
+  ],
+  "desc": "MCAP: PoseStamped（既定の zstd 圧縮の mcap ライブラリで書いたもの）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/mcap_posestamped.expect.npz"
+ },
+ {
+  "id": "traj/mcap_posestamped_raw",
+  "files": [
+   "traj/posestamped_raw.mcap"
+  ],
+  "desc": "MCAP: PoseStamped（無圧縮）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/mcap_posestamped_raw.expect.npz"
+ },
+ {
+  "id": "traj/mcap_posecov_raw",
+  "files": [
+   "traj/posecov_raw.mcap"
+  ],
+  "desc": "MCAP: PoseWithCovarianceStamped（無圧縮）",
+  "kind": "traj",
+  "node": true,
+  "n": 400,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/mcap_posecov_raw.expect.npz"
+ },
+ {
+  "id": "traj/mcap_two_topics",
+  "files": [
+   "traj/two_topics.mcap"
+  ],
+  "desc": "MCAP: /Odometry 100 個 + /pose 400 個 + /imu（/Odometry を使う作り）",
+  "kind": "traj",
+  "node": true,
+  "n": 100,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/mcap_two_topics.expect.npz"
+ },
+ {
+  "id": "traj/mcap_odom_big",
+  "files": [
+   "traj/odom_big.mcap"
+  ],
+  "desc": "MCAP: /Odometry 2 万姿勢（無圧縮、チャンク 1 MB）",
+  "kind": "traj",
+  "node": true,
+  "n": 20000,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false,
+  "expect": "traj/mcap_odom_big.expect.npz"
+ },
+ {
+  "id": "sample/pcl_ascii.pcd",
+  "files": [
+   "sample_formats/pcl_ascii.pcd"
+  ],
+  "desc": "同梱のサンプル pcl_ascii.pcd",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/pcl_binary.pcd",
+  "files": [
+   "sample_formats/pcl_binary.pcd"
+  ],
+  "desc": "同梱のサンプル pcl_binary.pcd",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/pcl_binary_compressed.pcd",
+  "files": [
+   "sample_formats/pcl_binary_compressed.pcd"
+  ],
+  "desc": "同梱のサンプル pcl_binary_compressed.pcd",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/laspy_utm.las",
+  "files": [
+   "sample_formats/laspy_utm.las"
+  ],
+  "desc": "同梱のサンプル laspy_utm.las",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": [
+     539000.0,
+     3836000.0,
+     30.0
+    ]
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/laspy_14.laz",
+  "files": [
+   "sample_formats/laspy_14.laz"
+  ],
+  "desc": "同梱のサンプル laspy_14.laz",
+  "kind": "cloud",
+  "node": false,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/pye57_2scans.e57",
+  "files": [
+   "sample_formats/pye57_2scans.e57"
+  ],
+  "desc": "同梱のサンプル pye57_2scans.e57",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud_ascii.ply",
+  "files": [
+   "sample_formats/cc_cloud_ascii.ply"
+  ],
+  "desc": "同梱のサンプル cc_cloud_ascii.ply",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud_binary.ply",
+  "files": [
+   "sample_formats/cc_cloud_binary.ply"
+  ],
+  "desc": "同梱のサンプル cc_cloud_binary.ply",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/handmade_2scans.ptx",
+  "files": [
+   "sample_formats/handmade_2scans.ptx"
+  ],
+  "desc": "同梱のサンプル handmade_2scans.ptx",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.txt",
+  "files": [
+   "sample_formats/cc_cloud.txt"
+  ],
+  "desc": "同梱のサンプル cc_cloud.txt",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.asc",
+  "files": [
+   "sample_formats/cc_cloud.asc"
+  ],
+  "desc": "同梱のサンプル cc_cloud.asc",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.neu",
+  "files": [
+   "sample_formats/cc_cloud.neu"
+  ],
+  "desc": "同梱のサンプル cc_cloud.neu",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.xyz",
+  "files": [
+   "sample_formats/cc_cloud.xyz"
+  ],
+  "desc": "同梱のサンプル cc_cloud.xyz",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.pts",
+  "files": [
+   "sample_formats/cc_cloud.pts"
+  ],
+  "desc": "同梱のサンプル cc_cloud.pts",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.csv",
+  "files": [
+   "sample_formats/cc_cloud.csv"
+  ],
+  "desc": "同梱のサンプル cc_cloud.csv",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.bin",
+  "files": [
+   "sample_formats/cc_cloud.bin"
+  ],
+  "desc": "同梱のサンプル cc_cloud.bin",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud_shift.bin",
+  "files": [
+   "sample_formats/cc_cloud_shift.bin"
+  ],
+  "desc": "同梱のサンプル cc_cloud_shift.bin",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": "any"
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud_normals.bin",
+  "files": [
+   "sample_formats/cc_cloud_normals.bin"
+  ],
+  "desc": "同梱のサンプル cc_cloud_normals.bin",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/cc_cloud.sbf",
+  "files": [
+   "sample_formats/cc_cloud.sbf",
+   "sample_formats/cc_cloud.sbf.data"
+  ],
+  "desc": "同梱のサンプル cc_cloud.sbf",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/handmade_cloud.pn",
+  "files": [
+   "sample_formats/handmade_cloud.pn"
+  ],
+  "desc": "同梱のサンプル handmade_cloud.pn",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/handmade_cloud.pv",
+  "files": [
+   "sample_formats/handmade_cloud.pv"
+  ],
+  "desc": "同梱のサンプル handmade_cloud.pv",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/handmade_2scans.soi",
+  "files": [
+   "sample_formats/handmade_2scans.soi"
+  ],
+  "desc": "同梱のサンプル handmade_2scans.soi",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/handmade_bundler.out",
+  "files": [
+   "sample_formats/handmade_bundler.out"
+  ],
+  "desc": "同梱のサンプル handmade_bundler.out",
+  "kind": "cloud",
+  "node": true,
+  "n": 5000,
+  "total": 5000,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {
+   "stats": {
+    "mean": [
+     11.50645805731715,
+     0.8842413432371042,
+     1.6019656019871829
+    ],
+    "min": [
+     -4.351192951202393,
+     -4.60348992466681,
+     -0.5652640130669572
+    ],
+    "max": [
+     28.627811514635496,
+     6.13587004261449,
+     3.8554041850409524
+    ],
+    "shift": null
+   }
+  },
+  "nocheck_points": false
+ },
+ {
+  "id": "sample/pyshp_points.shp",
+  "files": [
+   "sample_formats/pyshp_points.shp",
+   "sample_formats/pyshp_points.shx",
+   "sample_formats/pyshp_points.dbf"
+  ],
+  "desc": "同梱のサンプル pyshp_points.shp（試作ページの試験の正解用）",
+  "kind": "cloud",
+  "node": true,
+  "n": null,
+  "total": null,
+  "skipped": null,
+  "rgb": null,
+  "fields": null,
+  "error": null,
+  "cap": null,
+  "tol": null,
+  "mm": null,
+  "extra": {},
+  "nocheck_points": false
+ }
+]

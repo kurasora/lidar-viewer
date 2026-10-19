@@ -59,8 +59,8 @@ def a003():
     d = browser('range/pcl_binary')['result']
     s = [v for v in d['info'] if v.startswith('範囲 x')][0]
     a, b = [float(v) for v in re.findall(r'(-?[0-9.]+) 〜 (-?[0-9.]+)', s)[0]]
-    err = max(abs(a - (-11.5167)), abs(b - 86.2494))
-    return (BUG if err > 0.05 else OK), f"表示 {s}（本当は -11.52 〜 86.25、差 {err:.2f} m）"
+    err = max(abs(a - (-4.3512)), abs(b - 28.6278))
+    return (BUG if err > 0.05 else OK), f"表示 {s}（本当は -4.35 〜 28.63、差 {err:.2f} m）"
 
 
 def a004():

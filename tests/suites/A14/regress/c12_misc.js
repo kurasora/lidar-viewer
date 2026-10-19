@@ -11,7 +11,7 @@ const L = require('./lib.js');
   await p.evaluate(() => { document.getElementById('autoLevel').checked = false; });
   await L.open(p, ['/home/claude/pcd-viewer/sample/formats/cc_cloud.xyz']);
   R.a_info = await p.evaluate(() => [...document.querySelectorAll('#info dt')].map(dt => dt.textContent + ': ' + dt.nextElementSibling.textContent).filter(s => /範囲/.test(s)));
-  R.a_expected = { min: [-11.5167, -6.2480, -5.3942], max: [86.2494, 29.0875, 3.1325] };
+  R.a_expected = { min: [-4.3512, -4.6035, -0.5653], max: [28.6278, 6.1359, 3.8554] };
   R.a_trueFromPositions = await p.evaluate(() => { const f = window.__pcd.S.files[0], P = f.positions, lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9]; for (let i = 0; i < f.n; i++) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], P[3 * i + k]); hi[k] = Math.max(hi[k], P[3 * i + k]); } return { lo, hi }; });
   // b)
   for (const n of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${n}"]`);

@@ -1,4 +1,5 @@
-# Mac で LiDAR Viewer が起動して地図を開けるかを、GitHub の Mac で自動で確かめる（手で実行する）
+# Mac 版を GitHub の Mac で作り、起動して地図を開けるかを確かめる（手で実行する）
+# できた zip は、この実行の「Artifacts」の mac-<arch>-zip から取り出して Releases に置く
 name: mac-check
 on:
   workflow_dispatch:
@@ -10,7 +11,7 @@ jobs:
         include:
           - runner: macos-14   # Apple シリコン
             arch: arm64
-          - runner: macos-13   # Intel
+          - runner: macos-14   # Intel 版も Apple シリコンの機械で作る（起動の確認は Rosetta で動く）
             arch: x64
     runs-on: ${{ matrix.runner }}
     steps:
@@ -37,6 +38,10 @@ jobs:
           if kill -0 $P 2>/dev/null; then echo "起動したまま動いています"; else echo "起動しなかった、または落ちました"; cat app.log; exit 1; fi
           kill $P; sleep 3
           cat app.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-${{ matrix.arch }}-zip
+          path: release/*.zip
       - uses: actions/upload-artifact@v4
         if: always()
         with:
