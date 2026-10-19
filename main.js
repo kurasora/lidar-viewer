@@ -148,7 +148,12 @@ function isAppFile(url) {
 function lockDownSession() {
   const ses = session.defaultSession;
   ses.setPermissionRequestHandler((wc, perm, cb) => cb(false));
-  ses.setPermissionCheckHandler(() => false);
+  // 許すのは「ファイルを開く画面で選んだファイルを読む」ことだけ（アプリの画面から・読むだけ・フォルダは不可）。
+  // これまで断っていたため、ファイルを選んでも読めず、もう一度ファイルを選ぶ画面が出ていた
+  // （この確認には画面が渡されず、出どころは file:/// だけになる。読み込めるのはアプリのファイルだけにしてある）
+  ses.setPermissionCheckHandler((wc, perm, origin, d) =>
+    perm === 'fileSystem' && !!d && d.fileAccessType === 'readable' && !d.isDirectory &&
+    (wc ? isAppFile(wc.getURL()) : origin === 'file:///'));
   ses.setDevicePermissionHandler(() => false);
   ses.webRequest.onBeforeRequest((d, cb) => {
     const s = (d.url.match(/^([a-z][a-z0-9+.-]*):/i) || [])[1];
