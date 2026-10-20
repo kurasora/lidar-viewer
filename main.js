@@ -4,9 +4,13 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { fileURLToPath } = require('node:url');
 
-// 画面のプロセスが落ちた理由を日本語に（R15-003）
-const GONE_REASON = { oom: 'メモリ不足', killed: 'ほかのプログラムに止められました', crashed: '異常終了', 'abnormal-exit': '異常終了',
-  'launch-failed': '起動に失敗', 'integrity-failure': 'プログラムの検証に失敗', 'memory-eviction': 'メモリ不足' };
+// 言語（画面の設定の「言語」。app:lang で画面から知らされる）。主プロセスの言葉は L(日本語, 英語) で選ぶ
+let lang = 'ja';
+const L = (ja, en) => (lang === 'en' ? en : ja);
+// 画面のプロセスが落ちた理由（R15-003）
+const GONE_REASON = { oom: ['メモリ不足', 'out of memory'], killed: ['ほかのプログラムに止められました', 'stopped by another program'], crashed: ['異常終了', 'crashed'],
+  'abnormal-exit': ['異常終了', 'crashed'], 'launch-failed': ['起動に失敗', 'failed to start'], 'integrity-failure': ['プログラムの検証に失敗', 'integrity check failed'],
+  'memory-eviction': ['メモリ不足', 'out of memory'] };
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -42,9 +46,11 @@ function createWindow() {
     if (win.isDestroyed()) return;
     const { response } = await dialog.showMessageBox(win, {
       type: 'error', title: 'LiDAR Viewer',
-      message: '画面が止まりました',
-      detail: `画面の処理が終了しました（${GONE_REASON[d && d.reason] || '原因は不明'}）。開いていた点群は閉じられました。` +(d && d.reason === 'oom' ? '\n大きなファイルは「間引き」を強めて開いてください。' : ''),
-      buttons: ['読み込み直す', '終了する'], defaultId: 0, cancelId: 0,
+      message: L('画面が止まりました', 'The view stopped'),
+      detail: (() => { const r = GONE_REASON[d && d.reason]; const why = r ? L(r[0], r[1]) : L('原因は不明', 'unknown cause');
+        return L(`画面の処理が終了しました（${why}）。開いていた点群は閉じられました。`, `The view process ended (${why}). The open point clouds were closed.`) +
+          (d && d.reason === 'oom' ? L('\n大きなファイルは「間引き」を強めて開いてください。', '\nOpen large files with fewer points ("Max points to load" in Settings).') : ''); })(),
+      buttons: [L('読み込み直す', 'Reload'), L('終了する', 'Quit')], defaultId: 0, cancelId: 0,
     });
     if (win.isDestroyed()) return;
     if (response === 1) app.quit(); else win.reload();
@@ -118,6 +124,14 @@ ipcMain.handle('app:capture', async (e, r) => {
   const img = await mainWin.webContents.capturePage(rect);
   return new Uint8Array(img.toPNG());
 });
+// 画面の設定の言語が変わった（起動のたびにも来る）
+ipcMain.on('app:lang', (e, l) => {
+  if (!mainWin || e.sender !== mainWin.webContents) return;
+  const n = l === 'en' ? 'en' : 'ja';
+  if (n === lang) return;
+  lang = n;
+  setupMacMenu();
+});
 // 画面の準備ができた（app.js の末尾から呼ばれる）
 ipcMain.on('app:ready', e => {
   if (!mainWin || e.sender !== mainWin.webContents) return;
@@ -164,34 +178,34 @@ function lockDownSession() {
   });
 }
 
-// mac: 既定のメニュー（⌘R の再読み込み・開発者ツールなど）を出さず、最小限の日本語のメニューにする
+// mac: 既定のメニュー（⌘R の再読み込み・開発者ツールなど）を出さず、最小限のメニューにする（言葉は設定の言語に合わせる）
 function setupMacMenu() {
   if (process.platform !== 'darwin') return;
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: app.name, submenu: [
-      { role: 'about', label: 'LiDAR Viewer について' },
+      { role: 'about', label: L('LiDAR Viewer について', 'About LiDAR Viewer') },
       { type: 'separator' },
-      { role: 'hide', label: 'LiDAR Viewer を隠す' },
-      { role: 'hideOthers', label: 'ほかを隠す' },
-      { role: 'unhide', label: 'すべてを表示' },
+      { role: 'hide', label: L('LiDAR Viewer を隠す', 'Hide LiDAR Viewer') },
+      { role: 'hideOthers', label: L('ほかを隠す', 'Hide Others') },
+      { role: 'unhide', label: L('すべてを表示', 'Show All') },
       { type: 'separator' },
-      { role: 'quit', label: 'LiDAR Viewer を終了' },
+      { role: 'quit', label: L('LiDAR Viewer を終了', 'Quit LiDAR Viewer') },
     ] },
-    { label: '編集', submenu: [
-      { role: 'undo', label: '取り消す' },
-      { role: 'redo', label: 'やり直す' },
+    { label: L('編集', 'Edit'), submenu: [
+      { role: 'undo', label: L('取り消す', 'Undo') },
+      { role: 'redo', label: L('やり直す', 'Redo') },
       { type: 'separator' },
-      { role: 'cut', label: '切り取り' },
-      { role: 'copy', label: 'コピー' },
-      { role: 'paste', label: 'ペースト' },
-      { role: 'selectAll', label: 'すべてを選択' },
+      { role: 'cut', label: L('切り取り', 'Cut') },
+      { role: 'copy', label: L('コピー', 'Copy') },
+      { role: 'paste', label: L('ペースト', 'Paste') },
+      { role: 'selectAll', label: L('すべてを選択', 'Select All') },
     ] },
-    { label: 'ウインドウ', submenu: [
-      { role: 'minimize', label: 'しまう' },
-      { role: 'zoom', label: '拡大／縮小' },
-      { role: 'togglefullscreen', label: 'フルスクリーン' },
+    { label: L('ウインドウ', 'Window'), submenu: [
+      { role: 'minimize', label: L('しまう', 'Minimize') },
+      { role: 'zoom', label: L('拡大／縮小', 'Zoom') },
+      { role: 'togglefullscreen', label: L('フルスクリーン', 'Full Screen') },
       { type: 'separator' },
-      { role: 'close', label: '閉じる' },
+      { role: 'close', label: L('閉じる', 'Close') },
     ] },
   ]));
 }

@@ -215,11 +215,6 @@ details > * + * { margin-top: 8px }
 .mguide { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); margin: 0; padding: 6px 14px; border-radius: 999px; z-index: 4;
   background: color-mix(in srgb, var(--panel) 94%, transparent); border: 1px solid var(--line); font-size: 12px; color: var(--muted); pointer-events: none; white-space: nowrap }
 .mguide b { color: var(--fg) }
-.mlive { position: absolute; z-index: 4; display: flex; flex-direction: column; gap: 1px; padding: 7px 12px; border-radius: 10px; pointer-events: none;
-  background: color-mix(in srgb, var(--panel) 96%, transparent); border: 1px solid var(--accent); box-shadow: 0 8px 24px rgb(0 0 0 / 0.4) }
-.mlive .big { font: 600 22px var(--mono); line-height: 1.15 }
-.mlive .big small { font-size: 13px; font-weight: 400; color: var(--muted) }
-.mlive .sub { font: 11px var(--mono); color: var(--muted) }
 .labels .mnum { position: absolute; transform: translate(-50%, -50%); width: 16px; height: 16px; padding: 0; display: grid; place-items: center; border-radius: 50%;
   border: none; background: var(--fg); color: var(--scene); font: 600 9px var(--mono); line-height: 1; pointer-events: auto; cursor: pointer }
 .labels .mnum.sel { background: var(--accent); color: var(--accent-fg); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent) }
@@ -239,8 +234,7 @@ details > * + * { margin-top: 8px }
 .mfoot .btns { display: flex; gap: 6px }
 #measureCount { font-weight: 400; color: var(--muted); font-size: 12px }
 
-.stage.picking .pivot, .stage.picking .handles g { pointer-events: none }
-.stage.picking .pivot { opacity: 0.55 }
+/* 座標・距離のモードでも、中心の丸・矢印はつかんで動かせる（点を選ぶのは丸・矢印のない所） */
 
 /* 色のカード: 短いボタンで選ぶ */
 .crow { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 8px; align-items: center }
@@ -370,7 +364,7 @@ input[type=range]::-webkit-slider-runnable-track { box-shadow: inset 0 0 0 1px c
 .mcall.left.below .mc-stem { transform: scale(-1, -1) }
 /* 画像を撮る瞬間は、点群の上に浮かぶ操作の部品を隠す（吹き出しは残す） */
 .app.shooting .pop, .app.shooting .popstack, .app.shooting .dock, .app.shooting .hud, .app.shooting .navhint, .app.shooting .mguide,
-.app.shooting .mlive, .app.shooting .pivot, .app.shooting .handles, .app.shooting .progress { visibility: hidden !important }
+.app.shooting .pivot, .app.shooting .handles, .app.shooting .progress { visibility: hidden !important }
 .hud #statPoints { text-wrap: balance }
 /* 補正のカードは中身（ボタン 2 つと結果の数行）に合わせて幅を詰める */
 .pop[data-name="level"] { width: min(272px, calc(100% - 28px)) }

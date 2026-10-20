@@ -70,7 +70,7 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   const ids = ['pointSize', 'sizeMode', 'bgLight', 'showAxes', 'showPivot', 'showArrows', 'capSel', 'lodSel', 'swapMouse', 'wheelRev', 'zoomSpeed', 'startView', 'autoLevel', 'unitSel', 'digitSel', 'langSel', 'btnResetSettings'];
   ok('設定の部品が全部、設定のカードの中にある（ID が 1 つずつ）', await $v(w, ids => ids.every(i => document.querySelectorAll('#' + i).length === 1 && document.querySelector('[data-pop=settings]').contains(document.getElementById(i))), ids));
   ok('既定値: m・3 桁・斜め・自動補正 入・入れ替えなし・暗い', await $v(w, () => [document.getElementById('unitSel').value, document.getElementById('digitSel').value, document.getElementById('startView').value, document.getElementById('autoLevel').checked, document.getElementById('swapMouse').checked, document.documentElement.dataset.ui].join() === 'm,3,iso,true,false,dark'));
-  ok('言語の English は選べない（準備中）', await $v(w, () => document.querySelector('#langSel option[value=en]').disabled));
+  ok('言語の English が選べる', await $v(w, () => !document.querySelector('#langSel option[value=en]').disabled));
   ok('アプリの情報: version と部品の一覧', await $v(w, () => document.getElementById('appVersion').textContent === '0.4.2' && document.querySelectorAll('#licList li').length >= 8 && /three/.test(document.getElementById('licList').textContent)));
   // スイッチ
   await tab(w, 'setTabLook');
@@ -108,13 +108,36 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   const pinMM = await $v(w, () => [...document.querySelectorAll('#pinTable tbody td')].slice(1, 4).map(t => t.textContent));
   ok('mm・1 桁にすると座標の表が変わる（値は 1000 倍）', pinMM.every(s => /^-?\d+\.\d$/.test(s)) && Math.abs(+pinMM[0] - +pinM[0] * 1000) <= 0.6, pinMM.join(' '));
   ok('座標の吹き出しも mm', await $v(w, () => /mm/.test(document.querySelector('.pcall .pc-xyz').textContent)));
+  // 座標のモードのまま、中心の丸をつかんで点の上へ動かせる
+  {
+    const t0 = await $v(w, () => window.__pcd.controlsTarget());
+    const pv = await $v(w, () => { const r = document.getElementById('pivot').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, pe: getComputedStyle(document.getElementById('pivot')).pointerEvents }; });
+    const n0 = await $v(w, () => window.__pcd.S.pins.length);
+    const dst = await findPoint(w, [pv, p1]);
+    await w.mouse.move(pv.x, pv.y); await w.mouse.down();
+    for (let i = 1; i <= 10; i++) { await w.mouse.move(pv.x + (dst.x - pv.x) * i / 10, pv.y + (dst.y - pv.y) * i / 10); await wait(60); }
+    await wait(300); await w.mouse.up(); await wait(700);
+    const t1 = await $v(w, () => window.__pcd.controlsTarget());
+    ok('座標のモード中も、中心の丸をつかんで動かせる（座標は増えない）', pv.pe !== 'none' && Math.hypot(...t0.map((v, i) => v - t1[i])) > 0.05 && (await $v(w, () => window.__pcd.S.pins.length)) === n0, JSON.stringify({ pe: pv.pe, moved: Math.hypot(...t0.map((v, i) => v - t1[i])) }));
+  }
   ok('座標のカードの単位の表示も mm', /単位 mm/.test(await $v(w, () => document.getElementById('pinUnit').textContent)));
   // 距離
   await w.click('button[data-tool=measure]'); await wait(200);
   const q1 = await findPoint(w), q2 = await findPoint(w, [q1]);
   await w.mouse.click(q1.x, q1.y); await wait(300);
-  // 測っている途中の数字（#mLive）は 0.4.1 から呼ばれていない（updateLive を呼ぶ所がない）ので試さない
+  ok('測っている途中の数字（使っていなかった部品）は消してある', !(await $v(w, () => !!document.getElementById('mLive'))));
   await w.mouse.click(q2.x, q2.y); await wait(500);
+  {
+    const t0 = await $v(w, () => window.__pcd.controlsTarget());
+    const pv = await $v(w, () => { const r = document.getElementById('pivot').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    const m0 = await $v(w, () => window.__pcd.S.measures.length);
+    const dst = await findPoint(w, [pv, q1, q2]);
+    await w.mouse.move(pv.x, pv.y); await w.mouse.down();
+    for (let i = 1; i <= 10; i++) { await w.mouse.move(pv.x + (dst.x - pv.x) * i / 10, pv.y + (dst.y - pv.y) * i / 10); await wait(60); }
+    await wait(300); await w.mouse.up(); await wait(700);
+    const t1 = await $v(w, () => window.__pcd.controlsTarget());
+    ok('距離のモード中も、中心の丸をつかんで動かせる（距離は増えない）', Math.hypot(...t0.map((v, i) => v - t1[i])) > 0.05 && (await $v(w, () => window.__pcd.S.measures.length)) === m0);
+  }
   const mrow = await $v(w, () => [...document.querySelectorAll('#measureTable tbody td')].slice(1, 4).map(t => t.textContent));
   ok('距離の表は mm・1 桁', mrow.every(s => /^[+-]?\d+\.\d$/.test(s)), mrow.join(' '));
   ok('距離の吹き出しも mm', await $v(w, () => /mm/.test(document.querySelector('.mc-len').textContent)));
@@ -129,7 +152,9 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   await w.screenshot({ path: path.join(W, 'shots/02_units_mm_cm.png') });
   // ================= マウス
   const canvasC = await $v(w, () => { const r = window.__pcd.renderer.domElement.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
-  const drag = async (button) => { const d0 = await camDir(w), t0 = await $v(w, () => window.__pcd.controlsTarget()); await w.mouse.move(canvasC.x + 150, canvasC.y - 150); await w.mouse.down({ button }); for (let i = 1; i <= 8; i++) await w.mouse.move(canvasC.x + 150 + i * 12, canvasC.y - 150 + i * 4); await w.mouse.up({ button }); await wait(300); const d1 = await camDir(w), t1 = await $v(w, () => window.__pcd.controlsTarget()); return { rot: Math.hypot(...d0.map((v, i) => v - d1[i])), pan: Math.hypot(...t0.map((v, i) => v - t1[i])) }; };
+  // ドラッグ・ホイールの場所: 吹き出しなどが重なっていない、点群の画面そのものの所（視点が変わるたびに探し直す）
+  const freeSpot = () => $v(w, () => { const c = window.__pcd.renderer.domElement, r = c.getBoundingClientRect(); for (let gy = 0.15; gy < 0.85; gy += 0.05) for (let gx = 0.5; gx < 0.92; gx += 0.04) { const x = r.left + r.width * gx, y = r.top + r.height * gy; let ok = true; for (let i = 0; i <= 8 && ok; i++) ok = document.elementFromPoint(x + i * 12, y + i * 4) === c; if (ok) return { x, y }; } return null; });
+  const drag = async (button) => { const f = await freeSpot(); canvasC.x = f.x - 150; canvasC.y = f.y + 150; const d0 = await camDir(w), t0 = await $v(w, () => window.__pcd.controlsTarget()); await w.mouse.move(canvasC.x + 150, canvasC.y - 150); await w.mouse.down({ button }); for (let i = 1; i <= 8; i++) await w.mouse.move(canvasC.x + 150 + i * 12, canvasC.y - 150 + i * 4); await w.mouse.up({ button }); await wait(300); const d1 = await camDir(w), t1 = await $v(w, () => window.__pcd.controlsTarget()); return { rot: Math.hypot(...d0.map((v, i) => v - d1[i])), pan: Math.hypot(...t0.map((v, i) => v - t1[i])) }; };
   let a = await drag('left'), b = await drag('right');
   ok('入れ替えなし: 左ドラッグで回り、右ドラッグで平行に動く', a.rot > 0.05 && a.pan < 1e-6 && b.pan > 1e-4 && b.rot < 1e-3, JSON.stringify({ a, b }));
   await tab(w, 'setTabCtrl'); await w.click('label:has(#swapMouse)');
@@ -137,7 +162,7 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   ok('入れ替え: 左ドラッグで平行に動き、右ドラッグで回る', a.pan > 1e-4 && a.rot < 1e-3 && b.rot > 0.05, JSON.stringify({ a, b }));
   ok('案内の文も入れ替わる', /左ドラッグ: 平行に動かす/.test(await $v(w, () => document.getElementById('navHint').textContent)));
   await w.click('label:has(#swapMouse)');
-  const wheel = async () => { const d0 = await camDist(w); await w.mouse.move(canvasC.x + 200, canvasC.y - 120); await w.mouse.wheel(0, -200); await wait(400); return (await camDist(w)) / d0; };
+  const wheel = async () => { const f = await freeSpot(); const d0 = await camDist(w); await w.mouse.move(f.x, f.y); await w.mouse.wheel(0, -200); await wait(400); return (await camDist(w)) / d0; };
   const rNorm = await wheel();
   ok('ホイールを奥へ回すと近づく', rNorm < 0.99, rNorm.toFixed(3));
   await w.click('label:has(#wheelRev)');
@@ -180,6 +205,14 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
     return out;
   });
   ok('明るい: 文字の明暗の差が 4.5 以上', Object.values(contrast).every(v => v >= 4.5), JSON.stringify(contrast));
+  // ================= 言語（English）
+  await tab(w, 'setTabEtc'); await w.selectOption('#langSel', 'en'); await wait(300);
+  const en = await $v(w, () => ({ title: document.getElementById('popTitle').textContent, dock: [...document.querySelectorAll('#dock button')].map(b => b.textContent.trim()).join(','), lang: document.documentElement.lang,
+    left: (() => { const J = /[\u3040-\u30ff\u3400-\u9fff]/; const out = []; const it = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); for (let n = it.nextNode(); n; n = it.nextNode()) if (J.test(n.data) && n.data.trim() !== '日本語') out.push(n.data.trim()); return out; })() }));
+  ok('English: カード・ドックが英語になり、日本語が残らない', en.title === 'Settings' && en.dock === 'File,Coordinates,Distance,View,Color,Section,Level,Settings' && en.lang === 'en' && en.left.length === 0, JSON.stringify(en));
+  await w.selectOption('#langSel', 'ja'); await wait(300);
+  ok('日本語に戻せる', (await $v(w, () => document.getElementById('popTitle').textContent + document.querySelector('[data-open=view]').textContent.trim())) === '設定表示');
+  await w.selectOption('#langSel', 'en'); await wait(200);
   // ================= 保存して、起動し直す
   await tab(w, 'setTabPerf'); await w.selectOption('#capSel', '100000000'); await w.selectOption('#lodSel', '4000000');
   const before = await $v(w, () => localStorage.getItem('pcdviewer.settings'));
@@ -190,17 +223,18 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   ({ app, w, errs } = await launch());
   const after = await $v(w, () => ({ unit: document.getElementById('unitSel').value, dig: document.getElementById('digitSel').value, view: document.getElementById('startView').value, auto: document.getElementById('autoLevel').checked, ui: document.documentElement.dataset.ui, size: document.getElementById('pointSizeVal').textContent, bg: document.getElementById('bgLight').value, cap: document.getElementById('capSel').value, lod: document.getElementById('lodSel').value, zs: document.getElementById('zoomSpeed').value }));
   ok('起動し直しても設定が残る', after.unit === 'cm' && after.dig === '2' && after.view === 'front' && after.auto && after.ui === 'light' && after.size === '5 px' && after.bg === '40' && after.cap === '100000000' && after.lod === '4000000' && after.zs === '1', JSON.stringify(after));
+  ok('起動し直しても English のまま', (await $v(w, () => document.querySelector('[data-open=settings]').textContent.trim() + document.documentElement.lang)) === 'Settingsen');
   // 初めの状態に戻す
   await tab(w, 'setTabEtc'); await w.click('#btnResetSettings'); await wait(300);
   const rs = await $v(w, () => ({ unit: document.getElementById('unitSel').value, dig: document.getElementById('digitSel').value, view: document.getElementById('startView').value, ui: document.documentElement.dataset.ui, size: document.getElementById('pointSizeVal').textContent, bg: document.getElementById('bgLight').value, cap: document.getElementById('capSel').value, lod: document.getElementById('lodSel').value, zs: document.getElementById('zoomSpeed').value, sw: document.getElementById('swapMouse').checked, wr: document.getElementById('wheelRev').checked, st: document.getElementById('status') ? document.getElementById('status').textContent : '' }));
-  ok('「初めの状態に戻す」で全部戻る', rs.unit === 'm' && rs.dig === '3' && rs.view === 'iso' && rs.ui === 'dark' && rs.size === '2 px' && rs.bg === '14' && rs.cap === '30000000' && rs.lod === '1500000' && rs.zs === '3' && !rs.sw && !rs.wr, JSON.stringify(rs));
+  ok('「初めの状態に戻す」で全部戻る', rs.unit === 'm' && rs.dig === '3' && rs.view === 'iso' && rs.ui === 'dark' && rs.size === '2 px' && rs.bg === '14' && rs.cap === '30000000' && rs.lod === '1500000' && rs.zs === '3' && !rs.sw && !rs.wr && (await $v(w, () => document.getElementById('langSel').value)) === 'ja', JSON.stringify(rs));
   ok('途中でエラーが出ない（2 回目）', errs.length === 0, errs.slice(0, 3).join(' | '));
   // 壊れた設定・あり得ない値
   await $v(w, () => localStorage.setItem('pcdviewer.settings', '{"unit":"km","digits":"9","zoomSpeed":"fast","uiTheme":"neon","lang":"en","lod":"7",')); await app.close();
   ({ app, w, errs } = await launch());
   const bad = await $v(w, () => [document.getElementById('unitSel').value, document.getElementById('digitSel').value, document.getElementById('zoomSpeed').value, document.documentElement.dataset.ui, document.getElementById('langSel').value, document.getElementById('lodSel').value].join());
   ok('壊れた設定でも既定の値で起動する', bad === 'm,3,3,dark,ja,1500000' && errs.length === 0, bad + ' ' + errs.join('|'));
-  await $v(w, () => localStorage.setItem('pcdviewer.settings', JSON.stringify({ unit: 'km', digits: '9', zoomSpeed: 99, sizePx: -3, uiTheme: 'neon', lang: 'en', lod: '7', startView: 'under' }))); await app.close();
+  await $v(w, () => localStorage.setItem('pcdviewer.settings', JSON.stringify({ unit: 'km', digits: '9', zoomSpeed: 99, sizePx: -3, uiTheme: 'neon', lang: 'fr', lod: '7', startView: 'under' }))); await app.close();
   ({ app, w, errs } = await launch());
   const bad2 = await $v(w, () => [document.getElementById('unitSel').value, document.getElementById('digitSel').value, document.getElementById('zoomSpeed').value + '/' + document.getElementById('zoomSpeedVal').textContent, document.documentElement.dataset.ui, document.getElementById('langSel').value, document.getElementById('lodSel').value, document.getElementById('startView').value].join());
   ok('あり得ない値は既定の値にする（English・km・9 桁など）', bad2 === 'm,3,5/5,dark,ja,1500000,iso' && errs.length === 0, bad2 + ' ' + errs.join('|'));

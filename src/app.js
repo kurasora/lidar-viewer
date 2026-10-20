@@ -1,6 +1,7 @@
 // LiDAR Viewer の画面と操作
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { tr, setLang } from './i18n.js';
 import { SAMPLE_GROUPS } from './samples.js';
 import { extractMcap } from './trajectory.js';
 import { Gunzip } from 'fflate';
@@ -1865,10 +1866,6 @@ function measureNums(aLocal, bLocal) {
   const A = toWorld(aLocal), B = toWorld(bLocal), d = B.clone().sub(A);
   return { len: d.length(), hor: Math.hypot(d.x, d.y), dz: d.z };
 }
-const previewGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(6), 3));
-const previewLine = new THREE.Line(previewGeo, new THREE.LineBasicMaterial({ depthTest: false, transparent: true, opacity: 0.8 }));
-previewLine.renderOrder = 9; previewLine.visible = false;
-overlay.add(previewLine);
 function updateMeasureGuide() {
   // 上の短い案内（座標・距離を入れているときだけ）
   const g = $('mGuide');
@@ -1877,37 +1874,8 @@ function updateMeasureGuide() {
   if (S.tools.info) parts.push('点をクリックして座標を見る');
   g.hidden = !parts.length;
   g.textContent = parts.join(' ・ ');
-  if (!S.mPending) { previewLine.visible = false; $('mLive').hidden = true; }
   requestRender();
 }
-let mBusy = false, mNext = null;
-async function updateLive(x, y, shift) {
-  if (!S.mPending || !S.tools.measure) return;
-  if (mBusy) { mNext = [x, y, shift]; return; }
-  mBusy = true;
-  try {
-    const hit = await pickAt(x, y, true);
-    if (hit && S.mPending) {
-      const b = measureEnd(S.mPending, hit.local, shift);
-      const pa = previewGeo.attributes.position;
-      pa.setXYZ(0, S.mPending.x, S.mPending.y, S.mPending.z); pa.setXYZ(1, b.x, b.y, b.z); pa.needsUpdate = true;
-      previewGeo.computeBoundingSphere();
-      previewLine.material.color.set(css('--accent'));
-      previewLine.visible = true;
-      const n = measureNums(S.mPending, b);
-      const r = stage.getBoundingClientRect(), el = $('mLive');
-      el.hidden = false;
-      el.style.left = (x - r.left + 18) + 'px'; el.style.top = (y - r.top + 18) + 'px';
-      el.innerHTML = `<span class="big">${fL(n.len)} <small>${lenUnit()}</small></span><span class="sub">${shift ? '水平だけ' : `水平 ${fL(n.hor)} ・ 高さ ${n.dz >= 0 ? '+' : ''}${fL(n.dz)}`}</span>`;
-      requestRender();
-    }
-  } finally {
-    mBusy = false;
-    if (mNext) { const [nx, ny, ns] = mNext; mNext = null; updateLive(nx, ny, ns); }
-  }
-}
-// 1 点目のあとにカーソルについてくる仮の距離（線と数）は出さない（重く、邪魔になるため）
-stage.addEventListener('pointerleave', () => { $('mLive').hidden = true; });
 function cancelMeasure() { S.mPending = null; pickMarker.visible = false; updateMeasureGuide(); }
 
 function addMeasurePoint(hit, shift = false) {
@@ -2009,11 +1977,11 @@ function syncTools() {
     b.classList.toggle('on', S.tools[t]); b.setAttribute('aria-pressed', String(S.tools[t]));
     b.classList.toggle('open', !S.tools[t] && popStack.includes(t));
   }
-  if (was.measure && !S.tools.measure) { S.mPending = null; pickMarker.visible = false; previewLine.visible = false; $('mLive').hidden = true; }
+  if (was.measure && !S.tools.measure) { S.mPending = null; pickMarker.visible = false; }
   if (was.info === S.tools.info && was.measure === S.tools.measure) return;
   updateMeasureGuide();
   renderer.domElement.style.cursor = (S.tools.info || S.tools.measure) ? 'crosshair' : '';
-  // 点を選んでいる間は、中心の丸や矢印がクリックを横取りしないようにする
+  // 点を選んでいる間の印（カーソルの形など）。中心の丸・矢印は、このときもつかんで動かせる
   stage.classList.toggle('picking', !!(S.tools.info || S.tools.measure));
   updateStatus(); requestRender();
 }
@@ -2307,7 +2275,7 @@ const OPEN_TYPES = [
 const TRAJ_TYPES = [['軌跡 (*.mcap)', ['.mcap']], ['TUM 形式の軌跡 (*.tum *.txt)', ['.tum', '.txt']], ['CSV の軌跡 (*.csv)', ['.csv']]];
 const pickerTypes = (list, allName) => {
   const all = [...new Set(list.flatMap(([, e]) => e))];
-  return [{ description: allName, accept: { 'application/octet-stream': all } }, ...list.map(([d, e]) => ({ description: d, accept: { 'application/octet-stream': e } }))];
+  return [{ description: tr(allName), accept: { 'application/octet-stream': all } }, ...list.map(([d, e]) => ({ description: tr(d), accept: { 'application/octet-stream': e } }))];
 };
 const canPick = (() => { try { return typeof window.showOpenFilePicker === 'function' && window.top === window; } catch (e) { return false; } })();
 async function pickFiles(types, allName, input, kind) {
@@ -2579,6 +2547,11 @@ function applyMouse() {
   if (h.length >= 2) { h[0].textContent = setv.swapMouse ? '左ドラッグ: 平行に動かす' : '左ドラッグ: 回る'; h[1].textContent = setv.swapMouse ? '右ドラッグ: 回る' : '右ドラッグ: 平行に動かす'; }
   $('zoomSpeedVal').textContent = String(setv.zoomSpeed);
 }
+// 言語: 画面の文字を訳す（i18n.js）。アプリ version では、主プロセスの画面（落ちたときの知らせ・Mac のメニュー）にも知らせる
+function applyLang() {
+  setLang(setv.lang);
+  try { if (window.pcdApp && window.pcdApp.setLang) window.pcdApp.setLang(setv.lang); } catch (e) { /* 知らせられなくても画面は切り替える */ }
+}
 function applyUiTheme() {
   document.documentElement.dataset.ui = setv.uiTheme === 'light' ? 'light' : 'dark';
   document.querySelectorAll('[data-uitheme]').forEach(b => { const on = b.dataset.uitheme === document.documentElement.dataset.ui; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
@@ -2594,6 +2567,7 @@ function applySettings() {
   pickOpt('startView', setv.startView, 'iso'); $('autoLevel').checked = setv.autoLevel;
   pickOpt('unitSel', setv.unit, 'm'); pickOpt('digitSel', setv.digits, '3'); pickOpt('langSel', setv.lang, 'ja');
   renderPins(); renderMeasures();
+  applyLang();
   applyUiTheme();
   requestRender();
 }
@@ -2606,6 +2580,7 @@ for (const [id, key] of Object.entries(SET_INPUTS)) {
     setv[key] = el.type === 'checkbox' ? el.checked : typeof SET_DEFAULT[key] === 'number' ? +el.value : el.value;
     if (key === 'swapMouse' || key === 'wheelRev' || key === 'zoomSpeed') applyMouse();
     if (key === 'unit' || key === 'digits') { renderPins(); renderMeasures(); requestRender(); }
+    if (key === 'lang') { applyLang(); drawLegend(); drawHist(); requestRender(); }
     saveSettings();
   });
 }
@@ -2630,7 +2605,7 @@ applySettings();
 for (const el of document.querySelectorAll('[title]')) el.removeAttribute('title');
 new MutationObserver(ms => { for (const m of ms) if (m.type === 'attributes' && m.target.hasAttribute('title')) m.target.removeAttribute('title'); else for (const n of m.addedNodes || []) if (n.nodeType === 1) { if (n.hasAttribute('title')) n.removeAttribute('title'); for (const c of n.querySelectorAll('[title]')) c.removeAttribute('title'); } })
   .observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['title'] });
-window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, shotCanvas, get cam() { return cam; }, controlsTarget: () => controls.target.toArray(), updateLive }; // 動作確認用
+window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, shotCanvas, get cam() { return cam; }, controlsTarget: () => controls.target.toArray() }; // 動作確認用
 // OS から渡されたファイル（関連付け・ダブルクリック・コマンドライン・「このアプリで開く」）を開く（アプリ version だけ）。
 // 主プロセスが隠れた入力欄 #pcdOsOpen にファイルを入れてから知らせてくる
 if (window.pcdApp) {
