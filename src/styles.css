@@ -426,3 +426,21 @@ input[type=range]::-webkit-slider-runnable-track { box-shadow: inset 0 0 0 1px c
   .pcall.pin.sel .pc-dot, .labels .mcall.sel .mc-dot { background: Highlight }
 }
 /* カードの重なり（間のカードを閉じたときは滑らせる） */
+
+/* 設定のカード（タブ 4 つ。断面のカードと同じ形） */
+.ctabs.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)) }
+[data-pop="settings"] .spane { display: grid; gap: 8px; margin-top: 10px }
+[data-pop="settings"] .spane[hidden] { display: none }
+.row .span2 { grid-column: 2 / 4 }
+.about { display: grid; gap: 2px; font-size: 12px; color: var(--muted) }
+.about b { color: var(--fg); font-weight: 600 }
+.about .sel { user-select: text; color: var(--accent) }
+.about .lic { border: none; padding: 4px 0 0 }
+.about .lic summary { font-weight: 400; color: var(--muted); padding: 2px 0 }
+.about .lic ul { margin: 4px 0 0; padding-left: 16px; display: grid; gap: 1px; user-select: text }
+/* 画面の色「明るい」: メニュー・カードの色だけ明るくする（点群の背景は「背景の明るさ」のまま） */
+:root[data-ui="light"] {
+  --bg: #e9eef2; --panel: #f7f9fb; --fg: #17212b; --muted: #55636f; --line: #c9d3dc; --soft: #e6ecf1; --sunk: #e1e8ee;
+  --accent: #2f62c9; --accent-deep: #2350aa; --accent-fg: #ffffff; --danger: #c43a2a; color-scheme: light;
+}
+:root[data-ui="light"] ::-webkit-scrollbar-thumb { background: #b3c0cc }

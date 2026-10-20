@@ -10,6 +10,10 @@ const $ = id => document.getElementById(id);
 const fmtN = n => n.toLocaleString('ja-JP');
 // 丸めた結果が 0 のときは符号を付けない（-0.00 と出さない）
 const fmt = (v, d = 2) => { if (v == null || !Number.isFinite(v)) return '—'; const s = v.toFixed(d); return /^-0(\.0*)?$/.test(s) ? s.slice(1) : s; };
+// 座標・距離の数字: 設定の単位と桁数で書く（中は m のまま持つ）
+const UNIT_SCALE = { m: 1, cm: 100, mm: 1000 };
+const lenUnit = () => (document.getElementById('unitSel') || {}).value || 'm';
+const fL = v => fmt(v * (UNIT_SCALE[lenUnit()] || 1), +((document.getElementById('digitSel') || {}).value || 3));
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // ------------------------------------------------------------------ 別スレッド
@@ -1096,7 +1100,7 @@ function onLoadedInner(m, info) {
   // まだ順番待ちがあるときは、範囲・色の計算（全ファイル分）を最後の 1 回にまとめる（たくさん開くと 2 乗で遅くなるため）
   if (first || !queue.length) { S.refreshPending = false; updateBounds(first); applyColor(true); }
   else S.refreshPending = true;
-  if (first) { setView('iso', false); showNavHint(); }
+  if (first) { setView($('startView').value, false); showNavHint(); }
   // 平らなもの（画像など）は水平補正しない
   if (first && $('autoLevel').checked && (m.bbox.max[2] - m.bbox.min[2]) > 1e-6 * Math.max(1, m.bbox.max[0] - m.bbox.min[0], m.bbox.max[1] - m.bbox.min[1])) runLevel(true);
   status(`${info.name} を開きました（${m.sampled ? `全 ${fmtN(m.total)} 点のうち ${fmtN(m.n)} 点を表示` : `${fmtN(m.n)} 点`}${m.skipped ? `、座標のない ${fmtN(m.skipped)} 点を除外` : ''}）${dup ? '。同じファイルがすでに開いているので、重ねて表示しています' : ''}`, false, true);
@@ -1134,7 +1138,7 @@ function onTrajInner(m, info) {
   const canCloud = info.file && /^(txt|csv)$/.test(extOf(info.name));
   status(`軌跡 ${info.name} を開きました（${m.topic}、${fmtN(n)} 姿勢、${fmt(len, 1)} m、${fmt(dur, 1)} 秒）${m.note ? `。${m.note}` : ''}${info.auto && canCloud ? '。点群なら「ファイル」の一覧で「点群として開き直す」を押してください' : ''}`, false, true);
   // 点群がないときは、軌跡が見えるように視点を合わせる
-  if (!S.files.length && S.trajs.length === 1) setView('iso', false);
+  if (!S.files.length && S.trajs.length === 1) setView($('startView').value, false);
   $('empty').hidden = true;
   requestRender();
 }
@@ -1546,7 +1550,7 @@ let popName = null;
 let popStack = [];
 const popTabs = new Map();
 const POP_STEP = 30;   // 下のカードの見出しをのぞかせる高さ
-const POP_TITLES = { open: 'ファイル', view: '表示', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離', info: '座標' };
+const POP_TITLES = { settings: '設定', open: 'ファイル', view: '表示', color: '色', display: '表示', section: '断面・切り出し', level: '水平補正', measure: '距離', info: '座標' };
 let lastBelowCount = 0;
 let lastTop = null;
 function renderPop() {
@@ -1609,10 +1613,11 @@ function removePop(name) { popStack = popStack.filter(n => n !== name); renderPo
 // ドックのボタン: 開いているなら（重なりのどこにあっても）閉じる、開いていなければ一番上に出す
 function openPop(name) { if (popStack.includes(name)) removePop(name); else bringPop(name); }
 document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => openPop(b.dataset.open)));
-// 視点のカード: 基本／詳細のタブ（色・断面のカードと同じ）
-for (const [tab, pane] of [['tabViewBasic', 'viewBasic'], ['tabViewDetail', 'viewMore']]) {
+// 設定のカード: 見た目／点の数／操作／その他のタブ（断面のカードと同じ形）
+const SET_TABS = [['setTabLook', 'setLook'], ['setTabPerf', 'setPerf'], ['setTabCtrl', 'setCtrl'], ['setTabEtc', 'setEtc']];
+for (const [tab] of SET_TABS) {
   $(tab).addEventListener('click', () => {
-    for (const [t, p] of [['tabViewBasic', 'viewBasic'], ['tabViewDetail', 'viewMore']]) { const on = t === tab; $(t).setAttribute('aria-selected', String(on)); $(p).hidden = !on; }
+    for (const [t, p] of SET_TABS) { const on = t === tab; $(t).setAttribute('aria-selected', String(on)); $(p).hidden = !on; }
   });
 }
 // 距離のカードを閉じたら、距離のボタンも切る。閉じたあとは、下に残ったカードか、そのカードを開いたドックのボタンへフォーカスを戻す
@@ -1757,7 +1762,7 @@ function pinValues(hit) {
 }
 function pinHtml(p, i) {
   const v = pinValues(p.hit);
-  const rows = ['x', 'y', 'z'].map((a, k) => `<b style="color:${PICK_AXIS[k]}">${a}</b><span>${fmt(v[k], 3)} m</span>`).join('');
+  const rows = ['x', 'y', 'z'].map((a, k) => `<b style="color:${PICK_AXIS[k]}">${a}</b><span>${fL(v[k])} ${lenUnit()}</span>`).join('');
   const sub = [`#${i + 1}`];
   if (p.hit.rgb) sub.push(`RGB ${p.hit.rgb.join(',')}`);
   sub.push(coordLabel());
@@ -1782,12 +1787,12 @@ function renderPins() {
   S.pins.forEach((p, i) => { p.el.querySelector('.pc-box').innerHTML = pinHtml(p, i); p.el.classList.toggle('sel', p === S.pinSel); });
   const rows = S.pins.map((p, i) => {
     const v = pinValues(p.hit);
-    return `<tr data-i="${i}" class="${p === S.pinSel ? 'sel' : ''}"><td><span class="mnum-s">${i + 1}</span></td>${v.map(x => `<td>${fmt(x, 3)}</td>`).join('')}<td><button type="button" class="x" data-del="${i}" aria-label="${i + 1} 番目の座標を消す">×</button></td></tr>`;
+    return `<tr data-i="${i}" class="${p === S.pinSel ? 'sel' : ''}"><td><span class="mnum-s">${i + 1}</span></td>${v.map(x => `<td>${fL(x)}</td>`).join('')}<td><button type="button" class="x" data-del="${i}" aria-label="${i + 1} 番目の座標を消す">×</button></td></tr>`;
   }).join('');
   $('pinTable').hidden = !S.pins.length;
   $('pinTable').querySelector('tbody').innerHTML = rows;
   $('pinFoot').hidden = !S.pins.length;
-  $('pinUnit').textContent = `単位 m ・ ${coordLabel()}`;
+  $('pinUnit').textContent = `単位 ${lenUnit()} ・ ${coordLabel()}`;
   $('pinHint').hidden = S.pins.length > 0;
   $('pinCount').textContent = S.pins.length ? `${S.pins.length} 個` : '';
   placePickInfo();
@@ -1893,7 +1898,7 @@ async function updateLive(x, y, shift) {
       const r = stage.getBoundingClientRect(), el = $('mLive');
       el.hidden = false;
       el.style.left = (x - r.left + 18) + 'px'; el.style.top = (y - r.top + 18) + 'px';
-      el.innerHTML = `<span class="big">${fmt(n.len, 2)} <small>m</small></span><span class="sub">${shift ? '水平だけ' : `水平 ${fmt(n.hor, 2)} ・ 高さ ${n.dz >= 0 ? '+' : ''}${fmt(n.dz, 2)}`}</span>`;
+      el.innerHTML = `<span class="big">${fL(n.len)} <small>${lenUnit()}</small></span><span class="sub">${shift ? '水平だけ' : `水平 ${fL(n.hor)} ・ 高さ ${n.dz >= 0 ? '+' : ''}${fL(n.dz)}`}</span>`;
       requestRender();
     }
   } finally {
@@ -1943,14 +1948,15 @@ function selectMeasure(m) {
 function renderMeasures() {
   const rows = S.measures.map((m, i) => {
     const n = measureNums(m.a, m.b);
-    m.tag.innerHTML = `<span class="mc-dot"></span><svg class="mc-stem" aria-hidden="true" viewBox="0 0 30 30"><line x1="0" y1="30" x2="30" y2="0"/></svg><button type="button" class="mc-box" aria-label="${i + 1} 番目の距離 ${fmt(n.len, 3)} m"><span class="mc-len">${fmt(n.len, 3)} m <small>#${i + 1}</small></span><span class="mc-sub">水平 ${fmt(n.hor, 3)} ・ 高さの差 ${n.dz >= 0 ? '+' : ''}${fmt(n.dz, 3)}</span></button>`;
-    return `<tr data-i="${i}" class="${m === S.mSel ? 'sel' : ''}"><td><span class="mnum-s">${i + 1}</span></td><td class="b">${fmt(n.len, 3)}</td><td>${fmt(n.hor, 3)}</td><td>${n.dz >= 0 ? '+' : ''}${fmt(n.dz, 3)}</td><td><button type="button" class="x" data-del="${i}" aria-label="${i + 1} 番目を消す">×</button></td></tr>`;
+    m.tag.innerHTML = `<span class="mc-dot"></span><svg class="mc-stem" aria-hidden="true" viewBox="0 0 30 30"><line x1="0" y1="30" x2="30" y2="0"/></svg><button type="button" class="mc-box" aria-label="${i + 1} 番目の距離 ${fL(n.len)} ${lenUnit()}"><span class="mc-len">${fL(n.len)} ${lenUnit()} <small>#${i + 1}</small></span><span class="mc-sub">水平 ${fL(n.hor)} ・ 高さの差 ${n.dz >= 0 ? '+' : ''}${fL(n.dz)}</span></button>`;
+    return `<tr data-i="${i}" class="${m === S.mSel ? 'sel' : ''}"><td><span class="mnum-s">${i + 1}</span></td><td class="b">${fL(n.len)}</td><td>${fL(n.hor)}</td><td>${n.dz >= 0 ? '+' : ''}${fL(n.dz)}</td><td><button type="button" class="x" data-del="${i}" aria-label="${i + 1} 番目を消す">×</button></td></tr>`;
   }).join('');
   $('measureTable').hidden = !S.measures.length;
   $('measureTable').querySelector('tbody').innerHTML = rows;
   $('measureFoot').hidden = !S.measures.length;
   $('measureHint').hidden = S.measures.length > 0;
   $('measureCount').textContent = S.measures.length ? `${S.measures.length} 本` : '';
+  $('measUnit').textContent = `単位 ${lenUnit()}`;
 }
 function removeMeasure(m) {
   overlay.remove(m.line, m.dots); m.line.geometry.dispose(); m.tag.remove();
@@ -2062,7 +2068,7 @@ function applyLevel(auto = false, keepView = false) {
   renderPins(); // 出ている座標も新しい基準で出し直す
   applyColor(true);
   renderMeasures();
-  if (auto || !keepView) setView('iso'); else setView('keep'); // 設定（床を 0・廊下の向き）の切り替えでは視点の向きを変えない（R7-009）
+  if (auto) setView($('startView').value); else if (!keepView) setView('iso'); else setView('keep'); // 設定（床を 0・廊下の向き）の切り替えでは視点の向きを変えない（R7-009）
   const extra = (clipWas ? '。切り出しは全範囲に戻しました' : '') + (secWas ? '。断面の表示はやめました' : '');
   status((r ? '水平補正しました' : '水平補正を元に戻しました') + extra, false, auto); // 自動の補正では、開けなかった赤い知らせを消さない（R3-002）
 }
@@ -2363,7 +2369,7 @@ function shotCanvas() {
     const x = (mid.x + 1) / 2 * W, y = (1 - mid.y) / 2 * H, col = m === S.mSel ? css('--accent') : '#b8c0c8';
     ctx.strokeStyle = col; ctx.lineWidth = Math.max(1, sc); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 30 * sc, y - 30 * sc); ctx.stroke();
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 4 * sc, 0, 7); ctx.fill();
-    box(x + 30 * sc, y - 30 * sc - 60 * sc, [`${fmt(n.len, 3)} m  #${i + 1}`, `水平 ${fmt(n.hor, 3)} ・ 高さの差 ${n.dz >= 0 ? '+' : ''}${fmt(n.dz, 3)}`], col);
+    box(x + 30 * sc, y - 30 * sc - 60 * sc, [`${fL(n.len)} ${lenUnit()}  #${i + 1}`, `水平 ${fL(n.hor)} ・ 高さの差 ${n.dz >= 0 ? '+' : ''}${fL(n.dz)}`], col);
   });
   const st = stage.getBoundingClientRect();
   for (const p of S.pins) {
@@ -2551,6 +2557,72 @@ $('bgLight').addEventListener('input', e => setSceneLightness(+e.target.value));
   try { const v = localStorage.getItem('pcdviewer.bg'); if (v !== null && v !== '' && Number.isFinite(+v)) L = Math.min(50, Math.max(0, +v)); } catch (e) { /* 既定のまま */ }
   setSceneLightness(L);
 }
+// ------------------------------------------------------------------ 設定のカード
+// 決めたことは、この PC のアプリの中に覚えておき、次に起動したときも同じにする（背景の明るさ・読み込む最大点数は前からの場所に）
+const SET_KEY = 'pcdviewer.settings';
+const SET_DEFAULT = { sizeMode: 'px', sizePx: 2, sizeM: 4, showAxes: true, showPivot: true, showArrows: true, uiTheme: 'dark',
+  lod: '1500000', swapMouse: false, wheelRev: false, zoomSpeed: 3, startView: 'iso', autoLevel: true, unit: 'm', digits: '3', lang: 'ja' };
+const ZOOM_SPEEDS = [0.4, 0.7, 1, 1.5, 2.2];
+let setv = { ...SET_DEFAULT };
+try { const v = JSON.parse(localStorage.getItem(SET_KEY) || '{}'); if (v && typeof v === 'object') for (const k of Object.keys(SET_DEFAULT)) if (typeof v[k] === typeof SET_DEFAULT[k]) setv[k] = v[k]; } catch (e) { /* 既定のまま */ }
+function saveSettings() { try { localStorage.setItem(SET_KEY, JSON.stringify(setv)); } catch (e) { /* 保存できなくても動かす */ } }
+const pickOpt = (sel, v, def) => { $(sel).value = [...$(sel).options].some(o => o.value === v && !o.disabled) ? v : def; };
+function applyMouse() {
+  controls.mouseButtons = setv.swapMouse
+    ? { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.ROTATE }
+    : { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.PAN };
+  controls.zoomSpeed = (ZOOM_SPEEDS[setv.zoomSpeed - 1] || 1) * (setv.wheelRev ? -1 : 1);
+  const h = $('navHint').querySelectorAll('span');
+  if (h.length >= 2) { h[0].textContent = setv.swapMouse ? '左ドラッグ: 平行に動かす' : '左ドラッグ: 回る'; h[1].textContent = setv.swapMouse ? '右ドラッグ: 回る' : '右ドラッグ: 平行に動かす'; }
+  $('zoomSpeedVal').textContent = String(setv.zoomSpeed);
+}
+function applyUiTheme() {
+  document.documentElement.dataset.ui = setv.uiTheme === 'light' ? 'light' : 'dark';
+  document.querySelectorAll('[data-uitheme]').forEach(b => { const on = b.dataset.uitheme === document.documentElement.dataset.ui; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+  applyTheme();
+}
+// 設定の値を画面の部品に入れて、表示に反映する
+function applySettings() {
+  sizeState.px = setv.sizePx; sizeState.m = setv.sizeM; pickOpt('sizeMode', setv.sizeMode, 'px'); applySize();
+  $('showAxes').checked = setv.showAxes; $('showPivot').checked = setv.showPivot; $('showArrows').checked = setv.showArrows;
+  axes.visible = S.files.length > 0 && setv.showAxes;
+  pickOpt('lodSel', setv.lod, SET_DEFAULT.lod); applyLod();
+  $('swapMouse').checked = setv.swapMouse; $('wheelRev').checked = setv.wheelRev; $('zoomSpeed').value = setv.zoomSpeed; applyMouse();
+  pickOpt('startView', setv.startView, 'iso'); $('autoLevel').checked = setv.autoLevel;
+  pickOpt('unitSel', setv.unit, 'm'); pickOpt('digitSel', setv.digits, '3'); pickOpt('langSel', setv.lang, 'ja');
+  renderPins(); renderMeasures();
+  applyUiTheme();
+  requestRender();
+}
+// 部品を変えたら覚える
+const SET_INPUTS = { sizeMode: 'sizeMode', showAxes: 'showAxes', showPivot: 'showPivot', showArrows: 'showArrows', lodSel: 'lod', swapMouse: 'swapMouse', wheelRev: 'wheelRev',
+  zoomSpeed: 'zoomSpeed', startView: 'startView', autoLevel: 'autoLevel', unitSel: 'unit', digitSel: 'digits', langSel: 'lang' };
+for (const [id, key] of Object.entries(SET_INPUTS)) {
+  $(id).addEventListener(id === 'zoomSpeed' ? 'input' : 'change', e => {
+    const el = e.target;
+    setv[key] = el.type === 'checkbox' ? el.checked : typeof SET_DEFAULT[key] === 'number' ? +el.value : el.value;
+    if (key === 'swapMouse' || key === 'wheelRev' || key === 'zoomSpeed') applyMouse();
+    if (key === 'unit' || key === 'digits') { renderPins(); renderMeasures(); requestRender(); }
+    saveSettings();
+  });
+}
+$('pointSize').addEventListener('input', () => { setv.sizePx = sizeState.px; setv.sizeM = sizeState.m; saveSettings(); });
+document.querySelectorAll('[data-uitheme]').forEach(b => b.addEventListener('click', () => { setv.uiTheme = b.dataset.uitheme; applyUiTheme(); saveSettings(); }));
+$('btnResetSettings').addEventListener('click', () => {
+  setv = { ...SET_DEFAULT };
+  try { localStorage.removeItem(SET_KEY); localStorage.removeItem('pcdviewer.cap'); } catch (e) { /* なくても戻す */ }
+  $('capSel').value = '30000000';
+  setSceneLightness(14);
+  applySettings();
+  status('設定を初めの状態に戻しました');
+});
+// アプリの情報（version と、使っている部品の利用条件）
+{
+  const info = typeof __APP_INFO__ !== 'undefined' ? __APP_INFO__ : { version: '', libs: [] };
+  $('appVersion').textContent = info.version;
+  $('licList').innerHTML = info.libs.map(l => `<li><b>${escapeHtml(l.name)}</b> ${escapeHtml(l.version)} ・ ${escapeHtml(l.license)}</li>`).join('');
+}
+applySettings();
 // カーソルを合わせたときの説明（title）は出さない。あとから付いたものも消す
 for (const el of document.querySelectorAll('[title]')) el.removeAttribute('title');
 new MutationObserver(ms => { for (const m of ms) if (m.type === 'attributes' && m.target.hasAttribute('title')) m.target.removeAttribute('title'); else for (const n of m.addedNodes || []) if (n.nodeType === 1) { if (n.hasAttribute('title')) n.removeAttribute('title'); for (const c of n.querySelectorAll('[title]')) c.removeAttribute('title'); } })

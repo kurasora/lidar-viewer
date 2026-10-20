@@ -33,10 +33,19 @@ if (artifact && !process.env.NOSAMPLE) {
   for (const f of readdirSync('sample/formats')) m[f] = gzipSync(readFileSync('sample/formats/' + f), { level: 9 }).toString('base64');
   sampleFiles = JSON.stringify(m);
 }
+// アプリの情報（設定のカードの「その他」に出す）: version と、画面に入れている部品の利用条件
+const appInfo = (() => {
+  const pj = JSON.parse(readFileSync('package.json', 'utf8'));
+  const libs = [];
+  for (const name of ['three', 'fflate', 'geotiff', 'lerc', 'pako', 'laz-perf', 'draco3d', 'occt-import-js', 'web-ifc', 'zstddec', 'electron']) {
+    try { const q = JSON.parse(readFileSync(`node_modules/${name}/package.json`, 'utf8')); libs.push({ name, version: q.version || '', license: (typeof q.license === 'string' ? q.license : q.license && q.license.type) || '' }); } catch (e) { /* 入っていなければ出さない */ }
+  }
+  return { version: pj.version, libs };
+})();
 const workerText = worker.outputFiles[0].text;
 const app = await esbuild.build({
   entryPoints: ['src/app.js'], bundle: true, format: 'iife', write: false, minify: true, target: 'chrome120',
-  define: { __WORKER_GZ__: JSON.stringify(artifact ? gzipSync(Buffer.from(workerText), { level: 9 }).toString('base64') : ''), __ARTIFACT__: String(artifact), __SAMPLE__: sample, __SAMPLE_FILES__: sampleFiles },
+  define: { __WORKER_GZ__: JSON.stringify(artifact ? gzipSync(Buffer.from(workerText), { level: 9 }).toString('base64') : ''), __ARTIFACT__: String(artifact), __SAMPLE__: sample, __SAMPLE_FILES__: sampleFiles, __APP_INFO__: JSON.stringify(appInfo) },
 });
 const js = app.outputFiles[0].text;
 if (!artifact) {
