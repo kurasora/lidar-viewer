@@ -57,7 +57,7 @@ function core(k, depth) {
 function jaCount(s) { let n = 0; for (const ch of s) if (JA.test(ch)) n++; return n; }
 function tidy(s) { return s.replace(/ {2,}/g, ' ').replace(/ ([,.)])/g, '$1').trim(); }
 export function tr(s) {
-  if (lang !== 'en' || typeof s !== 'string' || !JA.test(s)) return s;
+  if (lang !== 'en' || typeof s !== 'string' || s.length > 800 || !JA.test(s)) return s;
   if (s.includes('\n')) return s.split('\n').map(tr).join('\n'); // 行ごとに
   const lead = s.match(/^\s*/)[0], tail = s.match(/\s*$/)[0];
   return lead + core(norm(s), 0) + tail;
@@ -68,8 +68,11 @@ const ATTRS = ['aria-label', 'alt', 'placeholder'];
 const texts = new Map();   // 文字の部品 → 元の日本語（訳したものだけ）
 const attrs = new Map();   // 要素 → { 属性: 元の日本語 }
 let obs = null;
+const SKIP = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'NOSCRIPT']);
 function doText(n) {
   const d = n.data;
+  // プログラムの文字（script など）や、とても長い文字は訳さない（長い文字に型を当てると固まるため）
+  if (d.length > 800 || (n.parentNode && SKIP.has(n.parentNode.nodeName))) return;
   if (!JA.test(d)) { texts.delete(n); return; }
   const t = tr(d);
   if (t !== d) { texts.set(n, d); n.data = t; }
@@ -84,7 +87,7 @@ function doAttrs(el) {
 }
 function walk(root) {
   if (root.nodeType === 3) { doText(root); return; }
-  if (root.nodeType !== 1 || root.tagName === 'SCRIPT' || root.tagName === 'STYLE') return;
+  if (root.nodeType !== 1 || SKIP.has(root.nodeName)) return;
   doAttrs(root);
   const it = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
   for (let n = it.nextNode(); n; n = it.nextNode()) { if (n.nodeType === 3) doText(n); else doAttrs(n); }
