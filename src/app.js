@@ -2565,6 +2565,9 @@ const SET_DEFAULT = { sizeMode: 'px', sizePx: 2, sizeM: 4, showAxes: true, showP
 const ZOOM_SPEEDS = [0.4, 0.7, 1, 1.5, 2.2];
 let setv = { ...SET_DEFAULT };
 try { const v = JSON.parse(localStorage.getItem(SET_KEY) || '{}'); if (v && typeof v === 'object') for (const k of Object.keys(SET_DEFAULT)) if (typeof v[k] === typeof SET_DEFAULT[k]) setv[k] = v[k]; } catch (e) { /* 既定のまま */ }
+// 数の設定は、つまみの範囲に収める（覚えていた値が壊れていても）
+{ const clamp = (v, lo, hi, d) => Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d;
+  setv.zoomSpeed = Math.round(clamp(setv.zoomSpeed, 1, 5, 3)); setv.sizePx = clamp(setv.sizePx, 1, 12, 2); setv.sizeM = clamp(setv.sizeM, 0.5, 30, 4); }
 function saveSettings() { try { localStorage.setItem(SET_KEY, JSON.stringify(setv)); } catch (e) { /* 保存できなくても動かす */ } }
 const pickOpt = (sel, v, def) => { $(sel).value = [...$(sel).options].some(o => o.value === v && !o.disabled) ? v : def; };
 function applyMouse() {
