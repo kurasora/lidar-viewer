@@ -223,7 +223,7 @@ export const EN = [
   ['、位置情報あり', ', georeferenced'], ['ラスター画像（パレット、{} × {}{}）', 'Raster image (palette, {} × {}{})'],
   ['1 画素を 1 点として平面に並べています', 'Each pixel is shown as one point on a plane'], ['ラスター画像（{} × {}、{} バンド{}{}）', 'Raster image ({} × {}, {} bands{}{})'],
   ['ラスター（{} × {}、{} バンド{}）', 'Raster ({} × {}, {} bands{})'], ['（値のないマス {} 個を除外）', '({} cells without values skipped)'],
-  ['1 バンド目の値を高さにしています{}', 'Values of band 1 are used as height{}'],
+  ['1 バンド目の値を高さにしています{}', 'Values of band 1 are used as height {}'],
   ['LAS ファイルではありません（先頭が LASF でない）', 'Not a LAS file (does not start with LASF)'], ['LAS のヘッダーが途中で切れています（{} バイト）', 'LAS header is cut off ({} bytes)'],
   ['未対応の点の形式です（{}）', 'Unsupported point format ({})'], ['{} {}.{}（点の形式 {}）', '{} {}.{} (point format {})'],
   ['LAS の 1 点の大きさ（{} バイト）が正しくありません。ファイルが壊れている可能性があります', 'Invalid LAS point size ({} bytes). The file may be damaged'],
@@ -333,6 +333,9 @@ export const EN = [
   ['テキスト', 'text'], ['軌跡として読める姿勢が {} 個しかありません（2 個以上必要です）', 'Only {} poses can be read as a trajectory (at least 2 are needed)'],
   ['軌跡のファイルが壊れているか、途中で切れているため開けません', 'The trajectory file is damaged or cut off'],
   ['撮る範囲が正しくありません', 'Invalid capture area'], ['この画面からは撮れません', 'Cannot capture from this window'],
+  // かっこだけの組み立て（中を訳すため）
+  ['CloudCompare BIN（{}）', 'CloudCompare BIN ({})'], ['VTK（{}、{}）', 'VTK ({}, {})'], ['PCD（{}）', 'PCD ({})'], ['PLY（{}）', 'PLY ({})'],
+  ['{} 〜 {}（{} m）', '{} – {} ({} m)'], ['—（{}）', '— ({})'], ['、{} bit', ', {} bit'], ['COLLADA（DAE）', 'COLLADA (DAE)'],
   // 区切り（最後の手段）
   ['{} ・ {}', '{} · {}'],
 ];
