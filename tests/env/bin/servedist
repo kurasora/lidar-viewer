@@ -1,0 +1,20 @@
+#!/bin/bash
+# 試験用のページの配り口（Chromium で試すとき用）。何度実行しても 1 つだけ動く
+#   http://127.0.0.1:8740/abs<絶対パス> … そのファイルを返す（例: /abs/home/claude/pcd-viewer/dist/index.html）
+# アプリの画面は別スレッドを dist/worker.js のファイルから起動するので、file:// では開けない（Chromium は file:// から Worker を作れない）。
+# 試作ページ（dist-artifact/pcd-viewer.html）には文字コードの指定がないので、.html は utf-8 として返す
+PORT=${SERVE_PORT:-8740}
+if (exec 3<>/dev/tcp/127.0.0.1/$PORT) 2>/dev/null; then exit 0; fi
+setsid node -e '
+const http = require("http"), fs = require("fs"), path = require("path");
+const T = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".wasm": "application/wasm", ".json": "application/json", ".png": "image/png" };
+http.createServer((q, r) => {
+  let p = decodeURIComponent(new URL(q.url, "http://x").pathname);
+  if (p === "/favicon.ico") { r.writeHead(204); return r.end(); }  // ブラウザが勝手に取りに来る（404 の誤りを出さない）
+  if (!p.startsWith("/abs/")) { r.writeHead(404); return r.end(); }
+  p = path.normalize(p.slice(4));
+  fs.readFile(p, (e, b) => { if (e) { r.writeHead(404); return r.end(); } r.writeHead(200, { "content-type": T[path.extname(p)] || "application/octet-stream", "cache-control": "no-store" }); r.end(b); });
+}).listen(+process.argv[1], "127.0.0.1");
+' "$PORT" >/dev/null 2>&1 < /dev/null &
+for i in $(seq 1 50); do (exec 3<>/dev/tcp/127.0.0.1/$PORT) 2>/dev/null && exit 0; sleep 0.1; done
+echo "servedist: 起動できませんでした" >&2; exit 1

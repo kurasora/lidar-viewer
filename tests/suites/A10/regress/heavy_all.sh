@@ -9,6 +9,12 @@ W=${W:-$T/work/A10}
 REL=${1:-/home/claude/pcd-viewer/release}; shift || true
 PARTS=${*:-lifecycle}
 export W APPBIN="$REL/linux-unpacked/$(ls "$REL/linux-unpacked" | grep -E '^(lidar-viewer|pcd-viewer)$' | head -1)"
+# 0.4.1 から本番の配布物はヒューズで --inspect を止めている（Playwright の electron.launch と主プロセスの evaluate が使えない）。
+# lifecycle は「ヒューズの inspect だけ戻した試験用の組み立て」（LIFE_REL、既定 <release>-test）で流す。中身は本番と同じ。作り方:
+#   npx electron-builder --linux dir -c.productName=LiDARViewer -c.directories.output=release-test -c.electronFuses.enableNodeCliInspectArguments=true
+# 本番のヒューズそのものは静的な点検（fuses.py）で確かめる。サンドボックスの試験は本番の組み立てのまま
+LIFE_REL=${LIFE_REL:-${REL%/}-test}
+if [ -x "$LIFE_REL/linux-unpacked/lidar-viewer" ]; then APPBIN="$LIFE_REL/linux-unpacked/lidar-viewer"; else echo "[注意] 試験用の組み立て $LIFE_REL がないので本番で流す（lifecycle は起動できずに FAIL になる）"; fi
 # Chromium の二重起動防止のソケットは $TMPDIR の下に作られ、パスが 107 文字を超えると作れない → 短い記号リンクを使う（中身は $W/tmp/e）
 mkdir -p "$W/tmp/e"; ln -sfn "$W/tmp/e" /tmp/a10t; export TMPDIR=/tmp/a10t
 OUT=$W/run/heavy_$(date +%m%d_%H%M%S); mkdir -p "$OUT"; ln -sfn "$OUT" "$W/run/heavy_latest"

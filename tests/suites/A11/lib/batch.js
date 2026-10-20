@@ -31,7 +31,7 @@ const HELPERS = fs.readFileSync(path.join(__dirname, 'helpers.page.js'), 'utf8')
     await p.exposeFunction('pwOpen', async (list, input) => { await p.setInputFiles(input || '#fileInput', list.map(f => path.resolve(base, f))); });
     let result;
     try {
-      await p.goto(t.page || process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+      await p.goto(t.page || process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
       await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
       await p.evaluate(HELPERS);
       if (t.cap) await p.evaluate(v => { const s = document.getElementById('capSel'); s.value = String(v); s.dispatchEvent(new Event('change', { bubbles: true })); }, t.cap);

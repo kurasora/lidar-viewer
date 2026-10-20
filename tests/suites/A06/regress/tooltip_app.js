@@ -81,14 +81,14 @@ const DWELL = +(process.env.DWELL || 1100);
   await p.setInputFiles('#trajInput', '/home/claude/pcd-viewer/sample/trajectory.txt'); await L.waitIdle(p);
   await hoverState('T03_loaded');
   await L.openCard(p, 'open'); await p.evaluate(() => { document.getElementById('infoBox').open = true; }); await hoverState('T04_open_files_info');
-  for (const c of ['view', 'color', 'display', 'section', 'level']) { await L.closeCards(p); await L.openCard(p, c); await hoverState('T05_' + c); }
+  for (const c of ['view', 'color', 'section', 'level', 'settings']) { await L.closeCards(p); await L.openCard(p, c); await hoverState('T05_' + c); }
   await L.closeCards(p); await L.openCard(p, 'color'); await p.click('#tabColorDetail'); await hoverState('T06_color_detail');
   await p.click('#tabColorBasic');
   await L.closeCards(p); await L.openCard(p, 'section'); await p.click('#tabClip'); await hoverState('T06_clip');
   await p.click('#tabSec');
   // 断面を入れて、帯（しま）の設定も
   await L.closeCards(p);
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${c}"]`);
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) await p.click(`[data-open="${c}"]`);
   await p.click('[data-tool="measure"]');
   const a = await S.findVisiblePoint(p), b = a && await S.findVisiblePoint(p, undefined, a.i + 300);
   if (a && b) { await p.mouse.click(a.x, a.y); await p.waitForTimeout(300); await p.mouse.click(b.x, b.y); await p.waitForTimeout(300); }

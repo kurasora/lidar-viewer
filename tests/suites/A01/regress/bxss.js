@@ -3,7 +3,7 @@
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const fs = require('fs'), path = require('path');
 const [OUT, ...files] = process.argv.slice(2);
-const PAGES = { app: 'file:///home/claude/pcd-viewer/dist/index.html', artifact: 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html' };
+const PAGES = { app: 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html', artifact: 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html' };
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });

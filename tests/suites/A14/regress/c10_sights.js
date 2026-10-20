@@ -52,20 +52,11 @@ const L = require('./lib.js');
   await L.sleep(1500); R.e_yamlDrop = { msg: await msg() };
   // 背景を明るくしたときの軌跡（白）の見え方
   await L.open(p, [L.F + '/fastlio/bag_odom/bag_odom.mcap'], { input: '#trajInput' });
-  await p.click('[data-open="display"]');
+  await p.click('[data-open="settings"]');
   await p.evaluate(() => { const s = document.getElementById('bgLight'); s.value = 50; s.dispatchEvent(new Event('input', { bubbles: true })); });
   await L.sleep(500); await L.shot(p, 'c10_bg50_traj');
-  // h) 座標の吹き出しを出したまま「床を z = 0 にする」を切る → 吹き出しの数字が新しい座標に変わるか
-  await p.evaluate(() => { let x; while ((x = document.querySelector('#fileList [data-act=remove]'))) x.click(); });
-  await L.open(p, ['/home/claude/pcd-viewer/sample/map.laz']);
-  await p.evaluate(() => window.__pcd.setView('side', false)); await L.render(p);
-  if (!(await p.evaluate(() => window.__pcd.S.tools.info))) await p.click('[data-tool="info"]');
-  const b2 = await p.evaluate(() => { const r = window.__pcd.renderer.domElement.getBoundingClientRect(); return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 }; });
-  for (const d of [0, 10, -10, 20, -20, 40]) { await L.click(p, { x: b2.x + d, y: b2.y + d }); await L.sleep(800); if (!(await p.evaluate(() => document.getElementById('pickInfo').hidden))) break; }
-  const shownBefore = await p.evaluate(() => document.getElementById('pickBox').innerText.replace(/\n/g, ' '));
-  await p.click('[data-open="level"]'); await p.click('#floorZero'); await L.sleep(1500);
-  R.h_pickAfterFloorToggle = { before: shownBefore, after: await p.evaluate(() => document.getElementById('pickBox').innerText.replace(/\n/g, ' ')), floorZ: (await L.state(p)).level, pickLocal: await p.evaluate(() => window.__pcd.S.pick && window.__pcd.S.pick.toArray()), worldNow: await p.evaluate(() => window.__pcd.S.pick && window.__pcd.S.pick.clone().applyMatrix4(window.__pcd.world.matrixWorld).toArray()) };
-  await p.click('#floorZero'); await L.sleep(800);
+  // h) 「床を z = 0 にする」は 0.4.1 から画面から外した（いつも元の原点のまま）ので確かめない
+  R.h_pickAfterFloorToggle = '0.4.1 から画面にない（確かめない）';
   // g) 3 つ同時に選び、真ん中が開けないとき: 失敗の知らせに気づけるか（知らせの移り変わりを 0.1 秒ごとに記録）
   await p.evaluate(() => { let x; while ((x = document.querySelector('#fileList [data-act=remove]'))) x.click(); window.__msgs = []; let last = ''; window.__mi = setInterval(() => { const t = document.getElementById('statMsg').textContent; if (t !== last) { window.__msgs.push(t); last = t; } }, 100); });
   await p.setInputFiles('#fileInput', [L.F + '/liosam/GlobalMap.pcd', L.F + '/wrong/empty.pcd', '/home/claude/pcd-viewer/sample/formats/pcl_binary.pcd']);

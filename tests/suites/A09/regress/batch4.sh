@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # 5,000 万点（上限より多い）と、メモリの足りない状況（故障注入）
 #   $T/bin/bigmem bash batch4.sh   （TIMEOUT=6000 MEM=6000 くらい）
 #   ※ 上限 1 億で 5,000 万点を制限なしに読む試験は、guard に全体を止められるおそれがあるので batch5.sh に分けた

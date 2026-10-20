@@ -7,7 +7,7 @@ const [file, outJson] = process.argv.slice(2);
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
   const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
   const errors = []; p.on('pageerror', e => errors.push(e.message));
-  await p.goto('file:///home/claude/pcd-viewer/dist/index.html');
+  await p.goto('http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
   await p.evaluate(() => { const s = document.getElementById('capSel'); s.value = '10000000'; s.dispatchEvent(new Event('change', { bubbles: true }));
     const el = document.getElementById('statMsg'); window.__msgs = []; new MutationObserver(() => { if (el.textContent) window.__msgs.push(el.textContent); }).observe(el, { childList: true, characterData: true, subtree: true }); });

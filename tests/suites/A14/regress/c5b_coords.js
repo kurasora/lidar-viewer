@@ -16,8 +16,8 @@ const L = require('./lib.js');
       await L.click(p, { x: box.l + box.w * gx, y: box.t + box.h * gy }); await L.sleep(900);
       const r = await p.evaluate(() => {
         const S = window.__pcd.S, o = S.offset || [0, 0, 0];
-        if (document.getElementById('pickInfo').hidden || !S.pick) return null;
-        const shown = (document.getElementById('pickBox').innerText.match(/-?\d+\.\d+/g) || []).slice(0, 3).map(Number);
+        if (!document.querySelector('.pcall.pin.sel') || !S.pick) return null;
+        const shown = ((document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).innerText.match(/-?\d+\.\d+/g) || []).slice(0, 3).map(Number);
         const file = S.pick.toArray().map((v, k) => +(v + o[k]).toFixed(3)); // その点のファイル上の座標（local + offset）
         return { shown, file, diff: shown.map((v, k) => +(v - file[k]).toFixed(3)) };
       });

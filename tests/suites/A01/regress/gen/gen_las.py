@@ -30,7 +30,8 @@ def expected(fn, pf, rgbshift=8):
     F = {'intensity': np.asarray(r.intensity, float), 'classification': np.asarray(r.classification, float),
          'return_number': np.asarray(r.return_number, float), 'point_source_id': np.asarray(r.point_source_id, float)}
     if pf in GPS_FMTS:
-        g = np.asarray(r.gps_time, float); F['gps_time'] = g - g[0]
+        # 0.4.0 から double の欄は基準値（fieldBase）を引いて持つ。試験側で足し戻すので、正解は元の値のまま
+        F['gps_time'] = np.asarray(r.gps_time, float)
     C = None
     if pf in RGB_FMTS:
         C = (np.stack([r.red, r.green, r.blue], 1).astype(np.int64) >> rgbshift).astype(np.uint8)

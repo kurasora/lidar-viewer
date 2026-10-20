@@ -14,7 +14,9 @@ const WR = L.F + '/wrong';
     let st;
     try { st = await fn(); } catch (e) { st = { error: e.message }; }
     const s = crashed ? { crashed: true } : await L.state(p).catch(e => ({ stateError: e.message }));
+    // 途中で止められても（メモリの見張りなど）それまでの結果が残るよう、1 段ずつ書き出す
     R.steps.push({ label, ms: Date.now() - t0, msg: s.msg, msgErr: s.msgErr, files: (s.files || []).map(f => `${f.name}:${f.n}`), trajs: (s.trajs || []).map(t => `${t.name}:${t.count}姿勢:${t.length}m:${(t.duration || 0).toFixed(1)}s`), crashed: s.crashed, timedOut: st && st.timedOut });
+    L.log({ step: R.steps[R.steps.length - 1] });
     if (!crashed) await p.evaluate(() => { let x; while ((x = document.querySelector('#fileList [data-act=remove]'))) x.click(); let y; while ((y = document.querySelector('#trajList [data-act=tremove]'))) y.click(); });
   };
   for (const e of ['pcd', 'las', 'laz', 'txt', 'e57', 'ply', 'bin']) await step(`空の .${e} を「点群を開く」`, () => L.open(p, [`${WR}/empty.${e}`], { wait: 30000 }));
@@ -35,7 +37,6 @@ const WR = L.F + '/wrong';
   R.crashed = crashed;
   if (!crashed) await L.shot(p, 'c7_after_huge').catch(() => {});
   R.errors = errors.filter(e => !/GPU stall|swiftshader|Security Warning|GroupMarkerNotSet/i.test(e)).slice(0, 20);
-  for (const s of R.steps) L.log(s);
   L.log({ crashed: R.crashed, errors: R.errors });
   await app.close().catch(() => {});
 })().catch(e => { console.log('FATAL', e.stack); process.exit(1); });

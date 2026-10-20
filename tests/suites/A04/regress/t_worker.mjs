@@ -54,7 +54,9 @@ test('A04-039', 'pickIn: 遠い外れ値が 1 点ある点群でも、引いて�
   const o = [500, -50, 0], d = [0, 1, 0];
   // 光線は x=500 を通る。最も近い点は x=500 ちょうど（i=1000）。ずらして x=500.3（点から 0.3 m 横）を通す
   const o2 = [500.3, -50, 0];
-  const r = W.pickIn(ds, o2, d, 0, 2.0, I, LO, HI); // 平行投影の許容 2 m（画面で 5 px が 2 m の縮尺）
+  // 0.4.0 から画面の「選ぶ」は 2 段（R7-004）: 一番手前の点を探し、その奥行きから許す幅の 3 倍までで光線に一番近い点を選び直す
+  let r = W.pickIn(ds, o2, d, 0, 2.0, I, LO, HI); // 平行投影の許容 2 m（画面で 5 px が 2 m の縮尺）
+  if (r) { const w = 3 * 2.0 + ds.index.cell; r = W.pickIn(ds, o2, d, 0, 2.0, I, LO, HI, null, [r.t, r.t + w]) || r; }
   ok(r && Math.abs(r.p[0] - 500.5) < 0.6, r ? `選んだ点 ${r.p}` : '見つからない');
 });
 test('OK-W05', 'pointSpacing: 1 cm の格子 20 万点で 1 cm', () => {
@@ -65,7 +67,11 @@ test('A04-039', 'pointSpacing / 索引: 5000 km 先の外れ値 1 点があっ�
   const ds = mk(100000, i => (i === 0 ? [5e6, 5e6, 5e5] : [(i % 1000) * 0.01, Math.floor(i / 1000) * 0.01, 0]));
   const t0 = Date.now(); const sp = W.pointSpacing(ds);
   ok(sp !== null && Math.abs(sp - 0.01) < 0.005, `点の間隔 ${sp}`);
-  ok(ds.index.ids.size > 1000, `索引のマスが ${ds.index.ids.size} 個に縮退（外れ値なしでは 4000 個）、格子 ${ds.index.cell} m、dims ${ds.index.dims}、${Date.now() - t0} ms`);
+  // 0.4.0 から索引は 2 段（粗い格子 + 細かい格子）。外れ値で細かい格子が粗くなっても、選ぶ操作が固まらないこと（B25: 以前は 26〜57 秒）を時間で確かめる
+  const t1 = Date.now();
+  for (let q = 0; q < 50; q++) W.pickIn(ds, [(q % 10) + 0.003, -5, 1], [0, Math.SQRT1_2, -Math.SQRT1_2], 0.002, 0, I, LO, HI);
+  const ms = Date.now() - t1;
+  ok(ms < 5000, `50 回の選ぶ操作に ${ms} ms（索引のマス ${ds.index.keys.length} 個、格子 ${ds.index.cell} m、作るのに ${t1 - t0} ms）`);
 });
 for (const [id, lo, hi] of [['OK-W06', -2, 6], ['A04-047', -7, -5]]) test(id, `jacobiEigen: 無作為な対称行列 2 万個（値の大きさ 1e${lo}〜1e${hi}）で A v = λ v（残差 1e-9 以下）・固有ベクトルが直交（重根・対角に近いものを含む）`, () => {
   let worst = 0, worstOrth = 0;
@@ -107,7 +113,7 @@ function transformed(tiltDeg, yawDeg, shift) {
   const idx = Uint32Array.from({ length: n }, (_, i) => i); let s2 = 99; const r = () => (s2 = (Math.imul(s2, 1103515245) + 12345) >>> 0) / 4294967296;
   for (let i = n - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
   for (let ii = 0; ii < n; ii++) { const i = idx[ii]; let x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2]; [y, z] = [cx * y - sx * z, sx * y + cx * z]; [x, y] = [cy * x - sy * y, sy * x + cy * y]; Q[3 * ii] = x + shift[0]; Q[3 * ii + 1] = y + shift[1]; Q[3 * ii + 2] = z + shift[2]; }
-  const ds = { n, positions: Q }; ds.bbox = W.bbox(Q); return ds;
+  const ds = { n, positions: Q, offset: [0, 0, 0] }; ds.bbox = W.bbox(Q); return ds; // offset: 0.4.1 から床探しでファイルの原点を使う
 }
 let BASE = null;
 for (const [tilt, yaw, sh] of [[0, 0, [0, 0, 0]], [3, 30, [0, 0, 0]], [8, -60, [0, 0, 0]], [3, 30, [5000, 5000, 0]], [3, 30, [9990, 9990, 9990]]]) {

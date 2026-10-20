@@ -1,8 +1,9 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 const P = window.__pcd, S = P.S, f = S.files[0];
 const M = P.world.matrixWorld.elements, c = S.hideCeil && S.ceil;
 const bands = [-99, -1, 0.5, 2.0, 2.8, 3.5, 5.0, 6.5, 99], hid = new Array(bands.length - 1).fill(0), tot = hid.slice();
 for (let i = 0; i < f.n; i++) {
-  const x = f.positions[3 * i], y = f.positions[3 * i + 1], z = f.positions[3 * i + 2];
+  const x = f.sample[3 * i], y = f.sample[3 * i + 1], z = f.sample[3 * i + 2];
   const w = [0, 1, 2].map(k => M[k] * x + M[4 + k] * y + M[8 + k] * z + M[12 + k]);
   let b = 0; while (z + S.offset[2] >= bands[b + 1]) b++;   // 帯はファイルの z で分ける
   tot[b]++;

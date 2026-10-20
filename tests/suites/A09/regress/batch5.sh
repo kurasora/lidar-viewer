@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # 上限 1 億点で 5,000 万点の LAS を制限なしに開く（このマシン 8 GB に収まるか）。guard に止められたらそれが結果
 #   MEM=7000 TIMEOUT=2400 $T/bin/bigmem bash batch5.sh
 W=$(cd "$(dirname "$0")/.." && pwd)

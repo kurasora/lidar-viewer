@@ -11,8 +11,9 @@ async function tools(p) {
       bInfo: bi.getAttribute('aria-pressed') === 'true' && bi.classList.contains('on'), bMeasure: bm.getAttribute('aria-pressed') === 'true' && bm.classList.contains('on'),
       guide: $('mGuide').hidden ? '' : $('mGuide').textContent, statMode: $('statMode').textContent,
       cursor: window.__pcd.renderer.domElement.style.cursor, picking: $('stage').classList.contains('picking'),
-      pickInfo: !$('pickInfo').hidden, measureCard: [...document.querySelectorAll('.ptab')].some(t => t.dataset.name === 'measure') || $('pop').dataset.name === 'measure',
-      mLive: !$('mLive').hidden, measures: S.measures.length, visibleLines: S.measures.filter(m => m.line.visible).length,
+      pins: S.pins.length, pinsShown: S.pins.filter(q => q.el.isConnected && getComputedStyle(q.el).display !== 'none').length,
+      measureCard: $('pop').dataset.name === 'measure' && !$('pop').hidden, infoCard: $('pop').dataset.name === 'info' && !$('pop').hidden,
+      measures: S.measures.length, visibleLines: S.measures.filter(m => m.line.visible).length,
       hideCeil: S.hideCeil, view: window.__pcd.cam.type,
     };
   });
@@ -23,14 +24,14 @@ function consistent(t) {
   if (t.bInfo !== t.info) e.push('座標ボタンの表示が違う');
   if (t.bMeasure !== t.measure) e.push('距離ボタンの表示が違う');
   if (t.measureCard !== t.measure) e.push('距離のカードが道具と食い違う');
+  if (t.infoCard !== t.info) e.push('座標のカードが道具と食い違う');
   const g = [t.measure ? (t.pending ? 'もう 1 点をクリック' : '2 点をクリックして距離を測る') : null, t.info ? '点をクリックして座標を見る' : null].filter(Boolean).join(' ・ ');
   if (t.guide !== g) e.push(`上の案内「${t.guide}」≠「${g}」`);
   const sm = [t.info ? '座標' : null, t.measure ? '距離' : null].filter(Boolean);
   if (sm.length ? !t.statMode.endsWith('クリックで' + sm.join('・')) : /クリックで/.test(t.statMode)) e.push(`右上の表示「${t.statMode}」`);
   if ((t.info || t.measure) !== (t.cursor === 'crosshair')) e.push('カーソル');
   if ((t.info || t.measure) !== t.picking) e.push('picking クラス');
-  if (!t.info && t.pickInfo) e.push('座標を切ったのに吹き出しが残る');
-  if (!t.measure && t.visibleLines) e.push('距離を切ったのに線が見える');
+  // 0.4.1 から: 座標の吹き出し・測った線は、道具を切っても残す（消すのは表の × か「すべて消す」だけ）
   return e;
 }
 
@@ -67,7 +68,7 @@ function consistent(t) {
   };
   const expectAfter = {
     none: { btnInfo: { info: true }, btnMeasure: { measure: true }, keyI: { info: true }, keyM: { measure: true }, esc: { info: false, measure: false }, cardX: { info: false, measure: false } },
-    info: { btnInfo: { info: false }, btnMeasure: { info: false, measure: true }, keyI: { info: false }, keyM: { info: false, measure: true }, esc: { info: false }, cardX: { info: true } },
+    info: { btnInfo: { info: false }, btnMeasure: { info: false, measure: true }, keyI: { info: false }, keyM: { info: false, measure: true }, esc: { info: false }, cardX: { info: false } }, // 座標もカードなので × で切れる
     measure: { btnInfo: { info: true, measure: false }, btnMeasure: { measure: false }, keyI: { info: true, measure: false }, keyM: { measure: false }, esc: { measure: false }, cardX: { measure: false } },
     measurePending: { btnInfo: { info: true, measure: false, pending: false }, btnMeasure: { measure: false, pending: false }, keyI: { info: true, measure: false, pending: false }, keyM: { measure: false, pending: false }, esc: { measure: true, pending: false }, cardX: { measure: false, pending: false } },
   };
@@ -85,8 +86,8 @@ function consistent(t) {
   await p.mouse.click(floorA.x, floorA.y); await p.waitForTimeout(900);
   const a = await tools(p);
   await EV.btnMeasure();
-  const b = await chk('U1 座標の吹き出しを出したあと距離を入れる → 吹き出しが消える', { pickInfo: false });
-  R.ok('U1 前提: 座標の吹き出しが出ていた', a.pickInfo);
+  const b = await chk('U1 座標の吹き出しを出したあと距離を入れる → 吹き出しは残る（消すのは表の × か「すべて消す」）', { pins: 1, pinsShown: 1 });
+  R.ok('U1 前提: 座標の吹き出しが出ていた', a.pins === 1 && a.pinsShown === 1, a);
   // 計測 1 本作って距離を切る → 線は見えないが残る、Delete で消えてしまうか
   await setState('measure');
   await p.mouse.click(floorA.x, floorA.y); await p.waitForTimeout(900);
@@ -95,21 +96,27 @@ function consistent(t) {
   R.ok('U2 前提: 計測が 1 本できた', t.measures === 1, t.measures);
   await EV.btnMeasure();
   t = await tools(p);
-  R.ok('U2 距離を切ると線は隠れる（消えない）', t.measures === 1 && t.visibleLines === 0, t);
+  R.ok('U2 距離を切っても線は残る（見えたまま）', t.measures === 1 && t.visibleLines === 1, t);
   await p.evaluate(() => document.activeElement && document.activeElement.blur());
   await p.keyboard.press('Delete'); await p.waitForTimeout(200);
   t = await tools(p);
-  R.ok('U3 距離を切っている（線が見えない）ときに Delete を押しても、見えない計測が黙って消えない', t.measures === 1, `計測の本数 ${t.measures}`);
+  R.ok('U3 距離を切っているときに Delete を押しても、計測は消えない（消すのは距離を入れているときだけ）', t.measures === 1, `計測の本数 ${t.measures}`);
   await EV.btnMeasure(); t = await tools(p);
   R.ok('U3b もう一度距離を入れると残っていた線が見える', t.visibleLines === t.measures, t);
   // --- 入力欄にフォーカスがあるときはショートカットが効かない ---
   await setState('none');
-  await p.click('[data-open="display"]');
-  await p.focus('#pointSize');
+  // R7-005 から: つまみ・チェックを触ったあとはショートカットを効かせる。効かないのは文字を打つ部品（選ぶ欄など）の中だけ
+  await p.click('[data-open="settings"]'); await p.click('#setTabCtrl');
+  await p.focus('#unitSel');
   await p.keyboard.press('i'); await p.keyboard.press('m'); await p.keyboard.press('c');
   t = await tools(p);
-  R.ok('K1 つまみにフォーカスがあるとき i/m/c は効かない', !t.info && !t.measure && t.hideCeil === true, t);
-  await p.click('[data-open="display"]');
+  R.ok('K1 選ぶ欄（設定の単位）にフォーカスがあるとき i/m/c は効かない', t.hideCeil === true && (await p.evaluate(() => document.getElementById('pop').dataset.name)) === 'settings', t);
+  await p.click('#setTabLook'); await p.focus('#pointSize');
+  await p.keyboard.press('c'); await p.waitForTimeout(200);
+  t = await tools(p);
+  R.ok('K1b つまみ（設定の点の大きさ）を触ったあとは c が効く（R7-005）', t.hideCeil === false, t);
+  await p.keyboard.press('c');
+  await p.evaluate(() => { if (!document.getElementById('pop').hidden) document.getElementById('popClose').click(); });
   // --- 修飾キー付き ---
   await p.evaluate(() => document.activeElement && document.activeElement.blur());
   const combos = [['Control+c', 'hideCeil'], ['Control+i', 'info'], ['Control+m', 'measure'], ['Control+p', 'view'], ['Alt+c', 'hideCeil'], ['Meta+c', 'hideCeil']];

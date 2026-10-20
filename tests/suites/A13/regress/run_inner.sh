@@ -1,10 +1,12 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # run.sh から heavy の枠を 1 つ取って呼ばれる本体（試験を順に直接動かす）。単独で呼ばないこと
 #   使い方: bash run.sh [all|quick|<試験の名前>...]
 #     quick … 大きさ・起動・枠の中の機能・UTM・injection・故障注入（30 分ほど）
 #     all   … quick ＋ サンプル 73 個を 4 通り（枠＋CSP 地図あり／きれい、file 直接、wasm 禁止）＋ アプリ version の基準 ＋ スマートフォン
 #   環境変数: ART=試作ページのパス（既定 /home/claude/pcd-viewer/dist-artifact/pcd-viewer.html）
-#            APP=アプリ version のページ（既定 file:///home/claude/pcd-viewer/dist/index.html）
+#            APP=アプリ version のページ（既定 http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html）
 #   結果: ../out/*.json と画面写真、../logs/*.log。判定の表は ../out/eval_*.md
 #   メモ: Chromium は長い TMPDIR だと起動できない（プロファイルの UNIX ソケットのパスが長すぎる）ので /tmp/a13t（$W/tmp への記号リンク）を使う
 #         http サーバーは各試験の中で 8830（親・claude.ai 役）と 8831（子・アーティファクト役）に立てて、最後に止める

@@ -135,7 +135,8 @@ async function removeByName(p, name) {
   await L.idle(p);
   st = await L.state(p);
   const v = await p.evaluate(() => ({ first: window.__pcd.S.files.length, level: document.getElementById('levelResult').textContent, empty: document.getElementById('empty').hidden }));
-  R.ok('E13 読み込み中にほかを全部閉じても、読み終わったファイルが 1 つ目として表示され、自動補正される', st.files.length === 1 && st.files[0].name === 'scans.pcd' && v.level !== '' && v.empty, { ...v, msg: st.msg });
+  // 仕様（R16 で確認）: 自動補正は「最初の 1 つ」を開いたときだけ。読み込み中に前のファイルを閉じても、あとから補正はしない
+  R.ok('E13 読み込み中にほかを全部閉じても、読み終わったファイルが 1 つ目として表示される（自動補正はしない）', st.files.length === 1 && st.files[0].name === 'scans.pcd' && v.empty && !/^開いたときの自動/.test(v.level), { ...v, msg: st.msg });
   R.ok('ページのエラーなし', !errors.length, errors.slice(0, 5));
   await close();
   process.exitCode = R.done() ? 1 : 0;

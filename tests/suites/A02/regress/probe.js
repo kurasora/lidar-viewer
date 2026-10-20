@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面は全部の点を持たない（描いたら捨てる）。全部の座標・色は別スレッドから __pcd.call({ type: "buffers", id }) で借りる
 // 読み込んだ点群を「期待値」と比べるための集計（Node・Chromium・Electron で共通）
 //   summarize(files, offset, spec) → 1 ファイルごとの集計
 //     files: [{ name, n, total, positions(Float32Array, offset を引いた値), rgb(Uint8Array|null), fmt, note, fields[] }]

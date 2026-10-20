@@ -282,5 +282,12 @@
    "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/ecef_room.pcd"
   ],
   "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p3/s_display.js"
+ },
+ {
+  "label": "level/sparse030_auto",
+  "files": [
+   "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p5/cases/sparse030.pcd"
+  ],
+  "script": "/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv/work/A11/data/p5/s_autolevel_msg.js"
  }
 ]

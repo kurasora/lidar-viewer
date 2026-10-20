@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // 1 つのファイルを開いて、時間・メモリ・進み具合・固まり時間を測る（1 回ごとにブラウザを起動し直す）
 //   node perf_load.js [--electron] [--cap=N] [--label=名前] [--out=結果.jsonl] [--close] [--shot=写真.png] [--level=0|1] <ファイル> [<同時に選ぶファイル>...]
 //   出力: 1 行の JSON（--out があれば追記も）
@@ -46,7 +47,7 @@ if (!files.length) { console.error('usage: node perf_load.js [--electron] [--cap
         // 点の座標の統計と、x の 20 区間のヒストグラム（間引きの偏りを見る）
         const S = window.__pcd.S, f = S.files[0], o = S.offset || [0, 0, 0];
         if (!f) return null;
-        const P = f.positions, n = f.n, m = [0, 0, 0], lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+        const P = f.sample, n = f.n, m = [0, 0, 0], lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
         for (let i = 0; i < n; i++) for (let k = 0; k < 3; k++) { const v = P[3 * i + k] + o[k]; m[k] += v; if (v < lo[k]) lo[k] = v; if (v > hi[k]) hi[k] = v; }
         const H = new Array(20).fill(0);
         for (let i = 0; i < n; i++) { const b = Math.min(19, Math.floor((P[3 * i] + o[0] - lo[0]) / ((hi[0] - lo[0]) || 1) * 20)); H[b]++; }

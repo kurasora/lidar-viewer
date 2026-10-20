@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # 小さめの確認をまとめて（heavy が混んでいるので bigmem で一度に）: 閉じたあとの描き直し・色のモードと閉じたあとの知らせ・頭書きの点数が多すぎる LAS・100 個のファイル
 W=$(cd "$(dirname "$0")/.." && pwd)
 cd "$W/regress"

@@ -8,7 +8,7 @@ const fs = require('fs'), path = require('path');
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
   for (const dir of process.argv.slice(2)) {
     const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
-    await p.goto(process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+    await p.goto(process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
     await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
     const truth = JSON.parse(fs.readFileSync(path.join(dir, 'truth.json'), 'utf8'));
     await p.setInputFiles('#fileInput', path.join(dir, 'scans.pcd'));

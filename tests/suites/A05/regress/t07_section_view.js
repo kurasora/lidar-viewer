@@ -76,8 +76,10 @@ const dirOk = (a, b) => { const l = Math.hypot(...b); return a.every((v, k) => M
   R.ok('K2 「切り出しをやめる」で元に戻る', c.min.every(v => v <= -1e8) && c.max.every(v => v >= 1e8), c);
   // 下限を上限より上へ動かせない
   await p.evaluate(() => { const i = document.querySelectorAll('#clipX input'); i[1].value = 200; i[1].dispatchEvent(new Event('input')); i[0].value = 600; i[0].dispatchEvent(new Event('input')); });
+  // 0.4.1 から（R16 で確認）: つまみはすれ違える。そのときは小さい方が下限・大きい方が上限になる
   const xr = await p.evaluate(() => [...document.querySelectorAll('#clipX input')].map(i => +i.value));
-  R.ok('K3 下限のつまみは上限を越えない', xr[0] <= xr[1], xr);
+  c = await clip(p);
+  R.ok('K3 下限のつまみを上限より上へ動かすと、すれ違って範囲は小さい方〜大きい方になる', c.min[0] < c.max[0] && c.min[0] > -1e8 && c.max[0] < 1e8, { xr, c });
   await p.click('#btnClipReset');
   await p.click('#tabSec');
   // ---- 視点 ----
@@ -103,9 +105,11 @@ const dirOk = (a, b) => { const l = Math.hypot(...b); return a.every((v, k) => M
   R.ok('V5 p キーで透視に戻る', d.type === 'PerspectiveCamera' && d.btn === '透視' && d.mode.startsWith('透視投影'), d);
   // 平行投影で上から → 選んだ点が合っているか（平行でもクリックで選べる）
   await p.keyboard.press('p'); await p.keyboard.press('t'); await p.waitForTimeout(900);
+  // 開けるカードは 1 枚なので、天井の切り替え（表示のカード）を先に。座標を入れたあとに別のカードを開くと座標が切れる
+  await L.card(p, 'view'); await p.click('#btnCeil'); // 天井を表示
   await p.click('[data-tool="info"]');
-  const sc2 = await L.screenOf(p, [10, 0.5, 2.6]);
-  await p.click('[data-open="view"]'); await p.click('#btnCeil'); await p.click('[data-open="view"]'); // 天井を表示
+  const FZ = await p.evaluate(() => window.__pcd.S.bounds.min[2]);
+  const sc2 = await L.screenOf(p, [10, 0.5, FZ + 2.6]);
   await p.mouse.click(sc2.x, sc2.y); await p.waitForTimeout(900);
   const pk = await p.evaluate(() => { const S = window.__pcd.S, e = window.__pcd.world.matrixWorld.elements, v = S.pick; return v && [e[0] * v.x + e[4] * v.y + e[8] * v.z + e[12], e[1] * v.x + e[5] * v.y + e[9] * v.z + e[13], e[2] * v.x + e[6] * v.y + e[10] * v.z + e[14]].map(x => +x.toFixed(2)); });
   R.ok('V6 平行投影の上から天井の点 (10, 0.5) を選べる', pk && Math.abs(pk[0] - 10) < 0.3 && Math.abs(pk[1] - 0.5) < 0.3, pk);
@@ -114,7 +118,9 @@ const dirOk = (a, b) => { const l = Math.hypot(...b); return a.every((v, k) => M
   await p.keyboard.press('p');
   await p.keyboard.press('f');
   await p.waitForTimeout(80);
-  await p.mouse.move(640, 300); await p.mouse.down(); await p.mouse.move(700, 330, { steps: 4 }); await p.mouse.up();
+  // 回し始める場所は、吹き出し（座標は道具を切っても残る）や中心の丸に重ならない所
+  const fp = await p.evaluate(() => { const c = window.__pcd.renderer.domElement, b = c.getBoundingClientRect(); for (let gy = 0.3; gy < 0.8; gy += 0.05) for (let gx = 0.55; gx < 0.9; gx += 0.04) { const x = b.left + b.width * gx, y = b.top + b.height * gy; if ([0, 1, 2, 3, 4].every(i => document.elementFromPoint(x + i * 15, y + i * 8) === c)) return { x, y }; } return { x: 640, y: 300 }; });
+  await p.mouse.move(fp.x, fp.y); await p.mouse.down(); await p.mouse.move(fp.x + 60, fp.y + 30, { steps: 4 }); await p.mouse.up();
   await p.waitForTimeout(900);
   d = await camDir(p);
   R.ok('V7 視点が動いている途中にマウスで回すと、その場で止まる（正面に戻されない）', !dirOk(d.d, DIRS.front), d.d);

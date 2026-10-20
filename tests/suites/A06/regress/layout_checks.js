@@ -33,7 +33,7 @@ module.exports.check = async function check(p) {
     const add = (name, el) => { if (vis(el)) boxes.push({ name, r: el.getBoundingClientRect() }); };
     add('カード', pop); add('距離の案内', document.getElementById('mGuide')); add('操作の案内', document.getElementById('navHint'));
     add('ドック', document.getElementById('dock')); add('読み込み中', document.getElementById('progress'));
-    add('座標の吹き出し', document.getElementById('pickBox')); add('測定中の表示', document.getElementById('mLive'));
+    add('座標の吹き出し', (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div'))); add('測定中の表示', document.getElementById('mLive'));
     for (const s of document.querySelectorAll('.hud span')) if (s.textContent.trim()) add('右上 ' + s.id, s);
     document.querySelectorAll('.ptab').forEach(t => add('重なったカードの見出し「' + t.textContent + '」', t));
     const ov = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));

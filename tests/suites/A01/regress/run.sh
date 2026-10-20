@@ -9,9 +9,11 @@
 #   実行はすべて見張り付きの入口（light / heavy）を通す
 set -u
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 R=$(cd "$(dirname "$0")" && pwd)
 export PYTHONPATH=$R/../pylib${PYTHONPATH:+:$PYTHONPATH}
-export TMPDIR=$R/../tmp
+# Chromium は長い TMPDIR だと起動できない（プロファイルのソケットのパスが 107 文字まで）ので、短い記号リンクを使う（中身は ../tmp）
+mkdir -p $R/../tmp; ln -sfn $R/../tmp /tmp/a01t; export TMPDIR=/tmp/a01t
 cd $R
 mkdir -p out
 steps=${*:-gen cc node browser scen artifact}
@@ -57,7 +59,14 @@ if has oracle; then
   MEM=1500 $T/bin/light python3 cc_compare.py > out/cc_compare.txt; cat out/cc_compare.txt
 fi
 {
-  echo "# A01 再試験の結果 $(date '+%F %T')"
+  echo "# A01 再試験の結果 $(date '+%F %T')（「既知」は known.tsv にある直さないもの・仕様のもの）"
   for f in out/node.txt out/browser.txt out/scen.txt out/artifact.txt out/cc_compare.txt; do [ -f $f ] && { echo "## $f"; grep -E " NG |合計|\] NG|NG " $f; }; done
-} > out/RESULT.txt
+} | python3 -c '
+import sys, re
+known = dict(l.rstrip("\n").split("\t", 1) for l in open("known.tsv", encoding="utf-8") if l.strip() and not l.startswith("#"))
+for line in sys.stdin:
+    m = re.search(r"NG +(\S.*?)[:：（(]", line)
+    k = next((k for k in known if m and (m.group(1).strip() == k or m.group(1).strip().startswith(k + "（"))), None)
+    print(line.rstrip("\n") + (f"  ← 既知: {known[k]}" if k else ""))
+' > out/RESULT.txt
 echo "== まとめ: $R/out/RESULT.txt"; cat out/RESULT.txt | head -80

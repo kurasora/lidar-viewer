@@ -1,0 +1,26 @@
+# A01 で残っている食い違いのうち、直さないと決めたもの・仕様のもの（id<TAB>理由）。run.sh の RESULT.txt で「既知」と書く
+ply/list_before_x_ascii	R2-004 ascii PLY の list の欄（研究で使わない形式の細部。直さない）
+ply/many70_ascii	R2-006 ascii PLY の欄が 64 個を超える（直さない）
+ply/empty_ble	0 点の PLY を 0 点として開く（以前から。研究で使わない）
+misc/bundler_nocolor	R2-005 Bundler の色の行がない点（直さない）
+ascii/head_rf_gf_bf	R2-008 CloudCompare の Rf Gf Bf の見出し（直さない）
+ascii/head_none	見出しなし 7 列の色の列の並び（どちらとも決められない入力。R8）
+ascii/exp_extra	R8 行末の余分な列（以前から）
+ascii/head_sf_space	見出しの「scalar field」（空白入りの名前。以前から）
+ascii/jp_header_sjis	Shift_JIS の日本語の見出し（以前から。UTF-8 で読む）
+ascii/utf16le	UTF-16 の文字の点群（対応外。以前から）
+ascii/decimal_comma	小数点がカンマの文字の点群（対応外。以前から）
+ascii/text_column	文字の列を含む点群（対応外。以前から）
+cc/bin_local_utm	R2-001 1 つのファイルに原点付近と地図座標が混ざる（注記で知らせるところまで。直さない）
+laz/v1.3_pf4	R8-006 波形付き LAZ（直さない）
+laz/v1.3_pf5	R8-006 波形付き LAZ（直さない）
+laz/v1.4_pf4	R8-006 波形付き LAZ（直さない）
+laz/v1.4_pf5	R8-006 波形付き LAZ（直さない）
+laz/v1.4_pf9	R8-006 波形付き LAZ（直さない）
+laz/v1.4_pf10	R8-006 波形付き LAZ（直さない）
+local_then_utm	B10 の残り: 2 つ目のファイルは 1 つ目のシフトを使う（注記で知らせるところまで）
+utm_then_local	B10 の残り（同上）
+local_utm_at_once	B10 の残り（同上）
+.las	B10 の残り: 試作ページは最初の地図のシフトを使う
+.bin シフト	B10 の残り（同上）
+.shp 点	B10 の残り（同上）

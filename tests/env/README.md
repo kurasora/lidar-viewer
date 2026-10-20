@@ -36,10 +36,10 @@
 
 ---
 
-## 2. 対象のアプリ（LiDAR Viewer 0.3.0）
+## 2. 対象のアプリ（LiDAR Viewer 0.4.2）
 
 卒業研究のロボット（i-Cart mini ＋ Livox MID-360 ＋ Raspberry Pi 5 ＋ ROS2 Jazzy ＋ FAST-LIO）で作った点群地図や、LiDAR の生データを見るための
-**デスクトップ点群ビューア**（CloudCompare の置き換え）。Windows / Linux（x64・arm64）/ macOS 向けに配布。画面はすべて日本語。
+**デスクトップ点群ビューア**（CloudCompare の置き換え）。Windows / Linux（x64・arm64）/ macOS 向けに配布。画面は日本語（設定の「言語」で English にもできる。`src/i18n.js` が画面に出る直前に訳す）。
 同じ中身を 1 つの HTML にした「試作ページ」（claude.ai のアーティファクト。サンプルファイル入り）もあります。
 
 ### 構成（`/home/claude/pcd-viewer`）
@@ -47,8 +47,8 @@
 |---|---|
 | `main.js` | Electron の主プロセス。窓の作成、OS から渡されたファイルを開く・画像の保存（`app:capture`）、二重起動の防止、`PCDV_USERDATA` |
 | `preload.js` | 画面に `window.pcdApp`（OS から渡されたファイル・画像の保存）を渡す。contextIsolation・sandbox 有効 |
-| `src/index.html` `src/styles.css` | 画面。CSP あり（`'unsafe-eval'` は STEP の展開部品が eval を使うため） |
-| `src/app.js` | 画面の処理（three.js）。ファイルの読み込み順番待ち、カード（ポップ）の重ね、色、計測、座標、水平補正、天井を隠す、軌跡、試作ページの扱い など |
+| `src/index.html` `src/styles.css` | 画面。CSP あり（画面本体に `'unsafe-eval'` は無い。別スレッドは `dist/worker.js` のファイルから作るので、file:// では動かない → Chromium の試験は http で配る） |
+| `src/app.js` | 画面の処理（three.js）。ファイルの読み込み順番待ち、カード（1 枚だけ）、設定、色、計測、座標、水平補正、天井を隠す、軌跡、試作ページの扱い など |
 | `src/worker.js` | 別スレッド。読み込み・間引き・統計・選択用の索引・水平補正の解析・軌跡 |
 | `src/io/index.js` | 拡張子 → 読み方の対応表（READERS）。メーカー専用形式（RIEGL など）は理由付きで断る |
 | `src/io/util.js` | `Src`（ファイルを少しずつ読む）・行の切り出し・XML など |
@@ -61,14 +61,17 @@
 | `release/` | 配布物（exe・AppImage・deb の x64/arm64・mac の zip。mac は ad-hoc 署名済み）と展開済みの中身（`linux-unpacked` など） |
 
 ### 動作確認用の窓口（画面の中）
-`window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, cam, controlsTarget(), updateLive }`
+`window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, shotCanvas, cam, controlsTarget() }`
 - `S.files[]`（`name n total positions(Float32, offset を引いた値) header{data, fields} hasRgb …`）、`S.offset`（グローバルシフト）、`S.measures`、`S.tools`、`S.levelInfo`、`S.ceilZ` など
-- 主な要素: `#fileInput`（ファイル選択）`#trajInput`（軌跡）`#statMsg`（右上の知らせ。誤りは赤）`#progress`（読み込み中の表示）`#fileList [data-act=remove]`（閉じる）`#capSel`（点数の上限: 1,000 万〜10 億）
+- 主な要素: `#fileInput`（ファイル選択）`#trajInput`（軌跡）`#statMsg`（右上の知らせ。誤りは赤）`#progress`（読み込み中の表示）`#fileList [data-act=remove]`（閉じる）`#capSel`（点数の上限: 1,000 万〜10 億。設定のカードの「点の数」）
 
 ### ユーザーがこれまでに求めた仕様（確認の観点）
 - 座標を示す球（選んだ点の印）は、カメラを動かしても・ほかと重なっても**常に見える**こと
 - 「座標」と「距離」のボタンは**同時に押せない**こと
-- 左上に出るカード（色・表示・距離 など）は、後から開いたものが**重なるように順に並ぶ**。数の上限なし。**どのカードもボタンでいつでも閉じられ**、途中のカードが消えたら残りが**詰めて移動**する。1 つ閉じたらほかが消える、ということがない
+- 左上に出るカード（ファイル・表示・色・断面・補正・設定・座標・距離）は**常に 1 枚だけ**。別のカードを開くと前のカードは閉じ、そのメニューのボタンも解除される（0.4.2 から。前は重ねて並べていた）
+- 点の大きさ・背景・座標軸などの表示・読み込む最大点数・操作中の点数・開いたときの自動補正は**設定のカード**（ドックの一番右の歯車）にある（0.4.2 から。前は表示・補正のカード）。設定は localStorage の `pcdviewer.settings` に覚える
+- 座標・距離のモード中も、中心の丸・矢印はつかんで動かせる（0.4.2 から）
+- ライブ表示（LiDAR をつないで見る機能）は 0.4.2 で削除した
 - 点数の上限は**最大 10 億点**まで選べる
 - CloudCompare で開ける形式をできるだけ開ける。試作ページには**形式ごとのサンプル**が入っている
 - ファイルを開く画面では、形式の種類が**縦に 1 つずつ**並ぶ（拡張子が横に羅列されない）
@@ -78,15 +81,17 @@
 - アプリ名は「LiDAR Viewer」、アイコンは「Tsubu」（粒）。旧名は PCD Viewer（名残の表記が残っていないか）
 
 ### サンプルと期待値
-- `/home/claude/pcd-viewer/sample/formats/`（82 ファイル）: ほとんどが**同じ廊下の点群 5,000 点**を各形式で書いたもの。
-  期待値 `/home/claude/samples/out_expected.json`: n=5000, mean≈[14.7463, 4.8036, 0.3985], min≈[-11.5167,-6.2480,-5.3942], max≈[86.2494,29.0875,3.1325], 一部は UTM 風の大きな座標（+[539000, 3836000, 30]）。
+- `/home/claude/pcd-viewer/sample/formats/`（82 ファイル。2026-10-20 に作り物の廊下で作り直した）: ほとんどが**同じ廊下の点群 5,000 点**を各形式で書いたもの。
+  廊下は作り物（`make_synthetic_corridor.py` で作る。本物の地図は 2026-10-20 に履歴ごと消した）。
+  期待値 `tests/sample-generators/samples/out_expected.json`: n=5000, mean≈[11.5065, 0.8842, 1.6020], min≈[-4.3512,-4.6035,-0.5653], max≈[28.6278,6.1359,3.8554], 一部は UTM 風の大きな座標（+[539000, 3836000, 30]）。
   メッシュ・CAD は面の上に点を散らす（既定 100 万点）ので点数は一致しない。画像は画素が点になる。
-- 作り方: `/home/claude/samples/`（`make_src.py` `gen_clouds.sh` `gen_py1.py` `gen_py2.py` `gen_py3.py` `gen_mesh.py`）。CloudCompare で書いた元: `/home/claude/samples/cc/`
-- `/home/claude/pcd-viewer/sample/map.json` `map.laz` `trajectory.txt`: 廊下の地図（約 100 万点）と軌跡
+- 作り方: `tests/sample-generators/samples/`（`make_synthetic_corridor.py`（元の廊下）→ `make_src.py` `gen_clouds.sh` `gen_py1.py` `gen_py2.py` `gen_py3.py` `gen_mesh.py`）。CloudCompare で書いた元: `tests/sample-generators/samples/cc/`
+- `/home/claude/pcd-viewer/sample/map.json` `map.laz` `trajectory.txt`: 作り物の廊下の地図（L 字の廊下 2 m × 2.6 m × 38 m と部屋、361,000 点、3.4° 傾けてある）と軌跡（4,210 姿勢、10 Hz、時刻は 2000-01-01 から）
+  地図の範囲 x -4.35〜、y -4.97〜、z -0.76〜（map.json の lo）。水平補正すると傾き約 3.4° を直す
 
 ### 使える道具
 - Node 22、Playwright（全体に入っている。`require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright')`）、Chromium `/opt/pw-browsers/chromium`
-- Electron 34.5.8: `/home/claude/pcd-viewer/node_modules/electron/dist/electron --no-sandbox <アプリのフォルダ>/main.js`（X が必要）
+- Electron 44.8.0（fuse で RunAsNode・NODE_OPTIONS・--inspect を無効にしてある。製品 version は --remote-debugging-port から画面を操作する）: `/home/claude/pcd-viewer/node_modules/electron/dist/electron --no-sandbox <アプリのフォルダ>/main.js`（X が必要）
 - CloudCompare（比較の正解として使える）: `QT_QPA_PLATFORM=offscreen xvfb-run -a -n <番号> CloudCompare -SILENT -NO_TIMESTAMP -O <入力> -C_EXPORT_FMT ASC -SAVE_CLOUDS`（出力は入力と同じフォルダに書くので、入力は自分の場所に写してから）
 - Python: numpy, laspy(+lazrs), pye57, plyfile, trimesh, ezdxf, pyshp(shapefile), ifcopenshell, gmsh, DracoPy, tifffile, Pillow, scipy, pandas, imageio
 - `$T/harness/read.mjs` … Node で読み込み部品を直接動かす: `$T/bin/light node --no-warnings $T/harness/read.mjs <ファイル> [付属ファイル…] [--cap=N]` → JSON

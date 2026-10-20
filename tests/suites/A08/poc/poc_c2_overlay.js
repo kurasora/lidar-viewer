@@ -2,7 +2,7 @@
 const path = require('path');
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const FILE = path.resolve(process.argv[2]);
-const PAGE = process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html';
+const PAGE = process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html';
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files','--disable-background-networking','--disable-component-update','--no-first-run'] });
   const p = await b.newPage({ viewport: { width: 1280, height: 800 } });

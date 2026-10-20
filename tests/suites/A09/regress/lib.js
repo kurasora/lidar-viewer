@@ -170,7 +170,7 @@ async function launch(opts = {}) {
     browser = await pw.chromium.launch({ executablePath: opts.chromium || process.env.CHROMIUM || '/opt/pw-browsers/chromium', args });
     page = await browser.newPage({ viewport: vw });
     await page.addInitScript(INIT);
-    await page.goto(opts.page || process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+    await page.goto(opts.page || process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   } else {
     const appdir = opts.appdir || process.env.APPDIR || '/home/claude/pcd-viewer';
     const exe = opts.electronPath || process.env.ELECTRON || '/home/claude/pcd-viewer/node_modules/electron/dist/electron';

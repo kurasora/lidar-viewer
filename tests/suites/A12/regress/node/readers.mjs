@@ -99,16 +99,21 @@ await tryCase('A12-vtk51', async () => {
 // 項目名に HTML（読み込み部品はそのまま通す。画面で innerHTML に入る）
 await tryCase('A12-html-field', async () => {
   const { r } = await load('html_field.pcd');
-  say(Object.keys(r.fields).some(k => k.includes('<')), 'A12-html-field', 'PCD の項目名（画面でエスケープされずに innerHTML に入る）', Object.keys(r.fields));
+  // 項目名に < が入るのは読み込み部品の仕様どおり。画面で文字として出す（エスケープ）かは browser/render_checks.js で確かめる
+  console.log(`[情報] A12-html-field PCD の項目名をそのまま読む（画面での扱いは render_checks で確認）: ${JSON.stringify(Object.keys(r.fields))}`);
 });
 // 軌跡: KITTI 形式（12 列）・時刻のない 7 列を黙って取り違える
 await tryCase('A12-traj-kitti', async () => {
-  const t = parseTrajectory(readFileSync(join(D, 'traj_kitti.txt')).buffer.slice(0));
+  // 0.4.1 から: 取り違えずに、理由を言って断る（例外の文が出れば直っている）
+  let t;
+  try { t = parseTrajectory(readFileSync(join(D, 'traj_kitti.txt')).buffer.slice(0)); } catch (e) { say(false, 'A12-traj-kitti', '理由を言って断る', e.message); return; }
   const first = Array.from(t.poses.slice(0, 8)).map(v => +v.toFixed(3));
   say(t.count > 0, 'A12-traj-kitti', 'KITTI 形式（3×4 行列 12 列）が誤りにならず [t x y z qx qy qz qw] として読まれる（1 行目）', first);
 });
 await tryCase('A12-traj-7col', async () => {
-  const t = parseTrajectory(readFileSync(join(D, 'traj_xyzq.txt')).buffer.slice(0));
+  // 0.4.1 から: 取り違えずに、理由を言って断る（例外の文が出れば直っている）
+  let t;
+  try { t = parseTrajectory(readFileSync(join(D, 'traj_xyzq.txt')).buffer.slice(0)); } catch (e) { say(false, 'A12-traj-7col', '理由を言って断る', e.message); return; }
   const first = Array.from(t.poses.slice(0, 8)).map(v => +v.toFixed(3));
   say(t.count > 0, 'A12-traj-7col', '時刻のない x y z qx qy qz qw（7 列）が t x y z として読まれる（1 行目）', first);
 });

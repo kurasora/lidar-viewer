@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // A13 試作ページ（アーティファクト version）の試験で共通に使う道具
 //  ・claude.ai の枠の再現: 親（http://localhost:8830）と子（http://127.0.0.1:8831、アーティファクト役）の 2 つの http サーバー
 //    子は CSP（下の CSP_PROFILES）と Permissions-Policy をヘッダーで返す。親は sandbox 付きの iframe で子を読む
@@ -13,7 +14,7 @@ const pw = require(PW_ROOT + '/playwright');
 const T = process.env.T || '/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv';
 const W = process.env.W || path.join(T, 'work/A13');
 const ART = process.env.ART || '/home/claude/pcd-viewer/dist-artifact/pcd-viewer.html';
-const APP = process.env.APP || 'file:///home/claude/pcd-viewer/dist/index.html';
+const APP = process.env.APP || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html';
 const OUT = process.env.OUT || path.join(W, 'out');
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -191,11 +192,13 @@ async function waitIdle(frame, { limit = 120000, stableMs = 1200, seq0 = null } 
 
 // 開いている点群の統計（座標は offset を足し戻した値。水平補正の行列は掛けない）
 async function fileStats(frame, ids = null) {
-  return frame.evaluate((ids) => {
+  return frame.evaluate(async (ids) => {
     const S = window.__pcd.S, o = S.offset || [0, 0, 0];
     const list = S.files.filter(f => !ids || ids.includes(f.id));
+    // 全部の座標は別スレッドから借りる（f.sample は先頭 20 万点だけ）
+    const bufs = {}; for (const f of list) bufs[f.id] = (await window.__pcd.call({ type: 'buffers', id: f.id })).positions;
     const files = list.map(f => {
-      const P = f.positions, n = f.n;
+      const P = bufs[f.id], n = f.n;
       const m = [0, 0, 0], lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
       const ax = [new Float64Array(n), new Float64Array(n), new Float64Array(n)];
       for (let i = 0; i < n; i++) for (let k = 0; k < 3; k++) { const v = P[3 * i + k] + o[k]; ax[k][i] = v; m[k] += v; if (v < lo[k]) lo[k] = v; if (v > hi[k]) hi[k] = v; }
@@ -210,11 +213,12 @@ async function fileStats(frame, ids = null) {
 
 // 並べた座標（軸ごと）を取り出す（2 つの読み込み結果を点ごとに比べるため）
 async function sortedAxes(frame, id, maxN = 200000) {
-  return frame.evaluate(([id, maxN]) => {
+  return frame.evaluate(async ([id, maxN]) => {
     const S = window.__pcd.S, o = S.offset || [0, 0, 0];
     const f = S.files.find(x => x.id === id); if (!f) return null;
+    const P = (await window.__pcd.call({ type: 'buffers', id: f.id })).positions;
     const n = Math.min(f.n, maxN), out = [];
-    for (let k = 0; k < 3; k++) { const a = new Float64Array(f.n); for (let i = 0; i < f.n; i++) a[i] = f.positions[3 * i + k] + o[k]; a.sort(); out.push(Array.from(a.subarray(0, n))); }
+    for (let k = 0; k < 3; k++) { const a = new Float64Array(f.n); for (let i = 0; i < f.n; i++) a[i] = P[3 * i + k] + o[k]; a.sort(); out.push(Array.from(a.subarray(0, n))); }
     return out;
   }, [id, maxN]);
 }

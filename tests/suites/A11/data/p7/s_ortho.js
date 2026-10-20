@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // 透視で部屋の中に入ってから平行投影に切り替え、画面の中心を選ぶ
 const P = window.__pcd, S = P.S, f = S.files[0];
 if (S.hideCeil) document.getElementById('btnCeil').click();
@@ -16,12 +17,12 @@ const along = (cam) => {
   const d = tgt.clone().sub(cam.position).normalize().transformDirection(inv);
   let front = null, back = null;
   for (let i = 0; i < f.n; i++) {
-    const v = [f.positions[3 * i] - o.x, f.positions[3 * i + 1] - o.y, f.positions[3 * i + 2] - o.z];
+    const v = [f.sample[3 * i] - o.x, f.sample[3 * i + 1] - o.y, f.sample[3 * i + 2] - o.z];
     const t = v[0] * d.x + v[1] * d.y + v[2] * d.z;
     const perp = Math.sqrt(Math.max(0, v[0] * v[0] + v[1] * v[1] + v[2] * v[2] - t * t));
     if (perp > 0.05) continue;
-    if (t > 0 && (!front || t < front.t)) front = { t, p: [f.positions[3 * i], f.positions[3 * i + 1], f.positions[3 * i + 2]] };
-    if (t < 0 && (!back || t < back.t)) back = { t, p: [f.positions[3 * i], f.positions[3 * i + 1], f.positions[3 * i + 2]] };
+    if (t > 0 && (!front || t < front.t)) front = { t, p: [f.sample[3 * i], f.sample[3 * i + 1], f.sample[3 * i + 2]] };
+    if (t < 0 && (!back || t < back.t)) back = { t, p: [f.sample[3 * i], f.sample[3 * i + 1], f.sample[3 * i + 2]] };
   }
   return { front, back };
 };

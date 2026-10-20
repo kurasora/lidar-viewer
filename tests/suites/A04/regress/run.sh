@@ -14,9 +14,11 @@ set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 export PCDV_ROOT=${PCDV_ROOT:-/home/claude/pcd-viewer}
 T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 OUT=${OUT:-$HERE/../out/regress-$(date +%Y%m%d-%H%M%S)}
 mkdir -p "$OUT"
-export TMPDIR=${TMPDIR:-$HERE/../tmp}; mkdir -p "$TMPDIR"
+# Chromium は長い TMPDIR だと起動できないので、短い記号リンクを使う（中身は ../tmp）
+mkdir -p "$HERE/../tmp"; ln -sfn "$HERE/../tmp" /tmp/a04t; export TMPDIR=${TMPDIR:-/tmp/a04t}
 COV=1; ONLY=(); SAMPLES_ONLY=0; ARGS=("$@")
 while [ $# -gt 0 ]; do
   case "$1" in

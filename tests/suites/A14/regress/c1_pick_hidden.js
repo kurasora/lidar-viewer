@@ -14,7 +14,7 @@ const fs = require('fs');
   await p.evaluate(() => window.__pcd.setView('top', false)); await L.render(p);
   await p.click('[data-tool="info"]');
   const B2M = b => { const R0 = truth.R0, t = truth.t0, d = [b[0] - t[0], b[1] - t[1], b[2] - t[2]]; return [0, 1, 2].map(j => d[0] * R0[0][j] + d[1] * R0[1][j] + d[2] * R0[2][j]); };
-  const pickShown = async () => (await p.evaluate(() => document.getElementById('pickBox').innerText)).replace(/\n/g, ' ');
+  const pickShown = async () => (await p.evaluate(() => (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).innerText)).replace(/\n/g, ' ');
   // 箱の上面の中心（正解: 補正後 z = 0.8）
   let s = await L.screenOf(p, truth.box_top_center_M); await L.click(p, s); await L.sleep(1200);
   R.boxTop_hidden = await pickShown();

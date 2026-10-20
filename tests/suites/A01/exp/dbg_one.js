@@ -7,7 +7,7 @@ const path = require('path');
   const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
   p.on('pageerror', e => console.log('PAGEERROR', e.message, '\n', (e.stack || '').split('\n').slice(0, 12).join('\n')));
   p.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.log('CONSOLE', m.type(), m.text()); });
-  await p.goto(process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+  await p.goto(process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
   for (const f of process.argv.slice(2)) {
     await p.setInputFiles('#fileInput', [path.resolve(f)]);

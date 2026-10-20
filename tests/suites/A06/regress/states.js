@@ -7,7 +7,8 @@ async function pointOnScreen(p, i = 0, fileIdx = 0) {
   return p.evaluate(([i, fi]) => {
     const P = window.__pcd;
     const f = P.S.files[fi]; const V = P.cam.position.constructor;
-    const v = new V(f.positions[3 * i], f.positions[3 * i + 1], f.positions[3 * i + 2]).applyMatrix4(P.world.matrixWorld).project(P.cam);
+    const S = f.sample || f.positions;  // 0.4.1 から画面には先頭 20 万点の標本 f.sample だけ
+    const v = new V(S[3 * i], S[3 * i + 1], S[3 * i + 2]).applyMatrix4(P.world.matrixWorld).project(P.cam);
     const r = P.renderer.domElement.getBoundingClientRect();
     return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height, z: v.z };
   }, [i, fileIdx]);
@@ -39,7 +40,7 @@ async function run(p, pre, opts = {}) {
   await L.openFiles(p, [L.FILES + '/corr_int_label.pcd']);
   await p.setInputFiles('#trajInput', '/home/claude/pcd-viewer/sample/trajectory.txt'); await L.waitIdle(p);
   await snap('02_loaded');
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) { await L.closeCards(p); await L.openCard(p, c); await snap('03_' + c); }
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) { await L.closeCards(p); await L.openCard(p, c); await snap('03_' + c); }
   // 開くカードで情報の欄も開く
   await L.closeCards(p); await L.openCard(p, 'open');
   await p.evaluate(() => { document.getElementById('infoBox').open = true; });
@@ -50,7 +51,7 @@ async function run(p, pre, opts = {}) {
   await p.click('#tabSec');
   // 8 枚重ね
   await L.closeCards(p);
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${c}"]`);
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) await p.click(`[data-open="${c}"]`);
   await p.click('[data-tool="measure"]');
   await snap('05_stack8');
   // 距離を 2 本

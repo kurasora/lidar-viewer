@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # A02（メッシュ・CAD・画像の形式）の再試験をまとめて流す
 #   使い方: bash run.sh [段階...]
 #     段階: gen（試験ファイルを作り直す） node browser electron artifact cc（CloudCompare との比較） perf（大きなファイル） all（既定: gen node browser electron artifact）

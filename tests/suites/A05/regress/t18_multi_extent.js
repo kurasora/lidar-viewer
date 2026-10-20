@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // t18 範囲の違う点群を順に開く（隣り合う 3 つの区画）: 2 つ目以降の点が「切り出し」で黙って隠れないか
 //   ・1 つ目を開いたあと 2 つ目・3 つ目を開く（別々に／一度に）
 //   ・表示を切って入れ直す
@@ -22,7 +23,7 @@ async function shown(p) {
     const S = window.__pcd.S, e = window.__pcd.world.matrixWorld.elements;
     return S.files.map(f => {
       const u = f.mat.uniforms, mn = u.uClipMin.value, mx = u.uClipMax.value, cn = u.uCeilN.value, cd = u.uCeilD.value;
-      let ok = 0; const P = f.positions, m = Math.min(f.n, 20000);
+      let ok = 0; const P = f.sample, m = Math.min( (f.sample.length / 3), 20000);
       for (let i = 0; i < m; i++) {
         const x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2];
         const wx = e[0] * x + e[4] * y + e[8] * z + e[12], wy = e[1] * x + e[5] * y + e[9] * z + e[13], wz = e[2] * x + e[6] * y + e[10] * z + e[14];

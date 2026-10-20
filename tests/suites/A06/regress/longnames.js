@@ -78,7 +78,7 @@ const NAME_ASCII = mk('corridor_scan_2026-10-17_run02_livox_mid360_fastlio_map_f
   await L.closeCards(p); await p.click('[data-tool="info"]');
   for (const [nm, area] of [['center', undefined], ['right', { x0: 0.8, x1: 0.99, y0: 0.1, y1: 0.9 }], ['left', { x0: 0.0, x1: 0.1, y0: 0.1, y1: 0.9 }]]) {
     const q = await S.findVisiblePoint(p, area);
-    if (q) { await p.mouse.click(q.x, q.y); await p.waitForTimeout(600); const bx = await p.evaluate(() => { const r = document.getElementById('pickBox').getBoundingClientRect(); return [r.x, r.y, r.right, r.bottom].map(Math.round); }); await snap('17_1e7_pick_' + nm, { pickBox: bx, vw: w }); }
+    if (q) { await p.mouse.click(q.x, q.y); await p.waitForTimeout(600); const bx = await p.evaluate(() => { const r = (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).getBoundingClientRect(); return [r.x, r.y, r.right, r.bottom].map(Math.round); }); await snap('17_1e7_pick_' + nm, { pickBox: bx, vw: w }); }
   }
   await p.click('[data-tool="info"]');
   await p.click('[data-tool="measure"]');

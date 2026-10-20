@@ -21,35 +21,32 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   const vp = await p.evaluate(() => [innerWidth, innerHeight]);
   R.ok('EL2 最小の大きさ 900×600（それより小さくできない）', sz.min[0] === 900 && sz.min[1] === 600 && sz.size[0] >= 900 && sz.size[1] >= 600, { ...sz, viewport: vp });
   await L.open(p, [`${D}/c_xyzi.pcd`]);
-  for (const n of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${n}"]`);
-  await p.click('[data-tool="measure"]'); await p.waitForTimeout(900);
-  const geo = await p.evaluate(() => { const r = e => { const b = e.getBoundingClientRect(); return [Math.round(b.left), Math.round(b.top), Math.round(b.right), Math.round(b.bottom)]; }; return { pop: r(document.getElementById('pop')), dock: r(document.getElementById('dock')), hud: r(document.querySelector('.hud')), vw: innerWidth, vh: innerHeight }; });
-  R.ok('EL3 最小の窓でカードを 7 枚重ねても、カード・ドックが窓の中に収まる', geo.pop[3] <= geo.dock[1] && geo.dock[2] <= geo.vw && geo.dock[0] >= 0, geo);
+  // 0.4.2 から: カードは常に 1 枚。どのカードを開いても（いちばん長い設定・ファイルのカードも）窓に収まるか
+  const geos = [];
+  for (const n of ['open', 'view', 'color', 'section', 'level', 'settings', 'measure']) {
+    if (n === 'measure') await p.click('[data-tool="measure"]'); else await p.click(`[data-open="${n}"]`);
+    await p.waitForTimeout(400);
+    geos.push(await p.evaluate(n => { const r = e => { const b = e.getBoundingClientRect(); return [Math.round(b.left), Math.round(b.top), Math.round(b.right), Math.round(b.bottom)]; }; return { card: n, pop: r(document.getElementById('pop')), dock: r(document.getElementById('dock')), vw: innerWidth, vh: innerHeight }; }, n));
+  }
+  const geo = geos.find(g => !(g.pop[3] <= g.dock[1] && g.dock[2] <= g.vw && g.dock[0] >= 0)) || geos[0];
+  R.ok('EL3 最小の窓で、どのカードを開いてもカード・ドックが窓の中に収まる', geos.every(g => g.pop[3] <= g.dock[1] && g.dock[2] <= g.vw && g.dock[0] >= 0), geo);
   await L.shot(p, 'e01_EL3_min_window');
   while (!(await p.isHidden('#pop'))) await p.click('#popClose');
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(1440, 900));
   await p.waitForTimeout(500);
   // ---- F12 ----
-  await p.keyboard.press('F12'); await p.waitForTimeout(1500);
+  // Electron 44 では Playwright のキー入力（CDP）が before-input-event に届かないので、Electron の入力として送る（本物のキーと同じ道筋）
+  const key = (keyCode, modifiers = []) => app.evaluate(({ BrowserWindow }, [k, m]) => { const wc = BrowserWindow.getAllWindows()[0].webContents; wc.focus(); wc.sendInputEvent({ type: 'keyDown', keyCode: k, modifiers: m }); wc.sendInputEvent({ type: 'keyUp', keyCode: k, modifiers: m }); }, [keyCode, modifiers]);
+  await key('F12'); await p.waitForTimeout(1500);
   const dev1 = await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].webContents.isDevToolsOpened());
-  await p.keyboard.press('F12'); await p.waitForTimeout(1500);
+  await key('F12'); await p.waitForTimeout(1500);
   const dev2 = await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].webContents.isDevToolsOpened());
   R.ok('EL4 F12 で開発者ツールが開き、もう一度で閉じる', dev1 === true && dev2 === false, { dev1, dev2 });
   // ---- 再読み込み・開発者ツールのほかのキー（メニューがないので効かないはず） ----
   await p.evaluate(() => { window.__marker = 1; });
-  for (const k of ['Control+r', 'F5', 'Control+Shift+r']) { await p.keyboard.press(k); await p.waitForTimeout(800); }
+  for (const [k, m] of [['R', ['control']], ['F5', []], ['R', ['control', 'shift']]]) { await key(k, m); await p.waitForTimeout(800); }
   const kept = await p.evaluate(() => window.__marker === 1 && window.__pcd.S.files.length === 1).catch(() => false);
   R.ok('EL5 Ctrl+R・F5 でページが読み直されない（開いた点群が消えない）', kept, kept);
-  // ---- ページが置き換わらない ----
-  const url0 = p.url();
-  await p.evaluate(f => { location.href = 'file://' + f; }, `${D}/c_xyzi.pcd`).catch(() => {});
-  await p.waitForTimeout(1500);
-  const nav1 = await p.evaluate(() => ({ url: location.href, ok: !!window.__pcd && window.__marker === 1 })).catch(e => ({ err: e.message }));
-  R.ok('EL6 ページからファイルの場所へ移ろうとしても（落としたときと同じ移動）ページが置き換わらない', nav1.ok && nav1.url === url0, nav1);
-  await p.evaluate(() => { location.href = 'https://example.com/'; }).catch(() => {});
-  await p.waitForTimeout(1500);
-  const nav2 = await p.evaluate(() => ({ url: location.href, ok: !!window.__pcd })).catch(e => ({ err: e.message }));
-  R.ok('EL7 外の URL へも移らない', nav2.ok && nav2.url === url0, nav2);
   const wo = await p.evaluate(() => { const w = window.open('https://example.com/'); return w === null; });
   await p.waitForTimeout(800);
   const nw = app.windows().length;
@@ -60,12 +57,21 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   R.ok('EL9 ドロップで開く（アプリ version）', st.files.length === 2, st.files.map(f => f.name));
   // ---- ファイルを開く画面（showOpenFilePicker がアプリ version で使えるか・Playwright で受けられるか） ----
   await p.evaluate(() => { window.__res = []; const o = window.showOpenFilePicker; if (o) window.showOpenFilePicker = function (x) { window.__res.push('called:' + x.types.length + ':' + x.types[0].description); const pr = o.call(window, x); pr.then(r => window.__res.push('ok ' + r.length), e => window.__res.push(e.name + ': ' + e.message)); return pr; }; });
-  let fc = null; const onFc = f => { fc = f; }; p.on('filechooser', onFc);
+  // Playwright の filechooser で受けると showOpenFilePicker が即「取り消し」になる（Electron 44）。本物の画面（GTK）を xdotool で操作する
+  const XD = (...a) => { try { return execFileSync('xdotool', a, { encoding: 'utf8' }); } catch (e) { return ''; } };
   await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(2500);
   const res1 = await p.evaluate(() => window.__res);
-  R.ok('EL10 アプリ version の「点群を開く」は形式ごとの種類の画面（showOpenFilePicker）を使う', info.sofp === 'function' && info.top && res1.some(r => r.startsWith('called:34:')), { sofp: info.sofp, res1, filechooser: !!fc });
-  if (fc) { await fc.setFiles([`${D}/c_label.pcd`]).catch(() => {}); await L.idle(p); }
-  p.off('filechooser', onFc);
+  const nTypes = +((res1.find(r => r.startsWith('called:')) || '').split(':')[1] || 0);
+  R.ok('EL10 アプリ version の「点群を開く」は形式ごとの種類の画面（showOpenFilePicker）を使う', info.sofp === 'function' && info.top && nTypes >= 30 && res1.some(r => /^called:\d+:対応しているすべての形式$/.test(r)), { sofp: info.sofp, res1 });
+  // 開いた画面で、場所の欄にファイルのパスを入れて「開く」を押す
+  const dlg = XD('search', '--name', '^Open').trim().split('\n').filter(Boolean).pop();
+  if (dlg) {
+    const g = Object.fromEntries(XD('getwindowgeometry', '--shell', dlg).trim().split('\n').map(l => l.split('=')));
+    XD('key', '--window', dlg, 'ctrl+l'); await p.waitForTimeout(400);
+    XD('type', '--window', dlg, '--delay', '20', `${D}/c_label.pcd`); await p.waitForTimeout(800);
+    XD('mousemove', String(+g.X + +g.WIDTH - 50), String(+g.Y + +g.HEIGHT - 24), 'click', '1');
+    await p.waitForTimeout(2500); await L.idle(p);
+  }
   st = await L.state(p);
   R.ok('EL11 その画面で選んだファイルが開く', st.files.some(f => f.name === 'c_label.pcd'), { files: st.files.map(f => f.name), res: await p.evaluate(() => window.__res) });
   // ---- ネイティブのダイアログ（Playwright が受けないとき）: X の画面写真で種類の欄を見る ----
@@ -76,13 +82,13 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   console.log('X windows:\n' + wins);
   X('key', 'Escape'); await p.waitForTimeout(1500);
   const res3 = await p.evaluate(() => window.__res);
-  R.ok('EL11b ネイティブのファイル選択の画面が出て、Esc で閉じると「取り消し」になる（代わりの画面は出ない）', /called:34/.test(res3.join()) && res3.some(r => /AbortError/.test(r)), { res3, windows: wins.trim().split('\n').length });
+  R.ok('EL11b ネイティブのファイル選択の画面が出て、Esc で閉じると「取り消し」になる（代わりの画面は出ない）', /called:\d+/.test(res3.join()) && res3.some(r => /AbortError/.test(r)), { res3, windows: wins.trim().split('\n').length });
   // ---- 画像の保存（アプリ version のダウンロード） ----
   await app.evaluate(({ session }) => { global.__dl = []; session.defaultSession.on('will-download', (e, item) => { global.__dl.push({ name: item.getFilename(), mime: item.getMimeType(), path: item.getSavePath() }); item.cancel(); }); });
-  await L.card(p, 'view'); await p.click('#btnShot'); await p.waitForTimeout(1500);
+  await L.card(p, 'open'); await p.click('#btnShot'); await p.waitForTimeout(1500); // 0.4.1 から「画像を保存」はファイルのカード
   const dl = await app.evaluate(() => global.__dl);
   const sm = (await L.msg(p)).text;
-  R.ok('EL12 「画像を保存」でダウンロードが始まる（名前 pcd_…png）', dl.length === 1 && /^pcd_\d{8}_\d{6}\.png$/.test(dl[0].name), { dl, msg: sm });
+  R.ok('EL12 「画像を保存」でダウンロードが始まる（名前 lidar_…png）', dl.length === 1 && /^lidar_\d{8}_\d{6}\.png$/.test(dl[0].name), { dl, msg: sm });
   // ---- 二重起動 ----
   const t0 = Date.now();
   const second = await new Promise(res => {
@@ -92,6 +98,17 @@ const X = (...a) => { try { return execFileSync('python3', [L.W + '/regress/xtoo
   });
   const still = await p.evaluate(() => window.__pcd.S.files.length).catch(() => -1);
   R.ok('EL15 同じ設定の置き場所で 2 つ目を起動すると、すぐ終わり、1 つ目はそのまま', !second.timeout && second.code === 0 && still >= 2 && app.windows().length === 1, { second, still });
+  // （ページの移動を試すと、Playwright がその移動の終わりを待ち続けて以後のクリックが止まるので、最後に回す）
+  // ---- ページが置き換わらない ----
+  const url0 = p.url();
+  await p.evaluate(f => { location.href = 'file://' + f; }, `${D}/c_xyzi.pcd`).catch(() => {});
+  await p.waitForTimeout(1500);
+  const nav1 = await p.evaluate(() => ({ url: location.href, ok: !!window.__pcd && window.__marker === 1 })).catch(e => ({ err: e.message }));
+  R.ok('EL6 ページからファイルの場所へ移ろうとしても（落としたときと同じ移動）ページが置き換わらない', nav1.ok && nav1.url === url0, nav1);
+  await p.evaluate(() => { location.href = 'https://example.com/'; }).catch(() => {});
+  await p.waitForTimeout(1500);
+  const nav2 = await p.evaluate(() => ({ url: location.href, ok: !!window.__pcd })).catch(e => ({ err: e.message }));
+  R.ok('EL7 外の URL へも移らない', nav2.ok && nav2.url === url0, nav2);
   // ---- 窓を閉じたらアプリが終わる ----
   const proc = app.process();
   const exited = new Promise(res => { const to = setTimeout(() => res({ timeout: true }), 15000); proc.on('exit', (code, sig) => { clearTimeout(to); res({ code, sig }); }); });

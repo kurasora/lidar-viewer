@@ -6,6 +6,7 @@
 # 出力: $W/regress/out/<日時>/static/summary.md（静的な点検）と heavy の出力（runtime_summary.md）
 set -u
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 W=${W:-$T/work/A10}
 REL=/home/claude/pcd-viewer/release; OLD=""; MODE=all; PARTS="lifecycle sandbox"
 while [ $# -gt 0 ]; do
@@ -17,11 +18,12 @@ while [ $# -gt 0 ]; do
     *) REL=$1; shift ;;
   esac
 done
-export W TMPDIR=$W/tmp PYTHONPATH=$W/pylib
+mkdir -p /tmp/a10t; export W TMPDIR=/tmp/a10t PYTHONPATH=$W/pylib
 OUT=$W/regress/out/$(date +%m%d_%H%M%S); mkdir -p "$OUT"
 echo "release=$REL old=${OLD:-なし} mode=$MODE out=$OUT"
 # 道具の用意（なければ入れる。全体の環境は変えない）
 [ -e "$W/pylib/pefile.py" ] || $T/bin/light pip install --break-system-packages --target "$W/pylib" pefile python-xlib >/dev/null
+[ -x "$W/tools/node_modules/7zip-bin/linux/x64/7za" ] || [ -x /home/claude/pcd-viewer/node_modules/7zip-bin/linux/x64/7za ] || $T/bin/light npm install --prefix "$W/tools" --no-audit --no-fund 7zip-bin@5.2.0 >/dev/null
 [ -x "$W/bin/nouserns" ] || { mkdir -p "$W/bin"; gcc -O2 -o "$W/bin/nouserns" "$W/regress/nouserns.c"; }
 [ -e "$W/data/big8m.pcd" ] || MEM=1200 $T/bin/light python3 -I "$W/regress/gen_big_pcd.py" "$W/data/big8m.pcd" 8000000
 [ -e "$W/data/fc/nocjk.conf" ] || { mkdir -p "$W/data/fc" "$W/tmp/fccache"; printf '<?xml version="1.0"?>\n<!DOCTYPE fontconfig SYSTEM "fonts.dtd">\n<fontconfig><dir>/usr/share/fonts/truetype/dejavu</dir><cachedir>%s</cachedir></fontconfig>\n' "$W/tmp/fccache" > "$W/data/fc/nocjk.conf"; }

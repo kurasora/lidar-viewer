@@ -1,5 +1,6 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 const P = window.__pcd, S = P.S, f = S.files[0];
-let mx = -Infinity, at = -1; for (let i = 0; i < f.n; i++) if (f.positions[3 * i] > mx) { mx = f.positions[3 * i]; at = i; }
+let mx = -Infinity, at = -1; for (let i = 0; i < (f.sample.length / 3); i++) if (f.sample[3 * i] > mx) { mx = f.sample[3 * i]; at = i; }
 const info = H.info();
 // x の下限のつまみだけを 1 目盛り右へ → x=50 の点はまだ見えるか（上限は触らない）
 const lo = document.querySelectorAll('#clipX input')[0]; lo.value = 1; lo.dispatchEvent(new Event('input', { bubbles: true })); await H.wait(200);

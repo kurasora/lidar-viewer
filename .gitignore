@@ -2,6 +2,7 @@ node_modules/
 dist/
 dist-artifact/
 release/
+release-test/
 *.log
 .DS_Store
 Thumbs.db

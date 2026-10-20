@@ -48,7 +48,7 @@ const { spawn } = require('child_process');
     wc.session.once('will-download', (e, item) => res({ filename: item.getFilename(), savePath: item.getSavePath(), mime: item.getMimeType() }));
     setTimeout(() => res(null), 8000);
   }));
-  await L.openCard(p, 'view');
+  await L.openCard(p, 'open'); // 0.4.1 から「画像を保存」はファイルのカード
   const base = L.xwindows();
   await p.click('#btnShot');
   await L.sleep(300);

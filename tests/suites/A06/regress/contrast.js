@@ -89,10 +89,10 @@ const PAGEFN = () => {
     // 誤りの知らせ（赤）
     await L.openAs(p, L.FILES + '/scan.rdb', ['scan.rdb']);
     await collect('error', lv);
-    for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) {
+    for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) {
       await L.closeCards(p); await L.openCard(p, c);
       if (c === 'open') await p.evaluate(() => { document.getElementById('infoBox').open = true; });
-      const r = await collect(c, lv); if (c === 'display' && lv === 14) ui = r.ui;
+      const r = await collect(c, lv); if (c === 'view' && lv === 14) ui = r.ui; // 0.4.2 から「表示」のカードは「視点」（view）
     }
     await L.closeCards(p); await L.openCard(p, 'color'); await p.click('#tabColorDetail'); await collect('color_detail', lv); await p.click('#tabColorBasic');
     await L.closeCards(p);

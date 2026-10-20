@@ -20,7 +20,7 @@ const path = require('path');
   await p.exposeFunction('pwMove', async (x, y) => { await p.mouse.move(x, y); });
   await p.exposeFunction('pwKey', async (k) => { await p.keyboard.press(k); });
   await p.exposeFunction('pwShot', async (f) => { await p.screenshot({ path: f }); });
-  await p.goto(process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+  await p.goto(process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
   await p.addInitScript(() => {});
   await p.evaluate(() => {

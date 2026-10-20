@@ -60,9 +60,12 @@ test('A04-001', '文字: 見出し x,y,z,intensity,r,g,b,label の 8 列の CSV 
   ok(r.n === 50 && !/高さの表/.test(r.info.format), `${r.info.format}・${r.n} 点`);
   eq([r.pt(2), r.col(2), r.fields.intensity[2], r.fields.label[2]], [[1, 0.5, 1.5], [10, 20, 30], 26, 2], r.info.format);
 });
-test('OK-A02', '文字: CSV の高さの表（名前に matrix・数値だけの格子）は 1 マス = 1 点', async () => {
-  const r = await read('dem_matrix.csv', '1,2,3\n4,5,6\n');
-  eq([r.n, r.pt(5)], [6, [2, -1, 6]]);
+// 0.4.0 から: 名前（matrix・grid・dem）で表とみなすのは 8 列以上のときだけ（3〜7 列は x y z の点の並び。R2-002）
+test('OK-A02', '文字: CSV の高さの表（名前に matrix・8 列以上の数値の格子）は 1 マス = 1 点。3 列なら点の並び', async () => {
+  const r = await read('dem_matrix.csv', '1,2,3,4,5,6,7,8\n9,10,11,12,13,14,15,16\n');
+  eq([r.n, r.pt(13)], [16, [5, -1, 14]]);
+  const q = await read('dem_matrix.csv', '1,2,3\n4,5,6\n');
+  eq([q.n, q.pt(1)], [2, [4, 5, 6]]);
 });
 isoTest('A04-003', '文字: CR だけの改行（2000 点）を 2000 点として読み、メモリを使いすぎない（300 MB 以内）', 'iso/cr_only.mjs', { timeoutMs: 20000, memMB: 300 });
 test('A04-005', '文字: BOM 付き（見出しなし）でも先頭の点を落とさない', async () => {

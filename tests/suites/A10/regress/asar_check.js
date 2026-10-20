@@ -27,7 +27,8 @@ const total = files.reduce((a, f) => a + f.size, 0);
 const nm = [...new Set(files.filter(f => f.path.startsWith('node_modules/')).map(f => f.path.split('/').slice(0, f.path.split('/')[1].startsWith('@') ? 3 : 2).join('/')))];
 const checks = [];
 const bad = (ok, what, detail) => checks.push({ ok, what, detail });
-bad(nm.length === 1 && nm[0] === 'node_modules/ws', 'node_modules は ws だけ', nm);
+// 0.4.0 から実行時の依存はない（以前は ws だけ）。node_modules が入っていないこと
+bad(nm.length === 0, 'node_modules が入っていない（実行時の依存なし）', nm);
 bad(!files.some(f => /\.map$/.test(f.path)), 'ソースマップ（*.map）がない', files.filter(f => /\.map$/.test(f.path)).map(f => f.path));
 const devish = files.filter(f => /(^|\/)(src|tools|sample|samples|test|tests|build|release|dist-artifact|\.git|\.vscode)\//.test(f.path) && !f.path.startsWith('node_modules/') || /(^|\/)(build\.mjs|package-lock\.json|\.env|README\.md|CLAUDE\.md|\.DS_Store)$/.test(f.path) && !f.path.startsWith('node_modules/'));
 bad(devish.length === 0, '開発用のファイル（src/ tools/ sample/ build.mjs など）が入っていない', devish.map(f => f.path));

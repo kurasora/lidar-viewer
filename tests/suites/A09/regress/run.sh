@@ -9,6 +9,7 @@ set -u
 R=$(cd "$(dirname "$0")" && pwd)
 W=$(cd "$R/.." && pwd)
 T=$(cd "$W/../.." && pwd)
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 export TMPDIR=/tmp/a09t
 ln -sfn "$W/tmp" /tmp/a09t   # Chromium の一時ソケットのパスが長すぎると起動できないので、短い名前で $W/tmp を指す
 mkdir -p "$W/out" "$W/data" "$W/tmp"

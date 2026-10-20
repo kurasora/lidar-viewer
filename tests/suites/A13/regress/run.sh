@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # A13 試作ページ（アーティファクト version）の再試験をまとめて流す
 #   使い方: bash run.sh [quick|all|<試験の名前>...]
 #     quick … files size startup iframe offset xss worker_fail（20〜30 分）

@@ -60,7 +60,8 @@ for nm in ('utm_cloud_traj', 'local_cloud_traj'):
 r = load('traj_via_fileinput')
 if r:
     s = r['steps'][0]
-    out('traj_via_fileinput', len(s['trajs']) == 1 or (not s['files']), f"点群 {[(x['name'], x['n'], x['format']) for x in s['files']]}・軌跡 {[(t['name'], t['count']) for t in s['trajs']]}・S.offset {s['offset']}・知らせ {s['msgs']}")
+    # 0.4.1 から「点群を開く」で選んだファイルは、中身が軌跡らしくても点群として開く（軌跡は「軌跡を開く」かドラッグで）
+    out('traj_via_fileinput', len(s['files']) == 1 and not s['trajs'], f"点群 {[(x['name'], x['n'], x['format']) for x in s['files']]}・軌跡 {[(t['name'], t['count']) for t in s['trajs']]}・S.offset {s['offset']}・知らせ {s['msgs']}")
 r = load('drop_traj_and_cloud')
 if r:
     st = r['steps']

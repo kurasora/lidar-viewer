@@ -1,10 +1,11 @@
+// 0.4.1 から: 画面は全部の点を持たない（描いたら捨てる）。全部の座標・色は別スレッドから __pcd.call({ type: 'buffers', id }) で借りる
 // 複数のファイル・順序・軌跡の重なりなどの「場面」の試験（Chromium で dist/index.html）
 //   使い方: node bscenario.js <data フォルダ> <出力フォルダ> [場面名の正規表現]
 //   出力: <出力フォルダ>/<場面>.json（各段階の S.files・S.trajs・S.offset・知らせ・ページのエラー）。判定は scen_check.py
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const fs = require('fs'), path = require('path');
 const [DATA, OUT, filt] = process.argv.slice(2);
-const PAGE = process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html';
+const PAGE = process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html';
 const D = f => path.join(DATA, f);
 const SAMPLE = '/home/claude/pcd-viewer/sample/formats/';
 
@@ -36,20 +37,22 @@ async function state(p, withPoints = true) {
   return p.evaluate(async withPoints => {
     const S = window.__pcd.S, o = S.offset || [0, 0, 0];
     const b64 = a => { let s = ''; const u = new Uint8Array(a.buffer, a.byteOffset, a.byteLength); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
-    const files = S.files.map(f => {
+    const files = [];
+    for (const f of S.files) {
+      const bf = await window.__pcd.call({ type: 'buffers', id: f.id }); // 全部の座標・色は別スレッドから借りる
       const P = new Float64Array(3 * f.n);
-      for (let i = 0; i < 3 * f.n; i++) P[i] = f.positions[i] + o[i % 3];
+      for (let i = 0; i < 3 * f.n; i++) P[i] = bf.positions[i] + o[i % 3];
       // 画面に描くときの座標（world の変換を当てたもの）の範囲
       const e = window.__pcd.world.matrix.elements;
       const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
       for (let i = 0; i < f.n; i++) {
-        const x = f.positions[3 * i], y = f.positions[3 * i + 1], z = f.positions[3 * i + 2];
+        const x = bf.positions[3 * i], y = bf.positions[3 * i + 1], z = bf.positions[3 * i + 2];
         const w = [e[0] * x + e[4] * y + e[8] * z + e[12], e[1] * x + e[5] * y + e[9] * z + e[13], e[2] * x + e[6] * y + e[10] * z + e[14]];
         for (let k = 0; k < 3; k++) { if (w[k] < lo[k]) lo[k] = w[k]; if (w[k] > hi[k]) hi[k] = w[k]; }
       }
-      const rgb = f.geom.getAttribute('rgbc');
-      return { name: f.name, n: f.n, total: f.total, sampled: f.sampled, skipped: f.skipped, format: f.header.data, rgb: !!f.hasRgb, P: withPoints ? b64(P) : null, C: withPoints && rgb ? b64(rgb.array) : null, worldMin: lo, worldMax: hi };
-    });
+      const rgb = bf.rgb ? { array: bf.rgb } : null;
+      files.push({ name: f.name, n: f.n, total: f.total, sampled: f.sampled, skipped: f.skipped, format: f.header.data, rgb: !!f.hasRgb, P: withPoints ? b64(P) : null, C: withPoints && rgb ? b64(rgb.array) : null, worldMin: lo, worldMax: hi });
+    }
     const trajs = S.trajs.map(t => {
       const e = window.__pcd.world.matrix.elements, P = t.P, lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
       for (let i = 0; i < t.count; i++) {
@@ -223,10 +226,12 @@ const SCENES = {
     const p = await open(b);
     const t0 = Date.now();
     let steps, err = null;
-    try { steps = await fn(p); } catch (e) { err = e.message; }
+    // 1 つの場面が固まっても全体が止まらないよう、場面ごとに 3 分で打ち切る
+    const limit = (pr, ms, what) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error(what + ' が ' + ms / 1000 + ' 秒で終わらない')), ms))]);
+    try { steps = await limit(fn(p), 180000, '場面'); } catch (e) { err = e.message; }
     fs.writeFileSync(path.join(OUT, name + '.json'), JSON.stringify({ name, ms: Date.now() - t0, err, steps, errors: p.__errors.slice(0, 10) }));
     console.log(name, err || 'ok', p.__errors.length ? p.__errors[0] : '');
-    await p.close();
+    await limit(p.close(), 30000, 'ページを閉じる').catch(e => console.log(name, e.message));
   }
   await b.close();
 })().catch(e => { console.log('fatal', e.message); process.exit(1); });

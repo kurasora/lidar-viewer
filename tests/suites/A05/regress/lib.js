@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // A05 の試験の共通部品（Chromium の dist/index.html と Electron のアプリ version）
 //   const L = require('./lib.js'); const { p, close } = await L.page(); ...
 const path = require('path');
@@ -10,7 +11,7 @@ const DATA = W + '/data';
 const SF = '/home/claude/pcd-viewer/sample/formats';
 const SHOTS = process.env.SHOTS || (W + '/shots');
 fs.mkdirSync(SHOTS, { recursive: true });
-const PAGE = process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html';
+const PAGE = process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html';
 const GL = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'];
 
 // 結果の記録: ok(名前, 条件, 詳細) を集めて最後に JSON で出す
@@ -134,7 +135,7 @@ async function screenOf(p, xyz) {
 // ファイル f の i 番目の点の世界座標（水平補正後・シフトを引いた値）
 async function worldOf(p, fi, i) {
   return p.evaluate(([fi, i]) => {
-    const f = window.__pcd.S.files[fi], P = f.positions, e = window.__pcd.world.matrixWorld.elements;
+    const f = window.__pcd.S.files[fi], P = f.sample, e = window.__pcd.world.matrixWorld.elements;
     const x = P[3 * i], y = P[3 * i + 1], z = P[3 * i + 2];
     return [e[0] * x + e[4] * y + e[8] * z + e[12], e[1] * x + e[5] * y + e[9] * z + e[13], e[2] * x + e[6] * y + e[10] * z + e[14]];
   }, [fi, i]);
@@ -142,7 +143,16 @@ async function worldOf(p, fi, i) {
 
 
 // カードを一番上に出す（開いていなければドックで開き、下にあれば見出しを押す）
+// 2026-10-20〜: 「表示」の細かい設定（点の大きさ・背景・座標軸・読み込む最大点数など）は「設定」のカードに移った（タブ 4 つ）。
+//   古い名前 'display' は設定のカードを開き、試験では 4 つのタブの中身を全部見えるようにする（どの部品もそのまま触れるように）
+//   開けるカードは常に 1 枚（別のカードを開くと前のカードは閉じる）
 async function card(p, name) {
+  if (name === 'display' || name === 'settings') {
+    const open = await p.evaluate(() => !document.getElementById('pop').hidden && document.getElementById('pop').dataset.name === 'settings');
+    if (!open) { await p.click('[data-open="settings"]'); await p.waitForTimeout(150); }
+    if (name === 'display') await p.evaluate(() => document.querySelectorAll('[data-pop=settings] .spane').forEach(e => { e.hidden = false; }));
+    return;
+  }
   const st = await p.evaluate(n => ({ top: document.getElementById('pop').hidden ? null : document.getElementById('pop').dataset.name, tab: !!document.querySelector(`.ptab[data-name="${n}"]`) }), name);
   if (st.top === name) return;
   if (st.tab) await p.click(`.ptab[data-name="${name}"]`);

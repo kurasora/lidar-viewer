@@ -8,7 +8,7 @@ const fs = require('fs');
 const T = '/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv';
 const W = T + '/work/A06';
 const APP = process.env.APPDIR || '/home/claude/pcd-viewer';
-const PAGE = process.env.PAGE || `file://${APP}/dist/index.html`;
+const PAGE = process.env.PAGE || `http://127.0.0.1:8740/abs${APP}/dist/index.html`;
 const FILES = W + '/files';
 const SAMPLES = '/home/claude/pcd-viewer/sample/formats';
 const SHOTS = process.env.SHOTS || W + '/shots';
@@ -93,8 +93,15 @@ async function closeAll(p) {
   await p.waitForTimeout(200);
 }
 // ドックのカードを開く（開いていなければ）
+// 0.4.2 から: 「表示」の細かい設定（点の大きさ・背景・座標軸・点数）と自動補正は「設定」のカード（4 つのタブ）へ移った。
+//   古い名前 'display' は設定のカードを開き、4 つのタブの中身を全部見えるようにする（どの部品もそのまま触れるように）
 async function openCard(p, name) {
-  await p.evaluate(n => { const s = document.querySelector('#pop').dataset.name; const b = document.querySelector(`[data-open="${n}"]`); if (s !== n) { b.click(); if (document.querySelector('#pop').dataset.name !== n) b.click(); } }, name);
+  const all = name === 'display';
+  if (all) name = 'settings';
+  await p.evaluate(([n, all]) => {
+    document.querySelectorAll('[data-pop=settings] .spane').forEach(e => { if (all) e.hidden = false; }); const s = document.querySelector('#pop').dataset.name; const b = document.querySelector(`[data-open="${n}"]`); if (s !== n) { b.click(); if (document.querySelector('#pop').dataset.name !== n) b.click(); }
+    if (all) document.querySelectorAll('[data-pop=settings] .spane').forEach(e => { e.hidden = false; });
+  }, [name, all]);
   await p.waitForTimeout(350);
 }
 async function closeCards(p) {

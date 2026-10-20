@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面は全部の点を持たない（描いたら捨てる）。全部の座標は別スレッドから __pcd.call({ type: 'buffers', id }) で借りる
 // 試作ページ（dist-artifact/pcd-viewer.html）: 最初に開く廊下の地図のあとに、形式ごとのサンプルのボタンを押して開く
 //   使い方: node bartifact.js <出力フォルダ> [ボタンの名前（正規表現、既定 ^\.las$|\.bin シフト|\.shp 点|\.e57|\.pcd binary）]
 //   出力: <出力フォルダ>/artifact.json（ボタンごとの S.files の最後のファイルの座標・S.offset・知らせ）
@@ -29,10 +30,11 @@ const want = new RegExp(filt || '^\\.las$|^\\.bin シフト$|^\\.shp 点$|^\\.e5
       await p.waitForTimeout(300);
     }
     await p.waitForTimeout(800);
-    const r = await p.evaluate(() => {
+    const r = await p.evaluate(async () => {
       const S = window.__pcd.S, f = S.files[S.files.length - 1], o = S.offset || [0, 0, 0];
+      const bf = await window.__pcd.call({ type: 'buffers', id: f.id }); // 全部の座標は別スレッドから借りる
       const P = new Float64Array(3 * f.n);
-      for (let i = 0; i < 3 * f.n; i++) P[i] = f.positions[i] + o[i % 3];
+      for (let i = 0; i < 3 * f.n; i++) P[i] = bf.positions[i] + o[i % 3];
       let s = ''; const u = new Uint8Array(P.buffer); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
       return { name: f.name, n: f.n, offset: S.offset, P: btoa(s), msgs: window.__msgs.slice() };
     });

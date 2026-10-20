@@ -8,6 +8,7 @@
 #   環境変数 APPDIR を付けると、写し（mkcopy して直したもの）を試せる: APPDIR=$W/proj bash run.sh app
 set -u
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 W=$T/work/A14; R=$W/regress; F=$W/files
 what=${1:-all}
 export APPDIR=${APPDIR:-/home/claude/pcd-viewer}
@@ -39,7 +40,7 @@ node_tests() {
 
 app_tests() {
   # A14-001 床の検出（Chromium、X 不要）
-  PAGE=file://$APPDIR/dist/index.html MEM=2500 TIMEOUT=900 $T/bin/heavy node $R/level_check.js $F/floor_h0.3 $F/floor_h0.55 $F/floor_h0.8 $F/floor_h1.2 > $O/level_check.log 2>&1
+  PAGE=http://127.0.0.1:8740/abs$APPDIR/dist/index.html MEM=2500 TIMEOUT=900 $T/bin/heavy node $R/level_check.js $F/floor_h0.3 $F/floor_h0.55 $F/floor_h0.8 $F/floor_h1.2 > $O/level_check.log 2>&1
   grep -q '"floorOK":false' $O/level_check.log && judge NG A14-001 || judge OK A14-001
   # A14-002 隠した天井の点が選ばれる（アプリ version）
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 240 node $R/c1_pick_hidden.js > $O/pick_hidden.log 2>&1
@@ -48,7 +49,8 @@ app_tests() {
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 241 node $R/c5_shift.js > $O/c5_shift.log 2>&1
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 244 node $R/c5b_coords.js > $O/c5b_coords.log 2>&1
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 248 node $R/c10_sights.js > $O/c10_sights.log 2>&1
-  MEM=4000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 249 node $R/c7_wrong.js > $O/c7_wrong.log 2>&1
+  # 巨大な画像（16000×16000）と 8000×6000 の写真は 3,000 万点として開くので、アプリ全体で 4 GB を少し超える（2026-10-20 に 6 GB に）
+  MEM=6000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 249 node $R/c7_wrong.js > $O/c7_wrong.log 2>&1
   MEM=3500 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 242 node $R/c6_bad.js > $O/c6_bad.log 2>&1
   CYCLES=${CYCLES:-30} MEM=3000 TIMEOUT=1500 $T/bin/heavy xvfb-run -a -n 245 node $R/c8_night.js > $O/c8_night.log 2>&1
 }

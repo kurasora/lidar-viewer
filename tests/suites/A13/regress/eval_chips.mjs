@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'node:path';
 const file = process.argv[2];
 const basePath = process.argv[3] || join(dirname(file), 'app_baseline.jsonl');
 const run = JSON.parse(readFileSync(file, 'utf8'));
-const exp = JSON.parse(readFileSync('/home/claude/samples/out_expected.json', 'utf8'));
+const exp = JSON.parse(readFileSync('/home/claude/pcd-viewer/tests/sample-generators/samples/out_expected.json', 'utf8'));
 const base = existsSync(basePath) ? readFileSync(basePath, 'utf8').trim().split('\n').map(l => JSON.parse(l)) : [];
 const src = readFileSync('/home/claude/pcd-viewer/src/samples.js', 'utf8').replace('export const SAMPLE_GROUPS', 'globalThis.G');
 eval(src);
@@ -25,7 +25,8 @@ for (const r of run.results) {
   if (r.csp && r.csp.length) v.notes.push('CSP 違反 ' + [...new Set(r.csp.map(c => c.dir + ' ' + c.uri))].join(', '));
   if (r.pageerror && r.pageerror.length) v.notes.push('ページのエラー: ' + r.pageerror.join(' / ').slice(0, 160));
   // 座標の細かさ（10 cm 以上の刻み = float32 の丸め）
-  for (const f of r.files) if (f.minGap && f.minGap.some(g => g != null && g >= 0.05)) v.notes.push(`座標が粗い（最小の刻み ${f.minGap.join(', ')}、offset ${JSON.stringify(r.offset)}）`);
+  // 画像・ラスター（1 画素 = 1 m）と高さの表（CSV・1 マス = 1 m）は格子そのものが 1 m 刻みなので除く
+  if (r.group !== '画像・ラスター') for (const f of r.files) if (f.minGap && !/高さの表/.test(f.fmt || '') && f.minGap.some(g => g != null && g >= 0.05)) v.notes.push(`座標が粗い（最小の刻み ${f.minGap.join(', ')}、offset ${JSON.stringify(r.offset)}）`);
   // アプリ version との比較
   if (b) {
     v.app = { n: b.files.map(f => f.n), msg: b.msg, err: b.msgIsError };

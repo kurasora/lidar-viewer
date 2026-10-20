@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # Chromium の試験（2 組目）
 R=$(cd "$(dirname "$0")" && pwd); O=$R/../out; mkdir -p $O
 cd $R/..

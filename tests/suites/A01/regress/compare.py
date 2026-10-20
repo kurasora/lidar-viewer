@@ -122,14 +122,16 @@ def check(c, r):
         cand = [k for k in Fa if k == nm] or [k for k in Fa if k.lower() == nm.lower()]
         if not cand:
             why.append(f'欄 {nm} がない（ある欄: {list(Fa)}）'); continue
-        va = dec(Fa[cand[0]], '<f4').astype(np.float64)
+        # double の欄（時刻など）は基準値を引いて float32 で持つ（FB = fieldBase）。足し戻して比べる
+        fb = float((r.get('FB') or {}).get(cand[0], 0) or 0)
+        va = dec(Fa[cand[0]], '<f4').astype(np.float64) + fb
         ve = E[key][idx]
         if nm in ftol:
             dv = np.abs(va - ve); bad = (dv > ftol[nm]).sum()
             info.append(f'欄 {nm} の最大誤差 {dv.max():.4g}')
             if bad: why.append(f'欄 {nm} の値が {ftol[nm]} より大きくずれる点 {bad} 個（最大 {dv.max():.4g}）')
         else:
-            ve32 = ve.astype(np.float32).astype(np.float64)
+            ve32 = (ve - fb).astype(np.float32).astype(np.float64) + fb
             ok = np.isclose(va, ve32, rtol=1e-6, atol=1e-6) | (np.isnan(va) & np.isnan(ve32))
             bad = (~ok).sum()
             if bad:
@@ -168,7 +170,10 @@ def check_lines(exp, r, why, info):
 
 
 def check_traj(exp, r, why, info):
-    E = np.load(os.path.join(DATA, exp['expect']))['poses']
+    E = np.load(os.path.join(DATA, exp['expect']))['poses'].copy()
+    # 時刻がナノ秒・マイクロ秒・ミリ秒なら、アプリは秒に直して読む（R12-007）。正解もそろえる
+    tm = np.abs(E[:, 0]).max() if len(E) else 0
+    E[:, 0] *= 1e-9 if tm > 1e17 else 1e-6 if tm > 1e14 else 1e-3 if tm > 1e11 else 1
     if r.get('poses'):  # Node: [t x y z qx qy qz qw] × n
         A = dec(r['poses'], '<f8').reshape(-1, 8)
         if len(A) != len(E): why.append(f'姿勢の数 {len(A)}（正解 {len(E)}）'); return why, info
@@ -183,8 +188,10 @@ def check_traj(exp, r, why, info):
     A = dec(t['P'], '<f4').astype(np.float64).reshape(-1, 3)
     if len(A) != len(E): why.append(f'姿勢の数 {len(A)}（正解 {len(E)}）'); return why, info
     off = np.array(r.get('offset') or [0, 0, 0], float)
+    # 軌跡の座標は点群と同じくシフト（S.offset）を引いた値。足し戻して比べる（UTM の軌跡だけを開いたときもシフトがかかる）
+    A = A + off
     dp = np.abs(A - E[:, 1:4]).max()
-    info.append(f'位置の最大差 {dp:.3g} m（画面の座標そのまま）・長さ {t.get("length"):.2f} m・時間 {t.get("duration"):.3f} 秒・トピック {t.get("topic")}')
+    info.append(f'位置の最大差 {dp:.3g} m（シフトを足し戻した座標）・長さ {t.get("length"):.2f} m・時間 {t.get("duration"):.3f} 秒・トピック {t.get("topic")}')
     if dp > 1e-3: why.append(f'位置が違う（最大差 {dp:.4g} m）')
     dur = E[-1, 0] - E[0, 0]
     if abs(t.get('duration', 0) - dur) > 1e-3 * max(1, dur): why.append(f'時間 {t.get("duration")}（正解 {dur}）')

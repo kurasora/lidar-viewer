@@ -1,6 +1,6 @@
 // app.js・worker.js の中の関数を、ソースから取り出して Node で動かす（元のファイルは書き換えない）
 //   topLevel(code)            … いちばん外側の宣言（function / const / let / class）を名前 → ソースの文字列で返す
-//   evalDecls(code, names, globals, extra) … 指定した宣言（と extra のコード）を vm の中で評価し、名前 → 値を返す
+//   evalDecls(code, names, globals, extra, deps) … 指定した宣言（と extra のコード）を vm の中で評価し、名前 → 値を返す。deps なら使っている宣言も取り込む
 //   TypeScript の構文解析器を使う（対象のプロジェクトの node_modules、なければ A04 の tools）
 import { createRequire } from 'node:module';
 import { existsSync, readFileSync } from 'node:fs';
@@ -29,9 +29,17 @@ export function topLevel(code) {
 }
 export const readSrc = p => readFileSync(join(ROOT, p), 'utf8');
 // names の宣言を順に並べ、最後に名前の一覧を返すコードを付けて評価する
-export function evalDecls(code, names, globals = {}, extra = '') {
+export function evalDecls(code, names, globals = {}, extra = '', deps = false) {
   const tl = topLevel(code);
-  const parts = names.map(n => { const s = tl.get(n); if (!s) throw new Error(`宣言 ${n} が見つかりません`); return s; });
+  for (const n of names) if (!tl.has(n)) throw new Error(`宣言 ${n} が見つかりません`);
+  // 指定した宣言が使うほかの宣言（定数・下請けの関数）も、元のソースの順に取り込む（アプリ側で関数を分けても試験が壊れないように）
+  const own = new Set(topLevel(extra).keys()); // extra で用意した入れ物（eqTex など）は元のソースから取り込まない
+  const need = new Set(names), todo = [...names];
+  while (deps && todo.length) {
+    const body = tl.get(todo.pop());
+    for (const k of tl.keys()) if (!need.has(k) && !own.has(k) && new RegExp(`(^|[^\\w$.])${k.replace(/\$/g, '\\$')}(?![\\w$])`).test(body)) { need.add(k); todo.push(k); }
+  }
+  const parts = [...tl.keys()].filter(k => need.has(k)).map(k => tl.get(k));
   const body = `${extra}\n${parts.join('\n')}\n;({${names.join(',')}})`;
   const ctx = vm.createContext({ console, Math, Number, Array, Float64Array, Float32Array, Uint8Array, Uint8ClampedArray, Uint16Array, Uint32Array, Int32Array, Map, Set, JSON, String, Object, Promise, TextDecoder, TextEncoder, Blob, Infinity, NaN, isFinite, parseFloat, parseInt, ...globals });
   return vm.runInContext(body, ctx, { filename: 'extracted.js' });

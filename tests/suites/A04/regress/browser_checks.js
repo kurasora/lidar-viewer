@@ -1,12 +1,13 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // A04 のブラウザでの確認（本番と同じ道筋: Chromium で dist/index.html を開き、ファイルを選ばせる）
 //   使い方: $T/bin/heavy node browser_checks.js <試験用ファイルのフォルダ>
-//   環境変数: PAGE（既定 file://$PCDV_ROOT/dist/index.html）、PCDV_ROOT、SHOT（写真の保存先）
+//   環境変数: PAGE（既定 http://127.0.0.1:8740/abs$PCDV_ROOT/dist/index.html）、PCDV_ROOT、SHOT（写真の保存先）
 //   出力: 1 項目 1 行の JSON（id・pass・detail）
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');
 const path = require('path');
 const fs = require('fs');
 const ROOT = process.env.PCDV_ROOT || '/home/claude/pcd-viewer';
-const PAGE = process.env.PAGE || `file://${ROOT}/dist/index.html`;
+const PAGE = process.env.PAGE || `http://127.0.0.1:8740/abs${ROOT}/dist/index.html`;
 const D = path.resolve(process.argv[2] || '.');
 const SAMPLES = path.join(ROOT, 'sample/formats');
 const out = r => console.log(JSON.stringify(r));
@@ -43,11 +44,11 @@ async function load(p, files, kind = 'cloud', wait = 60000) {
     const { p, errors } = await open(b);
     // 基準: UTM のファイルだけを開いたときの座標（x を並べ替えた列）
     await load(p, [path.join(SAMPLES, 'laspy_utm.las')]);
-    const ref = await p.evaluate(() => { const f = window.__pcd.S.files[0], o = window.__pcd.S.offset; const a = []; for (let i = 0; i < f.n; i++) a.push(f.positions[3 * i] + o[0], f.positions[3 * i + 1] + o[1]); return { a, offset: o }; });
+    const ref = await p.evaluate(() => { const f = window.__pcd.S.files[0], o = window.__pcd.S.offset; const a = []; for (let i = 0; i < (f.sample.length / 3); i++) a.push(f.sample[3 * i] + o[0], f.sample[3 * i + 1] + o[1]); return { a, offset: o }; });
     await p.evaluate(() => { let x; while ((x = document.querySelector('#fileList [data-act=remove]'))) x.click(); });
     await load(p, [path.join(SAMPLES, 'cc_cloud.asc')]);
     await load(p, [path.join(SAMPLES, 'laspy_utm.las')]);
-    const got = await p.evaluate(() => { const S = window.__pcd.S, f = S.files[1], o = S.offset; const a = []; for (let i = 0; i < f.n; i++) a.push(f.positions[3 * i] + o[0], f.positions[3 * i + 1] + o[1]); return { a, offset: o, names: S.files.map(x => x.name), msg: document.getElementById('statMsg').textContent }; });
+    const got = await p.evaluate(() => { const S = window.__pcd.S, f = S.files[1], o = S.offset; const a = []; for (let i = 0; i < (f.sample.length / 3); i++) a.push(f.sample[3 * i] + o[0], f.sample[3 * i + 1] + o[1]); return { a, offset: o, names: S.files.map(x => x.name), msg: document.getElementById('statMsg').textContent }; });
     const sx = v => v.filter((_, i) => i % 2 === 0).sort((x, y) => x - y), sy = v => v.filter((_, i) => i % 2 === 1).sort((x, y) => x - y);
     const ex = sx(ref.a), gx = sx(got.a), ey = sy(ref.a), gy = sy(got.a);
     let e = 0; for (let i = 0; i < Math.min(ex.length, gx.length); i++) e = Math.max(e, Math.abs(ex[i] - gx[i]), Math.abs(ey[i] - gy[i]));
@@ -61,7 +62,7 @@ async function load(p, files, kind = 'cloud', wait = 60000) {
     const { p, errors } = await open(b);
     await load(p, [path.join(SAMPLES, 'laspy_utm.las')]);
     await load(p, [path.join(D, 'utm_traj.txt')], 'traj');
-    const r = await p.evaluate(() => { const S = window.__pcd.S, f = S.files[0], t = S.trajs[0]; return { offset: S.offset, cloudFirstLocal: [f.positions[0], f.positions[1], f.positions[2]], trajFirstLocal: t ? [t.P[0], t.P[1], t.P[2]] : null, trajCount: t && t.count, msg: document.getElementById('statMsg').textContent }; });
+    const r = await p.evaluate(() => { const S = window.__pcd.S, f = S.files[0], t = S.trajs[0]; return { offset: S.offset, cloudFirstLocal: [f.sample[0], f.sample[1], f.sample[2]], trajFirstLocal: t ? [t.P[0], t.P[1], t.P[2]] : null, trajCount: t && t.count, msg: document.getElementById('statMsg').textContent }; });
     const dist = r.trajFirstLocal ? Math.hypot(r.trajFirstLocal[0] - r.cloudFirstLocal[0], r.trajFirstLocal[1] - r.cloudFirstLocal[1]) : null;
     out({ id: 'A04-017', title: 'UTM の点群に同じ座標系の軌跡を重ねると、軌跡だけシフトされずに遠くに描かれる', pass: dist !== null && dist < 1000, detail: `シフト ${JSON.stringify(r.offset)}、点群の点（画面の座標）${JSON.stringify(r.cloudFirstLocal.map(v => +v.toFixed(2)))}、軌跡の始点（画面の座標）${JSON.stringify(r.trajFirstLocal && r.trajFirstLocal.map(v => +v.toFixed(2)))}、距離 ${dist && dist.toFixed(0)} m、知らせ「${r.msg}」`, errors });
     await p.close();
@@ -84,7 +85,7 @@ async function load(p, files, kind = 'cloud', wait = 60000) {
       const { p, errors } = await open(b);
       await load(p, [f], 'cloud', 120000);
       await load(p, [path.join(SAMPLES, 'cc_cloud.asc')], 'cloud', 20000);
-      const r = await p.evaluate(() => ({ files: window.__pcd.S.files.map(x => ({ name: x.name, n: x.n, zr: (() => { const P = x.positions; let lo = Infinity, hi = -Infinity; for (let i = 2; i < P.length; i += 3) { lo = Math.min(lo, P[i]); hi = Math.max(hi, P[i]); } return [lo, hi]; })() })), progress: !document.getElementById('progress').hidden, msg: document.getElementById('statMsg').textContent }));
+      const r = await p.evaluate(() => ({ files: window.__pcd.S.files.map(x => ({ name: x.name, n: x.n, zr: (() => { const P = x.sample; let lo = Infinity, hi = -Infinity; for (let i = 2; i < P.length; i += 3) { lo = Math.min(lo, P[i]); hi = Math.max(hi, P[i]); } return [lo, hi]; })() })), progress: !document.getElementById('progress').hidden, msg: document.getElementById('statMsg').textContent }));
       out({ id: 'A04-015', title: `高さの範囲が大きい点群（${path.basename(f)}）のあとに別のファイルを開く`, pass: !errors.length && r.files.length === 2, detail: `${JSON.stringify(r.files)}、読み込み中の表示 ${r.progress}、知らせ「${r.msg}」、エラー ${JSON.stringify(errors.slice(0, 2))}`, errors });
       await p.close();
     }

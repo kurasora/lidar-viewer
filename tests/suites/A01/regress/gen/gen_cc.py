@@ -53,4 +53,5 @@ def gen():
     if have('ply_utm_shift.ply'):
         case('cc/ply_utm_shift', ['cc/ply_utm_shift.ply'], 'CloudCompare が書いた PLY（UTM をグローバルシフトして読み込んだもの）', P=Q, F={'intensity': I0}, rgb=False, mm=True, tol=2e-5)
     if have('ply_cc_ascii.ply'):
-        case('cc/ply_cc_ascii', ['cc/ply_cc_ascii.ply'], 'CloudCompare が書いた ascii の PLY', P=P32, C=RGB0, F={'intensity': I0}, rgb=True, tol=1e-5)
+        # CloudCompare の ascii PLY は有効数字 6 桁（20.4123 など）で書くので、10 m 台の座標で 5e-5 m ほど丸まる
+        case('cc/ply_cc_ascii', ['cc/ply_cc_ascii.ply'], 'CloudCompare が書いた ascii の PLY', P=P32, C=RGB0, F={'intensity': I0}, rgb=True, tol=1e-4)

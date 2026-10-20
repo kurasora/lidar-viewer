@@ -93,7 +93,8 @@ SCENES.basic = async () => {
     exitedQuickly: c.exitMs !== null && c.exitMs < 5000,
     noLeftovers: c.childrenLeft.length === 0 && !c.mainAlive,
     lockRemoved: !(udFilesAfter || []).some(f => /^Singleton/.test(f)),
-    wmClass: !!(x11 && x11.windows && x11.windows.some(w => (w.wm_class || []).includes('LiDAR Viewer'))),
+    // deb の .desktop は StartupWMClass=lidar-viewer（desktopName・executableName と同じ）。窓の WM_CLASS もそれに合うこと
+    wmClass: !!(x11 && x11.windows && x11.windows.some(w => (w.wm_class || []).includes('lidar-viewer'))),
   };
   return { main: m, doc: d, x11, udFilesRunning, udFilesAfter, localStorageDir: ls, close: c, errs: h.errs, checks };
 };
@@ -221,7 +222,11 @@ SCENES.menu = async () => {
   });
   const c = await closeAndWatch(h, 'menu');
   const flat = JSON.stringify(m.appMenu || []);
-  return { ...m, close: c, checks: { appMenuHasReload: /"role":"reload"/i.test(flat), appMenuHasToggleDevTools: /toggledevtools/i.test(flat) } };
+  // mac だけ setupMacMenu で最小のメニューに置き換える。Linux・Windows は窓のメニューを外す（既定のアプリのメニューは残るが、窓がないと届かない）
+  const checks = process.platform === 'darwin'
+    ? { appMenuHasReload: /"role":"reload"/i.test(flat), appMenuHasToggleDevTools: /toggledevtools/i.test(flat) }
+    : { windowMenuHidden: m.windowMenuBarVisible === false };
+  return { ...m, close: c, checks };
 };
 
 // S9: 日本語のフォントがない Linux（最小構成）で画面がどう見えるか（写真を残す）
@@ -240,7 +245,7 @@ SCENES.fonts = async () => {
 
 // S10: 設定の置き場所が作れない（読み取り専用・権限なし）とき。何も言わずに終わらないか
 SCENES.roUserData = async () => {
-  const ro = '/home/claude/pcd-viewer/__a10_ro_test__/ud'; // 読み取り専用のマウントの下（mkdir が EROFS で失敗する）
+  const ro = '/proc/__a10_ro_test__/ud'; // 作れない場所（/proc の下は mkdir が失敗する。以前はリポジトリが読み取り専用だった）
   const t0 = Date.now();
   const b = spawn(APP, ['--no-sandbox'], { env: { ...process.env, PCDV_USERDATA: ro }, stdio: ['ignore', 'pipe', 'pipe'] });
   let err = ''; b.stderr.on('data', x => { err += x; }); b.stdout.on('data', x => { err += x; });
@@ -256,18 +261,23 @@ SCENES.roUserData = async () => {
 // S11: 描画プロセスが落ちたとき（大きすぎるファイルでのメモリ不足などと同じ）。立ち直るか・知らせが出るか
 SCENES.rendererCrash = async () => {
   const h = await launch('rendererCrash');
-  await h.app.evaluate(({ app }) => { globalThis.__gone = []; app.on('render-process-gone', (e, wc, d) => globalThis.__gone.push(d)); });
+  // 0.4.1 から落ちたときは知らせ（読み込み直す／終了する）を出す（R5-001）。知らせは「読み込み直す」を押したことにする
+  await h.app.evaluate(({ app, dialog }) => {
+    globalThis.__gone = []; globalThis.__dlg = [];
+    app.on('render-process-gone', (e, wc, d) => globalThis.__gone.push(d));
+    dialog.showMessageBox = async (w, o) => { globalThis.__dlg.push((o || w).message); return { response: 0 }; };
+  });
   const kids = descendants(h.pid).filter(p => typeOf(p) === 'renderer');
   for (const p of kids) process.kill(p, 'SIGKILL');
   await sleep(4000);
   const st = await h.app.evaluate(({ BrowserWindow }) => {
     const w = BrowserWindow.getAllWindows()[0];
-    return { windows: BrowserWindow.getAllWindows().length, crashed: w ? w.webContents.isCrashed() : null, url: w ? w.webContents.getURL().slice(-30) : null, gone: globalThis.__gone, visible: w ? w.isVisible() : null };
+    return { windows: BrowserWindow.getAllWindows().length, crashed: w ? w.webContents.isCrashed() : null, url: w ? w.webContents.getURL().slice(-30) : null, gone: globalThis.__gone, dialogs: globalThis.__dlg, visible: w ? w.isVisible() : null };
   });
   const shot = path.join(RUN, 'renderer_crash.png');
   try { const img = await h.app.evaluate(async ({ BrowserWindow }) => (await BrowserWindow.getAllWindows()[0].capturePage()).toPNG().toString('base64')); fs.writeFileSync(shot, Buffer.from(img, 'base64')); } catch (e) { /* */ }
   const c = await closeAndWatch(h, 'rendererCrash');
-  return { renderersKilled: kids.length, state: st, shot, close: c, checks: { recovered: st.crashed === false } };
+  return { renderersKilled: kids.length, state: st, shot, close: c, checks: { recovered: st.crashed === false, dialogShown: (st.dialogs || []).length > 0 } };
 };
 
 // S12: 旧 version（PCD Viewer 0.2.0）からの引き継ぎ。旧 version で変えた設定（点数の上限・背景）が新 version で残るか／旧 version と新 version を同時に起動できるか

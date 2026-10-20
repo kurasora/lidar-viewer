@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # A11（計算と数値の正しさ）の再試験を 1 本で流す
 #   使い方:  bash $W/regress/run.sh            … 全部（試験用ファイルの作成 → Node の試験 → 画面の試験 → 判定）
 #            SKIP_GEN=1 bash run.sh             … ファイルを作り直さない
@@ -9,7 +11,7 @@
 set -u
 R=$(cd "$(dirname "$0")" && pwd); W=$(cd "$R/.." && pwd); T=$(cd "$W/../.." && pwd)
 O=$R/out; mkdir -p $O
-export TMPDIR=$W/tmp
+mkdir -p /tmp/a11t; export TMPDIR=/tmp/a11t   # 短い場所に（Chromium の二重起動防止のソケットは 107 文字まで。$W/tmp だと起動直後に落ちる）
 if [ -z "${SKIP_GEN:-}" ]; then
   echo "[1/4] 試験用ファイルを作る"; MEM=1500 TIMEOUT=1800 $T/bin/light bash $R/gen_all.sh || echo "gen_all に失敗"
 fi

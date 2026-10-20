@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面は全部の点を持たない（描いたら捨てる）。全部の座標・色は別スレッドから __pcd.call({ type: "buffers", id }) で借りる
 // 画面（本番と同じ道筋）にファイルを開かせて、cases.json の期待値と比べる
 //   使い方: node browser_probe.js [絞り込みの正規表現]
 //   環境変数:
@@ -33,7 +34,7 @@ const W = path.resolve(HERE, '..');
   } else {
     b = await pw.chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
     p = await b.newPage({ viewport: { width: 1280, height: 800 } });
-    const page = MODE === 'artifact' ? 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html' : (process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html');
+    const page = MODE === 'artifact' ? 'file:///home/claude/pcd-viewer/dist-artifact/pcd-viewer.html' : (process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
     await p.goto(page);
   }
   let errors = [];
@@ -74,13 +75,15 @@ const W = path.resolve(HERE, '..');
     const specs = {};
     if (c.expect.perFile) for (const pe of c.expect.perFile) specs[pe.name] = { parts: (pe.expect.parts || []).map(q => ({ name: q.name, box: q.box })) };
     specs['*'] = { parts: (c.expect.parts || []).map(q => ({ name: q.name, box: q.box })) };
-    const r = await p.evaluate(specs => {
+    const r = await p.evaluate(async specs => {
       const S = window.__pcd.S;
-      const out = S.files.map(f => {
-        const at = f.geom.getAttribute('rgbc');
-        const g = { name: f.name, n: f.n, total: f.total, positions: f.positions, rgb: at ? at.array : null, fmt: f.header.data, note: f.header.note, fields: f.header.fields.filter(x => !['x', 'y', 'z', 'rgb'].includes(x)), fieldStats: f.stats };
-        return window.__probe.summarize([g], S.offset, specs[f.name] || specs['*'])[0];
-      });
+      const out = [];
+      for (const f of S.files) {
+        // 0.4.1 から画面は全部の点を持たない（描いたら捨てる）。全部の座標・色は別スレッドから借りる（'buffers'。文脈が戻ったときに使う仕組み）
+        const b = await window.__pcd.call({ type: 'buffers', id: f.id });
+        const g = { name: f.name, n: f.n, total: f.total, positions: b.positions, rgb: b.rgb || null, fmt: f.header.data, note: f.header.note, fields: f.header.fields.filter(x => !['x', 'y', 'z', 'rgb'].includes(x)), fieldStats: f.stats };
+        out.push(window.__probe.summarize([g], S.offset, specs[f.name] || specs['*'])[0]);
+      }
       const el = document.getElementById('statMsg');
       return { files: out, offset: S.offset, msg: el.textContent, msgIsError: !!el.style.color, svgScript: window.__svgScript || null };
     }, specs);

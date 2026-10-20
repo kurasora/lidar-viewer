@@ -3,12 +3,15 @@
 #   bash run.sh            … 全部（30〜60 分。heavy の枠の空き次第）
 #   bash run.sh quick      … 写真の行列を 900x600 と 1280x800 だけにする
 #   結果: ../out/*.json *.log、写真: ../shots/、最後に summarize.py が「OK / NG」の一覧を出す
-#   別の version（写し）を試すとき: APPDIR=<写しのフォルダ> PAGE=file://<写し>/dist/index.html bash run.sh
+#   別の version（写し）を試すとき: APPDIR=<写しのフォルダ> PAGE=http://127.0.0.1:8740/abs<写し>/dist/index.html bash run.sh
 set -u
 R=$(cd "$(dirname "$0")" && pwd); W=$(cd "$R/.." && pwd)
 T=$(cd "$W/../.." && pwd)
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 O=$W/out; mkdir -p $O $W/shots $W/tmp
-export TMPDIR=$W/tmp PYTHONPATH=$W/pylib
+# Chromium は長い TMPDIR だと起動できない（プロファイルのソケットのパスが 107 文字まで）ので、短い記号リンクを使う（中身は $W/tmp）
+mkdir -p $W/tmp; ln -sfn $W/tmp /tmp/a06t
+export TMPDIR=/tmp/a06t PYTHONPATH=$W/pylib
 cd $W
 MODE=${1:-full}
 echo "== 試験用ファイル";   $T/bin/light python3 $R/gen_files.py $W/files
@@ -19,7 +22,7 @@ if [ "$MODE" = quick ]; then SIZES=900x600,1280x800; else SIZES=900x600,1280x800
 echo "== 写真の行列（DPR 1、暗/明）"; TIMEOUT=2400 $T/bin/heavy node $R/matrix_chromium.js $SIZES 1 dark,light > $O/matrix_run1.log 2>&1; cat $O/matrix_run1.log
 echo "== 写真の行列（DPR 2）";        TIMEOUT=2400 MEM=2400 $T/bin/heavy node $R/matrix_chromium.js 900x600,1280x800,1920x1080 2 dark > $O/matrix_run2.log 2>&1; cat $O/matrix_run2.log
 echo "== キーボード（Chromium）";      $T/bin/heavy node $R/keyboard.js > $O/keyboard_chromium.log 2>&1; tail -c 300 $O/keyboard_chromium.log
-echo "== Chromium の組";              TIMEOUT=2400 $T/bin/heavy bash $R/chromium_batch.sh > $O/chromium_batch.log 2>&1; tail -c 2000 $O/chromium_batch.log
+echo "== Chromium の組";              TIMEOUT=4800 $T/bin/heavy bash $R/chromium_batch.sh > $O/chromium_batch.log 2>&1; tail -c 2000 $O/chromium_batch.log
 # Electron（X が要る）
 echo "== Electron の組";              TIMEOUT=1800 $T/bin/heavy xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" bash $R/electron_batch.sh > $O/electron_batch.log 2>&1; tail -c 2000 $O/electron_batch.log
 echo "== 吹き出しの陽性対照";          $T/bin/heavy xvfb-run -a -n 160 -s "-screen 0 1280x800x24" node $R/tooltip_control.js > $O/tooltip_control.log 2>&1; grep -c override $O/tooltip_control.log

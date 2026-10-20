@@ -5,6 +5,7 @@
 # 出力: $W/out/*.jsonl（1 行 1 件の JSON）と、最後に各キャンペーンのまとめ
 set -e
 T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 W=$T/work/A03
 F=$W/fuzz G=$W/gen OUT=$W/out
 mkdir -p $OUT

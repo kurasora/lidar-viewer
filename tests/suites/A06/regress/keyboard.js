@@ -30,7 +30,7 @@ const DESC = () => { const e = document.activeElement; if (!e || e === document.
   await L.openFiles(p, [L.FILES + '/corr_int_label.pcd']);
   const escCases = [
     ['なし（body）', null, 'display'],
-    ['ドックのボタン', '[data-open="display"]', 'display'],
+    ['ドックのボタン', '[data-open="settings"]', 'display'],
     ['カードの閉じるボタン', '#popClose', 'display'],
     ['カードのチェックボックス', '#showAxes', 'display'],
     ['カードのつまみ（range）', '#pointSize', 'display'],

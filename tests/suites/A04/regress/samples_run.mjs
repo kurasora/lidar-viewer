@@ -2,14 +2,14 @@
 //   使い方: node --no-warnings samples_run.mjs [--json]
 //   環境変数: PCDV_ROOT（対象のプロジェクト。既定 /home/claude/pcd-viewer）
 //             SAMPLES（サンプルのフォルダ。既定 $PCDV_ROOT/sample/formats）
-//             EXPECTED（期待値 JSON。既定 /home/claude/samples/out_expected.json）
+//             EXPECTED（期待値 JSON。既定 tests/sample-generators/samples/out_expected.json（作り物の廊下））
 // 出力: 1 ファイル 1 行の結果と、最後に OK/NG/SKIP/ERR の数。終了コード: NG があれば 1
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 const ROOT = process.env.PCDV_ROOT || '/home/claude/pcd-viewer';
 const DIR = process.env.SAMPLES || join(ROOT, 'sample/formats');
-const EXP_PATH = process.env.EXPECTED || '/home/claude/samples/out_expected.json';
+const EXP_PATH = process.env.EXPECTED || (process.env.PCDV_ROOT || '/home/claude/pcd-viewer') + '/tests/sample-generators/samples/out_expected.json';
 const EXP = existsSync(EXP_PATH) ? JSON.parse(readFileSync(EXP_PATH, 'utf8')) : null;
 const { loadFile } = await import(join(ROOT, 'src/io/index.js'));
 const ASSETS = {

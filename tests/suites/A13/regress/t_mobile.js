@@ -66,10 +66,10 @@ async function gesture(cdp, from, to, steps = 12) {
     let tapped = null;
     for (const [dx, dy] of [[0, 0], [10, 0], [-10, 0], [0, 10], [0, -10], [20, 20], [-20, -20], [30, 0], [-30, 0]]) {
       await touch(cdp, 'touchStart', [[cx + dx, cy + 60 + dy]]); await touch(cdp, 'touchEnd', []); await page.waitForTimeout(1200);
-      const vis = await frame.evaluate(() => !document.getElementById('pickInfo').hidden);
+      const vis = await frame.evaluate(() => !!document.querySelector('.pcall.pin.sel'));
       if (vis) { tapped = [dx, dy]; break; }
     }
-    R.tapPick = { tapped, box: await rectOf(frame, '#pickBox'), inView: await frame.evaluate(() => { const b = document.getElementById('pickBox').getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth && b.top >= 0 && b.bottom <= innerHeight; }) };
+    R.tapPick = { tapped, box: await rectOf(frame, '#pickBox'), inView: await frame.evaluate(() => { const b = (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).getBoundingClientRect(); return b.left >= 0 && b.right <= innerWidth && b.top >= 0 && b.bottom <= innerHeight; }) };
     await page.screenshot({ path: `${L.OUT}/mobile_4_pick.png` });
     await frame.click('[data-tool="info"]');
     // 横向き
@@ -91,7 +91,7 @@ async function gesture(cdp, from, to, steps = 12) {
     const frame = await L.artFrame(page);
     await L.waitStartup(frame);
     R.light = await frame.evaluate(() => ({ scheme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light', bg: getComputedStyle(document.body).backgroundColor, panel: getComputedStyle(document.documentElement).getPropertyValue('--panel').trim(), colorScheme: getComputedStyle(document.documentElement).colorScheme }));
-    await frame.click('[data-open="display"]');
+    await frame.click('[data-open="settings"]');
     await page.screenshot({ path: `${L.OUT}/mobile_6_light.png` });
     await ctx.close();
   }

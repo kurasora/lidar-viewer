@@ -4,6 +4,7 @@
 #   前提: eslint/tsc/型定義は $W/tools に入れてある（この環境の作りに依存）。netns a12* は $T/bin/mknet a12 112 3 で作る
 set +e
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv; W=$T/work/A12
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 export NODE_PATH=$W/tools/node_modules
 echo "========== 0) 再現用の入力を作る"
 TIMEOUT=200 $T/bin/light python3 $W/regress/gen_data.py $W/regress/data

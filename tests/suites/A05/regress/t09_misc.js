@@ -42,7 +42,7 @@ const D = L.DATA;
   await p.evaluate(() => { const e = document.getElementById('bgLight'); e.value = '40'; e.dispatchEvent(new Event('input', { bubbles: true })); });
   await p.reload(); await p.waitForFunction(() => window.__pcd);
   const bg = await p.evaluate(() => ({ v: document.getElementById('bgLight').value, t: document.getElementById('bgLightVal').textContent, scene: getComputedStyle(document.documentElement).getPropertyValue('--scene').trim() }));
-  R.ok('B1 背景の明るさは開き直しても残る', bg.v === '40' && bg.t === '40', bg);
+  R.ok('B1 背景の明るさは開き直しても残る（表示は % : 40 → 80%）', bg.v === '40' && bg.t === '80%', bg);
   await p.evaluate(() => { const e = document.getElementById('bgLight'); e.value = '14'; e.dispatchEvent(new Event('input', { bubbles: true })); localStorage.removeItem('pcdviewer.bg'); });
   // ---- ドラッグ＆ドロップ ----
   const dragCls = async () => p.evaluate(() => document.getElementById('stage').classList.contains('drag'));
@@ -98,25 +98,30 @@ const D = L.DATA;
   } else R.ok('P2 X の矢印が出ている', false, 'なし');
   // 表示の選択肢
   await L.card(p, 'display');
-  await p.click('#showPivot'); await p.waitForTimeout(200);
-  let vis = await p.evaluate(() => ({ pivot: !document.getElementById('pivot').hidden, handles: document.getElementById('handles').style.display !== 'none' }));
+  await p.click('#showPivot');
+  // 描き直しが遅い（ソフトウェア描画）ので、消えるまで少し待つ
+  await p.waitForFunction(() => document.getElementById('pivot').hidden, null, { timeout: 3000 }).catch(() => {});
+  let vis = await p.evaluate(() => ({ checked: document.getElementById('showPivot').checked, pivot: !document.getElementById('pivot').hidden, handles: document.getElementById('handles').style.display !== 'none' }));
   R.ok('O1 「回転の中心の印を表示」を切ると丸と矢印が消える', !vis.pivot && !vis.handles, vis);
   await p.click('#showPivot');
-  await L.card(p, 'view'); await p.click('#showArrows'); await p.waitForTimeout(200);
+  await L.card(p, 'display'); await p.click('#showArrows');
+  await p.waitForFunction(() => document.getElementById('handles').style.display === 'none', null, { timeout: 3000 }).catch(() => {});
   vis = await p.evaluate(() => ({ pivot: !document.getElementById('pivot').hidden, handles: document.getElementById('handles').style.display !== 'none' }));
   R.ok('O2 「中心の軸の矢印を表示」を切ると矢印だけ消える', vis.pivot && !vis.handles, vis);
   await p.click('#showArrows');
-  await L.card(p, 'display'); await p.click('#showAxes'); await p.waitForTimeout(200);
+  await L.card(p, 'display'); await p.click('#showAxes'); await p.waitForTimeout(600);
   const axesVis = await p.evaluate(() => window.__pcd.world.parent.children.find(o => o.type === 'AxesHelper').visible);
   R.ok('O3 「座標軸を表示」を切ると座標軸が消える', axesVis === false, axesVis);
   await p.click('#showAxes');
   // ---- 画像の保存 ----
-  await L.card(p, 'view');
+  // 0.4.1 から: 「画像を保存」はファイルのカード。名前は lidar_年月日_時分秒.png、知らせは「保存先を選んでください」（保存したかは画面から分からないため）
+  await L.card(p, 'open');
   const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 10000 }).catch(() => null), p.click('#btnShot')]);
   const fn = dl ? dl.suggestedFilename() : null;
-  R.ok('S1 「画像を保存」で PNG がダウンロードされる（名前 pcd_年月日_時分秒.png）', fn && /^pcd_\d{8}_\d{6}\.png$/.test(fn) && (await L.msg(p)).text === '画像を保存しました', fn);
+  R.ok('S1 「画像を保存」で PNG がダウンロードされる（名前 lidar_年月日_時分秒.png）', fn && /^lidar_\d{8}_\d{6}\.png$/.test(fn) && /^画像（lidar_\d{8}_\d{6}\.png）の保存先を選んでください$/.test((await L.msg(p)).text), { fn, msg: (await L.msg(p)).text });
   if (dl) { const f = L.SHOTS + '/t09_S1_saved.png'; await dl.saveAs(f); const sz = require('fs').statSync(f).size; R.ok('S1b 保存した画像が空でない', sz > 10000, sz); }
   await L.closeAll(p);
+  await L.card(p, 'open');
   await p.click('#btnShot'); await p.waitForTimeout(200);
   R.ok('S2 点群がないときの「画像を保存」は知らせだけ', (await L.msg(p)).text === '保存する点群がありません');
   R.ok('ページのエラーなし', !errors.length, errors.slice(0, 5));

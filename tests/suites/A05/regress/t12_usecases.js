@@ -28,7 +28,7 @@ async function pickedZ(p) { return p.evaluate(() => window.__pcd.S.measures.map(
   await p.mouse.click(wl.x, wl.y); await p.waitForTimeout(900);
   await p.keyboard.down('Shift'); await p.mouse.click(wr.x, wr.y); await p.keyboard.up('Shift'); await p.waitForTimeout(900);
   let t = await table(p);
-  R.ok('UC1-2 上から壁と壁をクリック（Shift）→ 廊下の幅 ≈ 2.0 m', t.length === 1 && Math.abs(+t[0][0] - 2.0) < 0.1 && t[0][0] === t[0][1] && t[0][2] === '+0.00', t);
+  R.ok('UC1-2 上から壁と壁をクリック（Shift）→ 廊下の幅 ≈ 2.0 m', t.length === 1 && Math.abs(+t[0][0] - 2.0) < 0.1 && t[0][0] === t[0][1] && /^\+?0\.000$/.test(t[0][2]), t); // 0.4.2: 桁数は設定（既定 3 桁）
   const z1 = await pickedZ(p);
   R.ok('UC1-3 選ばれた点は見えている点（隠した天井の点ではない）', z1.length && z1[0].every(z => z <= (s1.ceil ? s1.ceilZ + 0.01 : 9)), { 選ばれた点の高さ: z1 });
   await L.shot(p, 't12_UC1_corridor_width');
@@ -55,7 +55,8 @@ async function pickedZ(p) { return p.evaluate(() => window.__pcd.S.measures.map(
   await L.openTraj(p, [`${D}/trajectory.txt`]);
   st = await L.state(p);
   const g = await p.evaluate(() => {
-    const S = window.__pcd.S, e = window.__pcd.world.matrixWorld.elements, t = S.trajs[0];
+    // 軌跡は自分の入れ物（group）の行列で世界に置かれる（地図のシフトと別）。group.matrixWorld で世界の位置にする
+    const S = window.__pcd.S, t = S.trajs[0], e = t.group.matrixWorld.elements;
     const W = i => [e[0] * t.P[3 * i] + e[4] * t.P[3 * i + 1] + e[8] * t.P[3 * i + 2] + e[12], e[1] * t.P[3 * i] + e[5] * t.P[3 * i + 1] + e[9] * t.P[3 * i + 2] + e[13], e[2] * t.P[3 * i] + e[6] * t.P[3 * i + 1] + e[10] * t.P[3 * i + 2] + e[14]];
     let inside = 0; for (let i = 0; i < t.count; i++) { const q = W(i); if (q.every((v, k) => v >= S.bounds.min[k] && v <= S.bounds.max[k])) inside++; }
     return { inside, count: t.count, len: t.length, lvl: document.getElementById('levelResult').textContent };
@@ -90,7 +91,7 @@ async function pickedZ(p) { return p.evaluate(() => window.__pcd.S.measures.map(
   await L.card(p, 'open');
   await p.click('#fileList li:nth-child(1) [data-act=vis]'); await p.click('#fileList li:nth-child(2) [data-act=vis]'); await p.waitForTimeout(300);
   const pts = await p.textContent('#statPoints');
-  R.ok('UC4-5 2 つを隠すと 1 つだけ表示（表示 60,000 点 ／ 全 180,000 点）', pts === '表示 60,000 点 ／ 全 180,000 点', pts);
+  R.ok('UC4-5 2 つを隠すと 1 つだけ表示（表示 60,000 点 ／ 全 180,000 点）', /^表示\s60,000\s点(（[^）]*）)?\s／\s全\s180,000\s点$/.test(pts)  /* 数と「点」の間は改行しない空白（U+00A0）のことがある */, pts);
   await p.click('#fileList li:nth-child(1) [data-act=vis]'); await p.click('#fileList li:nth-child(2) [data-act=vis]');
   await p.click('#fileList li:nth-child(2) .name'); await p.waitForTimeout(300);
   const inf = await p.evaluate(() => document.getElementById('info').textContent);

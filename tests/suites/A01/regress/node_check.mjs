@@ -49,7 +49,7 @@ for (const c of cases) {
     for (let i = 0; i < 3 * r.n; i++) P[i] = r.positions[i] + r.offset[i % 3];
     const F = {};
     for (const [k, v] of Object.entries(r.fields)) F[k] = b64(new Float32Array(v));
-    res = { id: c.id, ok: true, n: r.n, total: r.total, skipped: r.skipped, sampled: r.sampled, offset: r.offset, fields: Object.keys(r.fields), rgb: !!r.rgb,
+    res = { id: c.id, ok: true, n: r.n, total: r.total, skipped: r.skipped, sampled: r.sampled, offset: r.offset, fields: Object.keys(r.fields), FB: r.fieldBase || {}, rgb: !!r.rgb,
       format: info.format || '', note: info.note || '', ms: Date.now() - t0, P: b64(P), C: r.rgb ? b64(new Uint8Array(r.rgb)) : null, F,
       P32: b64(new Float32Array(r.positions)) };
   } catch (e) {

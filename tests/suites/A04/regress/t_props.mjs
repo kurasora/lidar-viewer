@@ -18,11 +18,13 @@ const enc = new TextEncoder(), dec = new TextDecoder();
 const check = async (prop, runs = 200) => { const r = await fc.check(prop, { numRuns: runs, seed: 20261017 }); ok(!r.failed, r.failed ? `反例 ${fc.stringify(r.counterexample)}（${r.numShrinks} 回縮めた）${r.errorInstance ? ' ' + String(r.errorInstance.message || r.errorInstance).slice(0, 200) : ''}` : ''); };
 const T = (id, title, fn, o) => test(id, title, fc ? fn : () => { console.log('      （fast-check がないので飛ばした）'); }, o);
 
-T('OK-F01', '性質: eachLine はどんなチャンクの大きさでも、LF で区切って行末の CR を 1 つ落とした結果と同じ', () => check(fc.asyncProperty(
+// 0.4.0 から: LF がなく CR がある（古い Mac 形式）ときは CR だけで区切る（A04-003）
+T('OK-F01', '性質: eachLine はどんなチャンクの大きさでも、LF で区切って行末の CR を 1 つ落とした結果と同じ（LF がなく CR があれば CR で区切る）', () => check(fc.asyncProperty(
   fc.array(fc.constantFrom('a', 'b', '1', ' ', '\r', '\n', 'あ', ',', '\r\n'), { maxLength: 60 }).map(a => a.join('')), fc.integer({ min: 1, max: 9 }),
   async (s, ch) => {
-    const want = s.length ? s.split('\n') : []; if (want.length && want[want.length - 1] === '' && s.endsWith('\n')) want.pop();
-    const exp = want.map(l => (l.endsWith('\r') ? l.slice(0, -1) : l));
+    const sep = !s.includes('\n') && s.includes('\r') ? '\r' : '\n';
+    const want = s.length ? s.split(sep) : []; if (want.length && want[want.length - 1] === '' && s.endsWith(sep)) want.pop();
+    const exp = sep === '\r' ? want : want.map(l => (l.endsWith('\r') ? l.slice(0, -1) : l));
     const got = []; await U.eachLine(new U.Src(enc.encode(s)), 0, (b, a, e) => { got.push(dec.decode(b.subarray(a, e))); }, () => {}, ch);
     return JSON.stringify(got) === JSON.stringify(exp);
   }), 500));

@@ -28,23 +28,27 @@ const inside = (q, g, m = 0.5) => q.every((v, k) => v >= g.bmin[k] - m && v <= g
   const R = L.recorder('t08_traj');
   const { p, errors, close } = await L.page();
   // ---- 地図と軌跡を「点群を開く」で一緒に選ぶ ----
+  // 0.4.1 から: 「点群のファイル」で選んだものは点群として開く（軌跡は「軌跡のファイル」で。間違えたら一覧の「軌跡として開き直す」）
   await L.open(p, [`${D}/c_xyzi.pcd`, `${D}/c_trajectory.txt`]);
   let s = await tr(p);
-  R.ok('A1 「点群を開く」で地図と軌跡（c_trajectory.txt）を一緒に選ぶと、軌跡は軌跡として開く', s.trajs.length === 1 && s.files.length === 1, s);
+  const reopen = await p.evaluate(() => [...document.querySelectorAll('#fileList [data-act=reopen], #fileList .reopen')].map(b => b.textContent.trim()));
+  R.ok('A1 「点群のファイル」で地図と軌跡の文字ファイルを一緒に選ぶと、両方点群として開き、軌跡の方に「軌跡として開き直す」が出る', s.trajs.length === 0 && s.files.length === 2 && reopen.includes('軌跡として開き直す'), { ...s, reopen });
   await L.shot(p, 't08_A1_dialog_map_and_traj');
   await L.closeAll(p);
   // 軌跡を先に選んだ場合（並び順で 1 つ目が軌跡になる）
-  await L.open(p, [`${D}/c_trajectory.txt`, `${D}/c_xyzi.pcd`]);
+  await L.openTraj(p, [`${D}/c_trajectory.txt`]);
+  await L.open(p, [`${D}/c_xyzi.pcd`]);
   s = await tr(p);
   const lvl = await p.evaluate(() => ({ result: document.getElementById('levelResult').textContent, files: window.__pcd.S.files.map(f => f.name), n: window.__pcd.S.files.map(f => f.n) }));
-  R.ok('A2 軌跡が先に並んでいても、地図が水平補正される', /傾き/.test(lvl.result), { ...lvl, msg: s.msg });
+  R.ok('A2 軌跡を先に（軌跡のファイルで）開いてから地図を開いても、地図が水平補正される', /傾き/.test(lvl.result) && s.trajs.length === 1, { ...lvl, msg: s.msg });
   await L.closeAll(p);
   // ---- ドロップ（自動判定）----
   await L.drop(p, [`${D}/c_xyzi.pcd`, `${D}/c_trajectory.txt`]);
   s = await tr(p);
   R.ok('B1 ドロップで地図と軌跡を一緒に落とすと、軌跡は軌跡として開く', s.trajs.length === 1 && s.files.length === 1 && s.trajs[0].count === 600, s.trajs);
   let g = await geo(p);
-  R.ok('B2 水平補正のあと、軌跡は地図の中（床から 0.45 m の高さ）を通る', g && inside(g.start, g) && inside(g.end, g) && Math.abs(g.start[2] - 0.45) < 0.1, g);
+  // 0.4.1 から: 補正しても原点は変えない（床を z = 0 にしない）。床（範囲の下端）から 0.45 m の高さを通るかで見る
+  R.ok('B2 水平補正のあと、軌跡は地図の中（床から 0.45 m の高さ）を通る', g && inside(g.start, g) && inside(g.end, g) && Math.abs(g.start[2] - g.bmin[2] - 0.45) < 0.15, g);
   R.ok('B3 軌跡があると「軌跡に沿って」のつまみが出る', s.moveRow && !s.hint, s);
   // 軌跡に沿って動かす
   await L.card(p, 'view');
@@ -53,7 +57,7 @@ const inside = (q, g, m = 0.5) => q.every((v, k) => v >= g.bmin[k] - m && v <= g
   const mid = await p.evaluate(() => ({ t: window.__pcd.controlsTarget().map(v => +v.toFixed(2)), val: document.getElementById('trajPosVal').textContent }));
   R.ok('B4 つまみを真ん中にすると、回転の中心が軌跡の真ん中（x≈15 m）に動く', Math.abs(mid.t[0] - ((g.start[0] + g.end[0]) / 2)) < 1.5 && /m$/.test(mid.val), { mid, g });
   // 表示の切り替え
-  await L.card(p, 'display');
+  await L.card(p, 'view');
   await p.click('#showTraj'); await p.waitForTimeout(200);
   s = await tr(p);
   R.ok('B5 「軌跡を表示」を切ると隠れる', !s.trajs[0].gvis, s.trajs);

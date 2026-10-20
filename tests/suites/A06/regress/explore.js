@@ -11,13 +11,13 @@ const L = require('./lib.js');
   const r = await L.openFiles(p, [L.FILES + '/corr_int_label.pcd', '/home/claude/pcd-viewer/sample/trajectory.txt']);
   await p.waitForTimeout(500);
   await L.shot(p, pre + '_02_loaded');
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) {
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) {
     await L.closeCards(p); await L.openCard(p, c); await L.shot(p, pre + '_03_card_' + c);
   }
   await L.closeCards(p);
   await p.click('[data-open="color"]'); await p.click('#tabColorDetail'); await p.waitForTimeout(200); await L.shot(p, pre + '_04_color_detail');
   await L.closeCards(p);
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${c}"]`);
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) await p.click(`[data-open="${c}"]`);
   await p.click('[data-tool="measure"]'); await p.waitForTimeout(500);
   await L.shot(p, pre + '_05_stack8');
   console.log(JSON.stringify({ r, errors }));

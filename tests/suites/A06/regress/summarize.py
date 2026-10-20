@@ -11,7 +11,14 @@ def text(n):
     try: return open(f'{O}/{n}', encoding='utf8').read()
     except Exception: return None
 rows = []
+# 直さないと決めたもの（tests/BUGS.md「直していないもの」）・仕様を変えたもの。残っていても NG ではなく「既知」と書く
+KNOWN = {
+    'A06-009': 'キーボードだけでできない操作（直さない）',
+    'A06-025': '文字を大きくできない（直さない）',
+    'テーマ': '0.4.2 から画面の明るさは設定で選ぶ（既定は暗い。OS には合わせない）',
+}
 def chk(id_, title, ok, detail=''):
+    if ok is False and id_ in KNOWN: rows.append((id_, '既知', title, f'{detail} … {KNOWN[id_]}'.strip(' …'))); return
     rows.append((id_, 'OK' if ok is True else 'NG' if ok is False else '? ', title, detail))
 
 t = load('tooltip_app.json')

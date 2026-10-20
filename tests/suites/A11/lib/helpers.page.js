@@ -3,6 +3,8 @@
   const H = window.H = {};
   H.wait = ms => new Promise(r => setTimeout(r, ms));
   H.text = id => document.getElementById(id).textContent;
+  // 0.4.1 から: 座標の吹き出しは何個でも残る（.pcall.pin）。選ばれている（最後に押した）ものの文字。前の #pickBox の代わり
+  H.pinText = () => { const b = document.querySelector('.pcall.pin.sel .pc-box') || [...document.querySelectorAll('.pcall.pin .pc-box')].pop(); return b ? b.innerText.replace(/\s+/g, ' ').trim() : ''; };
   H.q = s => [...document.querySelectorAll(s)].map(e => e.textContent.trim());
   H.V3 = window.__pcd.cam.position.constructor;
   H.canvas = () => window.__pcd.renderer.domElement;

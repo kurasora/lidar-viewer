@@ -26,17 +26,9 @@ const { check } = require('./layout_checks.js');
   }
   const { p, close, errors } = await L.chromium({ w: 900, h: 600 });
   await L.openFiles(p, [L.FILES + '/corr_intensity.pcd']);
-  // 2) 測定中の長さの表示（カーソルの右下に出る）が画面の端で切れるか
+  // 2) 測定中の長さの表示（mLive）は 0.4.2 でなくした（2 点目を選ぶ前の表示はない）ので、確かめない
   await p.click('[data-tool="measure"]'); await L.closeCards(p);
-  const a = await S.findVisiblePoint(p);
-  if (a) {
-    await p.mouse.click(a.x, a.y); await p.waitForTimeout(300);
-    const r = await S.findVisiblePoint(p, { x0: 0.9, x1: 1.0, y0: 0.05, y1: 0.8 }) || await S.findVisiblePoint(p, { x0: 0.8, x1: 1.0, y0: 0.05, y1: 0.95 });
-    if (r) { await p.mouse.move(r.x, r.y, { steps: 4 }); await p.waitForTimeout(800); out.mlive_right = await p.evaluate(() => { const e = document.getElementById('mLive'); const b = e.getBoundingClientRect(); return { hidden: e.hidden, right: Math.round(b.right), bottom: Math.round(b.bottom), vw: innerWidth, vh: innerHeight, text: e.innerText.replace(/\n/g, ' ') }; }); await L.shot(p, `${D}/mlive_right_edge`); }
-    const bt = await S.findVisiblePoint(p, { x0: 0.2, x1: 0.8, y0: 0.75, y1: 0.86 });
-    if (bt) { await p.mouse.move(bt.x, bt.y, { steps: 4 }); await p.waitForTimeout(800); out.mlive_bottom = await p.evaluate(() => { const e = document.getElementById('mLive'); const b = e.getBoundingClientRect(); const d = document.getElementById('dock').getBoundingClientRect(); return { hidden: e.hidden, rect: [b.x, b.y, b.right, b.bottom].map(Math.round), dockTop: Math.round(d.top), vh: innerHeight }; }); await L.shot(p, `${D}/mlive_bottom`); }
-    await p.keyboard.press('Escape');
-  }
+  await p.keyboard.press('Escape');
   // 3) 900×600: 距離の案内と、長い知らせの重なり
   await p.evaluate(() => { const el = document.getElementById('statMsg'); el.textContent = '軌跡 trajectory.txt を開きました（テキスト、2,359 姿勢、226.0 m、471.6 秒）'; });
   await p.waitForTimeout(200);
@@ -70,7 +62,7 @@ const { check } = require('./layout_checks.js');
   {
     const c3 = await L.chromium({ w: 1280, h: 800, reducedMotion: 'reduce', forcedColors: 'active' });
     await L.openFiles(c3.p, [L.FILES + '/corr_int_label.pcd']);
-    for (const c of ['color', 'display', 'section', 'level']) {
+    for (const c of ['color', 'display', 'section', 'level', 'settings']) {
       await L.closeCards(c3.p); await L.openCard(c3.p, c);
       if (c === 'color') { await c3.p.click('#tabColorDetail'); }
       await L.shot(c3.p, `${D}/forced_${c}`);

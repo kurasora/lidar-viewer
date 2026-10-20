@@ -2,7 +2,7 @@ const { chromium } = require(require('child_process').execSync('npm root -g').to
 (async () => {
   const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
   const p = await b.newPage();
-  await p.goto('file:///home/claude/pcd-viewer/dist/index.html');
+  await p.goto('http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   const r = await p.evaluate(() => {
     let lo = 1000, hi = 10000000;
     const ok = n => { try { Math.max(...new Float64Array(n)); return true; } catch (e) { return false; } };

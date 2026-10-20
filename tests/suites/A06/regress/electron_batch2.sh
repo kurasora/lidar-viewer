@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # Electron の試験（2 組目）: 自分の netns の中で流す
 #   heavy ip netns exec a061 xvfb-run -a -n 160 -s "-screen 0 1600x1000x24" bash electron_batch2.sh
 R=$(cd "$(dirname "$0")" && pwd); O=$R/../out; mkdir -p $O

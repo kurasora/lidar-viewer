@@ -116,14 +116,14 @@ def gen():
         M = np.hstack([R, p[1:4, None]])
         rows.append(' '.join(f'{v:.6e}' for v in M.ravel()))
     open(path('traj/kitti.txt'), 'w').write('\n'.join(rows) + '\n')
-    case('traj/kitti', ['traj/kitti.txt'], 'KITTI 形式（3×4 の行列 12 列、時刻なし）', kind='traj', node=True, n=m, poses=P, extra={'note': '正しく読むか、読めない旨を知らせる（黙って違う軌跡にしない）'})
+    case('traj/kitti', ['traj/kitti.txt'], 'KITTI 形式（3×4 の行列 12 列、時刻なし）', kind='traj', node=True, n=m, poses=P, error='KITTI', extra={'note': '時刻がないので読めない旨を知らせる（0.4.0 からの仕様。黙って違う軌跡にしない）'})
     rows = []
     for p in P:
         yaw = 2 * math.atan2(p[6], p[7])
         rows.append(' '.join(f'{v:.6f}' for v in [p[0] - P[0, 0], 0, 0, yaw, p[1], p[2], p[3], 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -9.81]))
     open(path('traj/fastlio_pos_log.txt'), 'w').write('\n'.join(rows) + '\n')
     Pf = P.copy(); Pf[:, 0] -= P[0, 0]
-    case('traj/fastlio_pos_log', ['traj/fastlio_pos_log.txt'], 'FAST-LIO の Log/pos_log.txt（時刻・オイラー角 3・位置 3・… 25 列）', kind='traj', node=True, n=m, poses=Pf, extra={'note': '正しく読むか、読めない旨を知らせる'})
+    case('traj/fastlio_pos_log', ['traj/fastlio_pos_log.txt'], 'FAST-LIO の Log/pos_log.txt（時刻・オイラー角 3・位置 3・… 25 列）', kind='traj', node=True, n=m, poses=Pf, error='四元数', extra={'note': '読めない旨を知らせる（0.4.0 からの仕様）'})
     Pns = P.copy(); Pns[:, 0] = np.round(P[:, 0] * 1e9)
     open(path('traj/tum_ns.txt'), 'w').write('\n'.join(' '.join([f'{int(p[0])}'] + [f'{v:.6f}' for v in p[1:]]) for p in Pns) + '\n')
     case('traj/tum_ns', ['traj/tum_ns.txt'], '時刻が ns の整数（ROS 2 の stamp をそのまま書いたもの）', kind='traj', node=True, n=m, poses=Pns, extra={'note': '秒の表示が 1e9 倍にならないか'})
@@ -134,7 +134,7 @@ def gen():
     # 6) MCAP（rosbag2）: チャンクあり無圧縮（rosbag2 の既定）・チャンクなし（fastwrite）・zstd・lz4、Odometry / PoseStamped / PoseWithCovarianceStamped
     for tag, comp, chunk in (('chunk_none', 'none', True), ('nochunk', 'none', False), ('zstd', 'zstd', True), ('lz4', 'lz4', True)):
         write_mcap(path(f'traj/odom_{tag}.mcap'), [('/Odometry', 'nav_msgs/msg/Odometry', P)], compression=comp, chunking=chunk, chunk_size=4096)
-        case(f'traj/mcap_odom_{tag}', [f'traj/odom_{tag}.mcap'], f'MCAP: /Odometry（{tag}、チャンク 4 KB）', kind='traj', node=True, n=m, poses=P,
+        case(f'traj/mcap_odom_{tag}', [f'traj/odom_{tag}.mcap'], f'MCAP: /Odometry（{tag}、チャンク 4 KB）', kind='traj', node=True, n=m, poses=P, error='圧縮された MCAP' if comp != 'none' else None,
              extra={'note': '圧縮は対応外と知らせるのは仕様どおり' if comp != 'none' else ''})
     write_mcap(path('traj/posestamped.mcap'), [('/pose', 'geometry_msgs/msg/PoseStamped', P)])
     case('traj/mcap_posestamped', ['traj/posestamped.mcap'], 'MCAP: PoseStamped（既定の zstd 圧縮の mcap ライブラリで書いたもの）', kind='traj', node=True, n=m, poses=P)

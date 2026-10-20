@@ -6,6 +6,7 @@
 #   全部で 40〜60 分。時間の上限は TIMEOUT（既定 5400 秒）で変えられる
 # 結果: $W/logs/<試験>.log（1 行ずつ OK/NG）と <試験>.json、写真は $W/shots/
 T=/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 W=$T/work/A05
 cd $W || exit 1
 if [ -z "$A05_INNER" ]; then
@@ -13,7 +14,7 @@ if [ -z "$A05_INNER" ]; then
   TIMEOUT=${TIMEOUT:-5400} MEM=${MEM:-1800} exec $T/bin/heavy env A05_INNER=1 bash $W/regress/run.sh "$@"
 fi
 mkdir -p $W/logs $W/shots $W/tmp
-export TMPDIR=$W/tmp
+mkdir -p /tmp/a05t; export TMPDIR=/tmp/a05t   # 短い場所に（Chromium の二重起動防止のソケットは 107 文字まで。$W/tmp だと起動直後に落ちる）
 # 試験用のファイル（なければ作る）
 [ -f $W/data/c_xyzi.pcd ]   || python3 $W/regress/gen_data.py  $W/data
 [ -f $W/data/utm_map.pcd ]  || python3 $W/regress/gen_data2.py $W/data

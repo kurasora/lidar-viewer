@@ -28,7 +28,7 @@ function rssTree(root) {
     const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
     let crashed = false; p.on('crash', () => { crashed = true; });
     const errors = []; p.on('pageerror', e => errors.push(e.message.slice(0, 200)));
-    await p.goto('file:///home/claude/pcd-viewer/dist/index.html');
+    await p.goto('http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
     await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
     await p.evaluate(() => { window.__long = 0; window.__longN = 0; new PerformanceObserver(l => { for (const e of l.getEntries()) { window.__long = Math.max(window.__long, e.duration); window.__longN++; } }).observe({ entryTypes: ['longtask'] }); });
     const base = rssTree(process.pid);

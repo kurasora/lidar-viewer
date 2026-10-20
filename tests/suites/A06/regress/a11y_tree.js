@@ -26,7 +26,7 @@ const L = require('./lib.js');
     out.states[state] = { rows, small };
   };
   await snap('loaded');
-  for (const c of ['open', 'view', 'color', 'display', 'section', 'level']) { await L.closeCards(p); await L.openCard(p, c); if (c === 'open') await p.evaluate(() => { document.getElementById('infoBox').open = true; }); await snap(c); }
+  for (const c of ['open', 'view', 'color', 'section', 'level', 'settings']) { await L.closeCards(p); await L.openCard(p, c); if (c === 'open') await p.evaluate(() => { document.getElementById('infoBox').open = true; }); await snap(c); }
   await L.closeCards(p); await L.openCard(p, 'color'); await p.click('#tabColorDetail'); await snap('color_detail');
   await L.closeCards(p); await p.click('[data-tool="measure"]');
   // 計測を 1 本

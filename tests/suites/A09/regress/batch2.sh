@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # 1,000 万点の各形式: 作る → 測る（Chromium・Electron）→ 繰り返し（リーク）→ LOD → 読み込み中の操作 → 疎で広い点群（Map の上限）
 #   $T/bin/bigmem bash batch2.sh   （TIMEOUT=3600 くらい）
 W=$(cd "$(dirname "$0")/.." && pwd)

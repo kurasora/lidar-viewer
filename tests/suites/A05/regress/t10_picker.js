@@ -20,7 +20,7 @@ const validExt = e => /^\.[A-Za-z0-9+.]*$/.test(e) && !e.endsWith('.') && e.leng
   };
   let { p, errors, close } = await L.page({ init: stub });
   await L.card(p, 'open');
-  await p.click('#btnOpen'); await p.waitForTimeout(300);
+  await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(300);
   let calls = await p.evaluate(() => window.__calls);
   const c = calls[0];
   R.ok('P1 「点群を開く」で showOpenFilePicker が呼ばれる（複数選択・id）', c && c.multiple === true && c.id === 'pcdviewer-open', c && { multiple: c.multiple, id: c.id, n: c.types.length });
@@ -42,7 +42,7 @@ const validExt = e => /^\.[A-Za-z0-9+.]*$/.test(e) && !e.endsWith('.') && e.leng
   R.ok('P8 一覧の説明は「拡張子の羅列」ではない（説明 + 括弧の中だけ）', types.slice(1).every(t => /^[^.(]+\(\*\./.test(t.description)), types.slice(1).map(t => t.description).filter(d => !/^[^.(]+\(\*\./.test(d)));
   // 取り消し → 代わりの画面を出さない
   let fc = null; p.once('filechooser', f => { fc = f; });
-  await p.click('#btnOpen'); await p.waitForTimeout(800);
+  await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(800);
   R.ok('P9 ダイアログを取り消したとき（AbortError）は、代わりの画面（input）を出さない', !fc, fc && 'filechooser が出た');
   // 軌跡
   await p.click('#btnTraj'); await p.waitForTimeout(300);
@@ -56,14 +56,15 @@ const validExt = e => /^\.[A-Za-z0-9+.]*$/.test(e) && !e.endsWith('.') && e.leng
     const mk = (b, n) => ({ kind: 'file', name: n, getFile: async () => new File([Uint8Array.from(atob(b), c => c.charCodeAt(0))], n) });
     window.__handles = [mk(a, 'c_xyzi.pcd'), mk(t, 'c_trajectory.txt')]; window.__mode = 'files';
   }, [b64, b64t]);
-  await p.click('#btnOpen'); await L.idle(p);
+  await L.card(p, 'open'); await p.click('#btnOpen'); await L.idle(p);
   let st = await L.state(p);
-  R.ok('P11 種類の画面で地図と軌跡を選ぶと、地図は点群・軌跡は軌跡として開く', st.files.length === 1 && st.trajs.length === 1, { files: st.files.map(f => f.name + ' ' + f.n), trajs: st.trajs.map(t => t.name) });
+  // 0.4.1 から: 「点群のファイル」で選んだものは点群として開く（軌跡は「軌跡のファイル」のボタンで）
+  R.ok('P11 「点群のファイル」の画面で地図と軌跡の文字ファイルを選ぶと、両方点群として開く', st.files.length === 2 && st.trajs.length === 0, { files: st.files.map(f => f.name + ' ' + f.n), trajs: st.trajs.map(t => t.name) });
   await L.closeAll(p);
   // showOpenFilePicker が使えない（SecurityError など）→ 代わりの <input> が開くか
   await p.evaluate(() => { window.__mode = 'security'; });
   fc = null; p.once('filechooser', f => { fc = f; });
-  await p.click('#btnOpen'); await p.waitForTimeout(1500);
+  await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(1500);
   R.ok('P12 showOpenFilePicker が失敗したら、代わりのファイル選択（input）が開く', !!fc, fc ? 'filechooser が出た' : '何も出ない');
   if (fc) { await fc.setFiles([`${D}/c_xyz.pcd`]); await L.idle(p); st = await L.state(p); R.ok('P12b 代わりの画面で選んだファイルが開く', st.files.length === 1, st.files.map(f => f.name)); }
   R.ok('ページのエラーなし（差し替え version）', !errors.length, errors.slice(0, 5));
@@ -77,7 +78,7 @@ const validExt = e => /^\.[A-Za-z0-9+.]*$/.test(e) && !e.endsWith('.') && e.leng
   const has = await p.evaluate(() => typeof window.showOpenFilePicker);
   await L.card(p, 'open');
   fc = null; p.once('filechooser', f => { fc = f; });
-  await p.click('#btnOpen'); await p.waitForTimeout(2500);
+  await L.card(p, 'open'); await p.click('#btnOpen'); await p.waitForTimeout(2500);
   const res = await p.evaluate(() => window.__res);
   R.ok('Q1 本物の showOpenFilePicker が types を受け付ける（TypeError にならない）', has === 'function' && !res.some(r => /TypeError/.test(r)), { has, res, filechooser: !!fc, multiple: fc && fc.isMultiple() });
   if (fc) { await fc.setFiles([`${D}/c_xyzi.pcd`]).catch(e => R.ok('Q2 setFiles', false, e.message)); await L.idle(p); const s2 = await L.state(p); R.ok('Q2 本物の画面（Playwright が受けた）で選んだファイルが開く', s2.files.length === 1, s2.files.map(f => f.name)); }

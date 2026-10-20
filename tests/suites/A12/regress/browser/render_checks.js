@@ -13,7 +13,7 @@ const D = process.argv[2];
   const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
   const cspBlocked = [];
   p.on('console', m => { const t = m.text(); if (/Content Security Policy|Refused to/i.test(t)) cspBlocked.push(t.slice(0, 120)); });
-  await p.goto('file:///home/claude/pcd-viewer/dist/index.html');
+  await p.goto('http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html');
   await p.waitForFunction(() => window.__pcd, null, { timeout: 60000 });
   const open = async f => {
     await p.evaluate(() => { let x; while ((x = document.querySelector('#fileList [data-act=remove]'))) x.click(); document.getElementById('statMsg').textContent = ''; document.title = 'LiDAR Viewer'; });

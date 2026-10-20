@@ -1,4 +1,6 @@
 #!/bin/bash
+T=${T:-/tmp/claude-0/-home-claude/fe3573b3-7a2d-5bb1-85c8-c22e6780cf30/scratchpad/testenv}
+"$T/bin/servedist" || true   # Chromium で開くページの配り口（file:// では別スレッドが動かない）
 # 3,000 万点の各形式: 作る → 測る（Chromium・Electron）→ プロファイル → 上限 1,000 万での間引き → 消す
 #   $T/bin/bigmem bash batch3.sh   （TIMEOUT=6000 MEM=6000 くらい）
 W=$(cd "$(dirname "$0")/.." && pwd)
@@ -24,7 +26,7 @@ ls -la $D; df -h / | tail -1
 for f in c30M_bin.pcd c30M_bc.pcd c30M_ascii.pcd c30M.las c30M.laz c30M.ply c30M.e57; do log perf $f; node perf_load.js --close --out=$OUT $D/$f > /dev/null 2>&1; done
 log electron las; xvfb-run -a -n 190 node perf_load.js --electron --close --out=$OUT $D/c30M.las > /dev/null 2>&1
 log electron pcd; xvfb-run -a -n 190 node perf_load.js --electron --close --out=$OUT $D/c30M_bin.pcd > /dev/null 2>&1
-log prof las; PAGE=file://$W/proj/dist/index.html node prof_load.js --save=$W/out/prof_c30M_las $D/c30M.las > $W/out/prof_c30M_las.json 2>&1
+log prof las; PAGE=http://127.0.0.1:8740/abs$W/proj/dist/index.html node prof_load.js --save=$W/out/prof_c30M_las $D/c30M.las > $W/out/prof_c30M_las.json 2>&1
 log prof electron; APPDIR=$W/proj xvfb-run -a -n 190 node prof_load.js --electron --save=$W/out/prof_c30M_las_el $D/c30M.las > $W/out/prof_c30M_las_el.json 2>&1
 log cap10M; node perf_load.js --cap=10000000 --stats --out=$OUT $D/c30M.las > /dev/null 2>&1
 log full-stats; node perf_load.js --stats --out=$OUT $D/c30M.las > /dev/null 2>&1

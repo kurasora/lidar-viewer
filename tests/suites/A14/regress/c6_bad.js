@@ -1,5 +1,5 @@
 // C6 悪い地区ツアー（1 回の起動でまとめて調べる）
-//   a) カードの重なり: 全部開く → 途中を閉じる → 詰める・ほかが消えない
+//   a) カード: 0.4.2 からは 1 枚だけ（全部を順に開く → 最後の 1 枚だけ → × で閉じる）
 //   b) 色を「反射」にしたまま、最後のファイルを閉じる／項目のないファイルだけ残す → 的外れな知らせが出ないか
 //   c) Ctrl+C（文字のコピー）・Ctrl+S・Ctrl+A などで、ショートカットが動いてしまわないか
 //   d) 水平補正の計算中にファイルを閉じる → あとで開いた別のファイルに古い補正が残らないか
@@ -11,23 +11,23 @@ const fs = require('fs');
   const { app, p, errors } = await L.launch('c6');
   const R = {};
   const msg = () => p.evaluate(() => document.getElementById('statMsg').textContent);
-  const front = async n => { const st = await p.evaluate(n => ({ top: document.getElementById('pop').dataset.name, tab: !!document.querySelector(`#popStack .ptab[data-name="${n}"]`) }), n); if (st.top === n) return; if (st.tab) await p.click(`#popStack .ptab[data-name="${n}"]`); else await p.click(`[data-open="${n}"]`); await L.sleep(250); };
-  const pops = () => p.evaluate(() => ({ top: document.getElementById('pop').dataset.name, topY: document.getElementById('pop').style.top, tabs: [...document.querySelectorAll('#popStack .ptab')].map(t => t.dataset.name + '@' + t.style.top) }));
-  // ---- a) カード
+  // 0.4.2 からカードは 1 枚だけ（別のカードを開くと前のカードは閉じる。重ねた「つまみ」はない）
+  const front = async n => { const top = await p.evaluate(() => document.getElementById('pop').dataset.name); if (top !== n) await p.click(`[data-open="${n}"]`); await L.sleep(250); };
+  const pops = () => p.evaluate(() => ({ top: document.getElementById('pop').dataset.name || null, hidden: document.getElementById('pop').hidden, tabs: document.querySelectorAll('#popStack .ptab').length }));
+  // ---- a) カード: 順に開くと最後の 1 枚だけが出る。× で閉じると何も出ない（距離の道具が × のあとどうなるかも記録する）
   await L.open(p, [L.F + '/liosam/GlobalMap.pcd']);
-  for (const n of ['open', 'view', 'color', 'display', 'section', 'level']) await p.click(`[data-open="${n}"]`);
-  await p.click('[data-tool="measure"]');
-  R.a_allOpen = await pops();
-  await p.click('[data-open="color"]'); await L.sleep(300);       // 途中（色）を閉じる
-  R.a_afterCloseColor = await pops();
-  await p.click('#popClose'); await L.sleep(300);                  // 一番上（距離）を × で閉じる
-  R.a_afterCloseTop = await pops();
+  for (const n of ['open', 'view', 'color', 'section', 'level', 'settings']) await p.click(`[data-open="${n}"]`);
+  R.a_afterOpenAll = await pops();
+  await p.click('[data-tool="measure"]'); await L.sleep(300);
+  R.a_afterMeasure = await pops();
+  await p.click('#popClose'); await L.sleep(300);
+  R.a_afterClose = await pops();
   R.a_measureToolAfterClose = await p.evaluate(() => window.__pcd.S.tools.measure);
-  await p.click('#popStack .ptab[data-name="open"]'); await L.sleep(300); // 一番下（ファイル）を手前に
-  R.a_afterBringOpen = await pops();
+  await p.click('[data-open="open"]'); await L.sleep(300);
+  R.a_afterOpenAgain = await pops();
   await L.shot(p, 'c6_a_cards');
   // 全部閉じる
-  for (let i = 0; i < 10; i++) { const n = await p.evaluate(() => document.getElementById('pop').dataset.name); if (!n) break; await p.click('#popClose'); await L.sleep(150); }
+  for (let i = 0; i < 10; i++) { const n = await p.evaluate(() => { const e = document.getElementById('pop'); return e.hidden ? null : e.dataset.name; }); if (!n) break; await p.click('#popClose'); await L.sleep(150); }
   L.log({ part: 'a', ...R });
   // ---- b) 色「反射」で閉じる
   await front('color');
@@ -57,10 +57,10 @@ const fs = require('fs');
   const r = await p.evaluate(() => { const b = window.__pcd.renderer.domElement.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
   // 何かの点を選んで、吹き出しの座標を選択してコピー（Ctrl+C）
   let picked = null;
-  for (const [dx, dy] of [[0, 0], [30, 0], [-30, 0], [0, 30], [0, -30], [60, 60]]) { await L.click(p, { x: r.x + dx, y: r.y + dy }); await L.sleep(700); if (!(await p.evaluate(() => document.getElementById('pickInfo').hidden))) { picked = [dx, dy]; break; } }
+  for (const [dx, dy] of [[0, 0], [30, 0], [-30, 0], [0, 30], [0, -30], [60, 60]]) { await L.click(p, { x: r.x + dx, y: r.y + dy }); await L.sleep(700); if (!(await p.evaluate(() => !document.querySelector('.pcall.pin.sel')))) { picked = [dx, dy]; break; } }
   R.c_picked = picked;
   const ceil0 = (await L.state(p)).hideCeil;
-  await p.evaluate(() => { const s = window.getSelection(); s.removeAllRanges(); const rg = document.createRange(); rg.selectNodeContents(document.getElementById('pickBox')); s.addRange(rg); });
+  await p.evaluate(() => { const s = window.getSelection(); s.removeAllRanges(); const rg = document.createRange(); rg.selectNodeContents((document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div'))); s.addRange(rg); });
   await p.keyboard.press('Control+c'); await L.sleep(300);
   R.c_ctrlC = { hideCeilBefore: ceil0, hideCeilAfter: (await L.state(p)).hideCeil, msg: await msg(), clipboard: await app.evaluate(({ clipboard }) => clipboard.readText()).catch(e => 'ERR ' + e.message) };
   const camBefore = await p.evaluate(() => window.__pcd.cam.position.toArray().map(v => +v.toFixed(2)));
@@ -87,7 +87,7 @@ const fs = require('fs');
   L.log({ part: 'd', ...R });
   // ---- f) 画像を保存
   await app.evaluate(({ session }) => { global.__dl = []; session.defaultSession.on('will-download', (e, item) => { global.__dl.push(item.getFilename()); item.setSavePath('/dev/null'); }); });
-  await front('view'); await p.click('#btnShot'); await L.sleep(1500);
+  await front('open'); await p.click('#btnShot'); await L.sleep(1500); // 0.4.1 から「画像を保存」はファイルのカード
   R.f_downloads = await app.evaluate(() => global.__dl);
   R.f_msg = await msg();
   R.errors = errors.filter(e => !/GPU stall|swiftshader|Security Warning|GroupMarkerNotSet/i.test(e));

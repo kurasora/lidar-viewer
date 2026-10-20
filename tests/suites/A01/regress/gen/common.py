@@ -1,5 +1,5 @@
 # 試験用ファイルの生成の共通部品
-#   ・元の点群: 廊下の 5,000 点（/home/claude/samples/src の写し P.npy I.npy RGB.npy）
+#   ・元の点群: 廊下の 5,000 点（tests/sample-generators/samples/src の写し P.npy I.npy RGB.npy。作り物の廊下）
 #   ・各試験（case）は data/<id>.<拡張子> と、正解 data/<id>.expect.npz（P: float64 の座標、C: uint8 の色、F_<名前>: 欄の値）
 #   ・一覧は data/manifest.json（gen_all.py が書く）
 import os, json, numpy as np
@@ -7,9 +7,12 @@ import os, json, numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.dirname(HERE)
 DATA = os.path.join(REG, 'data')
-P0 = np.load(os.path.join(HERE, 'P.npy'))
-I0 = np.load(os.path.join(HERE, 'I.npy')).astype(np.float64)
-RGB0 = np.load(os.path.join(HERE, 'RGB.npy'))
+# 元の点群はリポジトリの作り物の廊下（tests/sample-generators/samples/src）を直接読む（本物の地図から作った前の写しは消した）
+SRCDIR = os.path.normpath(os.path.join(HERE, '../../../../sample-generators/samples/src'))
+if not os.path.isdir(SRCDIR): SRCDIR = os.environ.get('PCDV_ROOT', '/home/claude/pcd-viewer') + '/tests/sample-generators/samples/src'  # 試験の場所に写したとき
+P0 = np.load(os.path.join(SRCDIR, 'P.npy'))
+I0 = np.load(os.path.join(SRCDIR, 'I.npy')).astype(np.float64)
+RGB0 = np.load(os.path.join(SRCDIR, 'RGB.npy'))
 N0 = len(P0)
 UTM = np.array([539000.0, 3836000.0, 30.0])
 

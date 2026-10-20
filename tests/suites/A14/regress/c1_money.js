@@ -24,19 +24,19 @@ const parseBox = s => { const m = s.match(/X\s*(-?[\d.]+)\s*Y\s*(-?[\d.]+)\s*Z\s
   const tgt = truth.box_top_center_M;
   let s = await L.screenOf(p, tgt);
   await L.click(p, s); await L.sleep(1500);
-  R.pickBoxTop_ceilHidden = { screen: s, shown: await p.evaluate(() => document.getElementById('pickBox').innerText), hideCeil: await p.evaluate(() => window.__pcd.S.hideCeil), ceilZ: await p.evaluate(() => window.__pcd.S.ceilZ) };
+  R.pickBoxTop_ceilHidden = { screen: s, shown: await p.evaluate(() => (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).innerText), hideCeil: await p.evaluate(() => window.__pcd.S.hideCeil), ceilZ: await p.evaluate(() => window.__pcd.S.ceilZ) };
   await L.shot(p, 'c1_03_pick_top_ceilhidden');
   // 3b. 天井を表示してから同じ所
   await p.click('#btnCeil'); await L.sleep(500);
   s = await L.screenOf(p, tgt);
   await L.click(p, s); await L.sleep(1500);
-  R.pickBoxTop_ceilShown = { shown: await p.evaluate(() => document.getElementById('pickBox').innerText), hideCeil: await p.evaluate(() => window.__pcd.S.hideCeil) };
+  R.pickBoxTop_ceilShown = { shown: await p.evaluate(() => (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).innerText), hideCeil: await p.evaluate(() => window.__pcd.S.hideCeil) };
   await p.click('#btnCeil'); await L.sleep(300); // 元に戻す（隠す）
   // 4. 斜めから見て箱の上面の中心（天井に遮られない向き）
   await p.click('[data-view="side"]'); await L.sleep(800);
   s = await L.screenOf(p, tgt);
   await L.click(p, s); await L.sleep(1500);
-  R.pickBoxTop_side = { shown: await p.evaluate(() => document.getElementById('pickBox').innerText) };
+  R.pickBoxTop_side = { shown: await p.evaluate(() => (document.querySelector('.pcall.pin.sel .pc-box') || document.createElement('div')).innerText) };
   await L.shot(p, 'c1_04_pick_side');
   R.fileCoordOfBoxTop = tgt;
   R.level = await p.evaluate(() => { const r = window.__pcd.S.levelInfo; return r && { tilt: r.tiltDeg, yaw: r.yawDeg, floorZ: r.floorZ, R: r.R }; });

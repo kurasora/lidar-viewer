@@ -35,7 +35,7 @@ def check(fid, title, fn):
     put(fid, title, st, why)
 
 
-BUG, OK = '再現（直っていない）', '直った'
+BUG, OK, UNK = '再現（直っていない）', '直った', '判定不能'
 
 
 def a001():
@@ -46,13 +46,21 @@ def a001():
 
 
 def a002():
+    # 0.4.1 から: 水平補正をしたあとの吹き出しは「補正後の座標」（地図の近くを中心に回した値 + シフト。B05）と書いて出す。
+    #   元のファイルの座標とは違ってよい。確かめるのは「補正後の座標」と書いてあることと、どの点でも 世界の座標 + 同じずらし で出ていること（混ざっていない）
     d = browser('display/utm_room_f8')['result']
-    p = d['picks'][0]
-    box = re.findall(r'[XYZ]([-0-9.]+)', p['box'].replace(' ', ''))
-    shown = [float(v) for v in box[:3]]
-    orig = [p['hitLocal'][k] + d['offset'][k] for k in range(3)]
-    err = max(abs(shown[k] - orig[k]) for k in range(3))
-    return (BUG if err > 0.01 else OK), f"吹き出し {shown} / 元の座標 {[round(v, 3) for v in orig]}（最大の差 {err:.3f} m）"
+    diffs, label = [], ''
+    for i, p in enumerate(d['picks']):
+        # 前の印の近くをクリックすると、新しい印ではなく前の印が選ばれる（#番号が違う）。その回は比べない
+        if not p.get('hitWorld') or f'#{i + 1}' not in p['box']: continue
+        box = re.findall(r'[XYZxyz]([-0-9.]+)', p['box'].replace(' ', ''))
+        shown = [float(v) for v in box[:3]]
+        diffs.append([shown[k] - p['hitWorld'][k] for k in range(3)])
+        label = label or ('補正後の座標' if '補正後の座標' in p['box'] else '補正前の座標' if '補正前の座標' in p['box'] else '')
+    if len(diffs) < 2: return UNK, f'選べた点が {len(diffs)} 個'
+    spread = max(max(x[k] for x in diffs) - min(x[k] for x in diffs) for k in range(3))
+    ok = spread <= 0.002 and label == '補正後の座標'
+    return (OK if ok else BUG), f"表示の種類「{label}」、点ごとの「表示 − 世界の座標」のばらつき {spread:.4f} m（ずらし {[round(v, 3) for v in diffs[0]]}）"
 
 
 def a003():
@@ -70,10 +78,13 @@ def a004():
 
 
 def a005():
+    # 0.4.1 から（B05）: 地図座標の点群は「シフトの点（地図の近く）のまわりに回した値」で床の高さを出し、カードにそう書く。
+    #   ファイルの床の高さ（約 30 m）とは傾きのぶん違ってよい（tests/reports3/R16.md）。確かめるのは、その説明が出ていること
     d = browser('display/utm_room_f8')['result']
     m = re.search(r'床の高さ ([-0-9.]+) m', d['levelResult'])
     z = float(m.group(1))
-    return (BUG if abs(z - 30.0) > 0.5 else OK), f"床の高さの表示 {z} m（ファイルの床は約 30 m）"
+    told = '地図座標の近くを中心に回した値' in d['levelResult']
+    return (OK if told else BUG), f"床の高さの表示 {z} m（ファイルの床は約 30 m）、カードの説明「地図座標の近くを中心に回した値」{'あり' if told else 'なし'}"
 
 
 def a006():
@@ -100,21 +111,28 @@ def a009():
     rows_ = {r['file']: r for r in jl('sweep_raw.jsonl')}
     chk = json.load(open(os.path.join(O, 'sweep_check.json')))
     up = json.load(open(os.path.join(O, 'level_check.json')))
-    e40 = chk['sw40']['up_err']; eu = up['upside']['up_err']
-    bug = (e40 > 5 and 'error' not in rows_['sw40.pcd']) or eu > 90
-    return (BUG if bug else OK), f"傾き 40°: 上向きの誤差 {e40:.1f}°（回転を当てた）、上下逆: {eu:.1f}°"
+    # 0.4.1 から: 傾きが大きすぎるときは回転を当てずに理由を言って断る（error）。断ったなら誤った回転は当てていない
+    s40 = chk['sw40']; eu = up['upside'].get('up_err', 0)
+    e40 = s40.get('up_err')
+    bug = (e40 is not None and e40 > 5 and 'error' not in rows_['sw40.pcd']) or eu > 90
+    d40 = f"断った（{s40['error']}）" if 'error' in s40 else f"上向きの誤差 {e40:.1f}°（回転を当てた）"
+    return (BUG if bug else OK), f"傾き 40°: {d40}、上下逆: {eu:.1f}°"
 
 
 def a010():
+    # 部品（analyze）が断るのは仕様。画面で赤い誤りにならないこと（level/sparse030_auto）を見る（tests/reports3/R16.md）
     rows_ = {r['file']: r for r in jl('level_raw.jsonl')}
     e = rows_['sparse030.pcd'].get('error')
-    return (BUG if e else OK), f"点の少ない部屋の自動補正: {e}（画面では赤い知らせ）"
+    b = browser('level/sparse030_auto')
+    if not b or 'result' not in b or not isinstance(b['result'], dict) or 'red' not in b['result']: return UNK, f'画面の試験 level/sparse030_auto の結果なし（部品の答え: {e}）'
+    r = b['result']
+    return (BUG if r['red'] else OK), f"点の少ない部屋: 知らせ「{r['msg']}」（赤 {r['red']}）、補正のカード「{r['levelResult'][:60]}」"
 
 
 def a011():
     t = txt('pickfar.txt')
     sec = t.split('== room_far.pcd')[1]
-    ms = [int(x) for x in re.findall(r'\) (\d+) ms', sec)]
+    ms = [int(x) for x in re.findall(r'[)）] (\d+) ms', sec)]
     bad = 'maximum size' in sec or max(ms) > 3000
     return (BUG if bad else OK), f"遠い外れ値のある点群で、何もない所の選択 {ms} ms{'、Set の上限で失敗' if 'maximum size' in sec else ''}"
 

@@ -1,6 +1,7 @@
+// 0.4.1 から: 画面は全部の点を持たない（描いたら捨てる）。全部の座標・色は別スレッドから __pcd.call({ type: 'buffers', id }) で借りる
 // 画面（Chromium で dist/index.html）に試験のファイルを開かせ、結果（座標・色・欄・知らせ）を書き出す
 //   使い方: node bcheck.js <manifest.json> <出力フォルダ> [id の正規表現] [--only-browser]
-//   環境変数: PAGE（既定 file:///home/claude/pcd-viewer/dist/index.html）、WAIT（1 件の待ち上限 ms、既定 90000）
+//   環境変数: PAGE（既定 http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html）、WAIT（1 件の待ち上限 ms、既定 90000）
 //   ・試験ごとに、前に開いたファイル・軌跡をすべて閉じてから開く（S.offset も消える）
 //   ・cap のある試験は、capSel に試験用の選択肢を足して選ぶ（maxPoints() の道筋はそのまま）
 //   出力: <出力フォルダ>/<id>.json（node_check.mjs と同じ形 + msg, msgIsError, files[], errors[]）
@@ -9,7 +10,7 @@ const fs = require('fs'), path = require('path');
 const [manifestPath, outDir, filt, ...rest] = process.argv.slice(2);
 const DATA = path.dirname(manifestPath);
 const cases = JSON.parse(fs.readFileSync(manifestPath, 'utf8')).filter(c => !filt || new RegExp(filt).test(c.id)).filter(c => !c.extra || !c.extra.no_browser);
-const PAGE = process.env.PAGE || 'file:///home/claude/pcd-viewer/dist/index.html';
+const PAGE = process.env.PAGE || 'http://127.0.0.1:8740/abs/home/claude/pcd-viewer/dist/index.html';
 const LIMIT = Number(process.env.WAIT || 90000);
 
 async function open(b) {
@@ -69,16 +70,18 @@ async function settle(p, t0) {
       const b64 = a => { let s = ''; const u = new Uint8Array(a.buffer, a.byteOffset, a.byteLength); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
       const files = [];
       for (const f of S.files) {
+        // 全部の座標・色は別スレッドから借りる（画面は描いたら捨てる）
+        const bf = await window.__pcd.call({ type: 'buffers', id: f.id });
         const P = new Float64Array(3 * f.n);
-        for (let i = 0; i < 3 * f.n; i++) P[i] = f.positions[i] + o[i % 3];
-        const rgbAttr = f.geom.getAttribute('rgbc');
+        for (let i = 0; i < 3 * f.n; i++) P[i] = bf.positions[i] + o[i % 3];
+        const rgbAttr = bf.rgb ? { array: bf.rgb } : null;
         const F = {};
         for (const nm of f.header.fields) {
           if (nm === 'x' || nm === 'y' || nm === 'z' || nm === 'rgb') continue;
           try { const m = await window.__pcd.call({ type: 'field', id: f.id, name: nm }); F[nm] = b64(new Float32Array(m.values)); } catch (e) { F[nm] = null; }
         }
         files.push({ name: f.name, n: f.n, total: f.total, sampled: f.sampled, skipped: f.skipped, format: f.header.data, note: f.header.note, fields: f.header.fields,
-          rgb: !!f.hasRgb, P: b64(P), C: rgbAttr ? b64(rgbAttr.array) : null, F, bboxMin: f.bbox.min, bboxMax: f.bbox.max });
+          rgb: !!f.hasRgb, FB: f.fieldBase || {}, P: b64(P), C: rgbAttr ? b64(rgbAttr.array) : null, F, bboxMin: f.bbox.min, bboxMax: f.bbox.max });
       }
       const trajs = S.trajs.map(t => ({ name: t.name, count: t.count, length: t.length, duration: t.duration, topic: t.topic, P: b64(t.P) }));
       const el = document.getElementById('statMsg');
@@ -87,7 +90,7 @@ async function settle(p, t0) {
     const f0 = r.files[0];
     const res = { id: c.id, ms: Date.now() - t0, timedOut, msg: (r.msgs || []).filter(m => !/^次に開くファイル|水平補正/.test(m)).join(' → ') || r.msg, msgs: r.msgs, msgIsError: r.msgIsError, offset: r.offset, files: r.files, trajs: r.trajs, errors: p.__errors.slice(0, 10) };
     if (c.kind === 'traj') Object.assign(res, { ok: r.trajs.length > 0, n: r.trajs.length ? r.trajs[0].count : undefined, error: r.trajs.length ? null : r.msg });
-    else if (f0) Object.assign(res, { ok: true, n: f0.n, total: f0.total, skipped: f0.skipped, sampled: f0.sampled, fields: f0.fields, rgb: f0.rgb, format: f0.format, note: f0.note, P: f0.P, C: f0.C, F: f0.F });
+    else if (f0) Object.assign(res, { ok: true, n: f0.n, total: f0.total, skipped: f0.skipped, sampled: f0.sampled, fields: f0.fields, rgb: f0.rgb, format: f0.format, note: f0.note, P: f0.P, C: f0.C, F: f0.F, FB: f0.FB });
     else Object.assign(res, { ok: false, error: r.msg });
     fs.writeFileSync(out, JSON.stringify(res));
     done++;

@@ -1,3 +1,4 @@
+// 0.4.1 から: 画面には全部の点を持たない（f.positions はなく、先頭 20 万点の標本 f.sample だけ。点は読み込み時に混ぜてあるので無作為な標本）
 // C5 複数ファイルの重ね合わせとグローバルシフト
 //   (a) ローカル座標の地図 → UTM 風の地図 の順に開く: 2 つ目の座標の細かさ（float32 の量子化）を調べる
 //   (b) UTM 風の地図 → ローカル座標の地図 の順
@@ -9,7 +10,7 @@ const D = L.F + '/shift';
 // 開いたファイルの点（オフセットを足した値）の「細かさ」: 値を並べたときの隣との差の最小（0 を除く）と、異なる値の数
 async function grain(p, idx) {
   return p.evaluate(i => {
-    const S = window.__pcd.S, f = S.files[i], o = S.offset || [0, 0, 0], P = f.positions;
+    const S = window.__pcd.S, f = S.files[i], o = S.offset || [0, 0, 0], P = f.sample;
     const m = Math.min(f.n, 200000), out = [];
     for (let k = 0; k < 3; k++) {
       const a = new Float64Array(m); for (let j = 0; j < m; j++) a[j] = P[3 * j + k];

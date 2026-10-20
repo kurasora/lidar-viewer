@@ -8,7 +8,9 @@ import sys, os, re, json, glob, hashlib, subprocess, shutil, plistlib, struct, t
 HERE = os.path.dirname(os.path.abspath(__file__))
 W = os.path.dirname(HERE)
 PYLIB = os.path.join(W, 'pylib')
-SZ = os.environ.get('SZ', '/home/claude/pcd-viewer/node_modules/7zip-bin/linux/x64/7za')
+# 7za: 対象のプロジェクトの node_modules（electron-builder の古い version が入れていた）か、A10 の道具（npm install --prefix $W/tools 7zip-bin）
+SZ = os.environ.get('SZ') or next((p for p in ('/home/claude/pcd-viewer/node_modules/7zip-bin/linux/x64/7za',
+      os.path.join(os.environ.get('W', ''), 'tools/node_modules/7zip-bin/linux/x64/7za')) if os.path.exists(p)), '7za')
 ELECTRON_ICON_256 = '6f0f28383bb8f3cb8f4d4a673115a4fee2643e16bbd3b208fb79aa47f922b34d'  # Electron 既定のアイコン（256px の画素の sha256）
 ELECTRON_UUIDS = {'x86_64': '4C4C44C6-5555-3144-A10F-9FB886F07EF0', 'arm64': '4C4C4446-5555-3144-A117-AEB167531362'}  # Electron 34.5.8 の主の実行ファイル
 
@@ -43,7 +45,11 @@ ART = {k: find(p) for k, p in {
 
 # ---------------------------------------------------------------- R01 配布物の一覧
 missing = [k for k, v in ART.items() if not v]
-rec('R01', '配布物 7 つがそろう', 'PASS' if not missing else 'FAIL', {'missing': missing, 'sizes_MB': {k: round(os.path.getsize(v) / 1e6, 1) for k, v in ART.items() if v}})
+# Mac の zip は GitHub Actions（mac の機械）で作るので、ここ（Linux）で作れないのは当然。欠けていても参考（INFO）にする
+mac_missing = [k for k in missing if k.startswith('zip_mac')]
+other_missing = [k for k in missing if k not in mac_missing]
+rec('R01', '配布物 5 つ（Windows・Linux）がそろう', 'PASS' if not other_missing else 'FAIL', {'missing': other_missing, 'sizes_MB': {k: round(os.path.getsize(v) / 1e6, 1) for k, v in ART.items() if v}})
+if mac_missing: rec('R01m', 'Mac の zip（GitHub Actions で作る）', 'INFO', {'missing': mac_missing})
 
 # ---------------------------------------------------------------- app.asar を各配布物から取り出して比べる
 asars = {}
@@ -184,7 +190,7 @@ for k in ('deb_amd64', 'deb_arm64'):
     dk = dict(re.findall(r'^([A-Za-z\[\]-]+)=(.*)$', dtext, re.M))
     probs = []
     if dk.get('Name') != PRODUCT: probs.append('Name=' + str(dk.get('Name')))
-    if dk.get('StartupWMClass') != PRODUCT: probs.append('StartupWMClass=' + str(dk.get('StartupWMClass')))
+    if dk.get('StartupWMClass') != 'lidar-viewer': probs.append('StartupWMClass=' + str(dk.get('StartupWMClass')))  # 窓の WM_CLASS（executableName と同じ lidar-viewer）と合わせる
     if 'MimeType' not in dk: probs.append('MimeType なし（点群ファイルの関連付けなし）')
     rec('R09b', f'{k}: .desktop（Name・StartupWMClass・関連付け）', 'PASS' if not probs else 'WARN', {'problems': probs, 'Exec': dk.get('Exec')}, 'A10-010')
     if re.search(r'PCD ?Viewer|pcd-viewer', dtext + json.dumps(f, ensure_ascii=False), re.I):
