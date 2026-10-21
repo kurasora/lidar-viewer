@@ -484,3 +484,5 @@ input[type=range]::-webkit-slider-runnable-track { box-shadow: inset 0 0 0 1px c
   border: 1.5px solid color-mix(in srgb, var(--fg) 35%, transparent); background: transparent }
 .pop .files input[type=checkbox]:checked { background: var(--accent); border-color: var(--accent) }
 .pop .files input[type=checkbox]:checked::after { content: ""; width: 7px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: translateY(-1px) rotate(-45deg) }
+/* T2: カードを開いている間は、下の操作の案内をカードの右側の空いた所に寄せる（900×600 の窓で重なっていた。A06-010） */
+.app:has(.pop:not([hidden])) .navhint { left: 346px; right: 12px; transform: none; margin-inline: auto; width: fit-content; max-width: none }

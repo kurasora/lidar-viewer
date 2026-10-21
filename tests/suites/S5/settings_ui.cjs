@@ -153,7 +153,7 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   // ================= マウス
   const canvasC = await $v(w, () => { const r = window.__pcd.renderer.domElement.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
   // ドラッグ・ホイールの場所: 吹き出しなどが重なっていない、点群の画面そのものの所（視点が変わるたびに探し直す）
-  const freeSpot = () => $v(w, () => { const c = window.__pcd.renderer.domElement, r = c.getBoundingClientRect(); for (let gy = 0.15; gy < 0.85; gy += 0.05) for (let gx = 0.5; gx < 0.92; gx += 0.04) { const x = r.left + r.width * gx, y = r.top + r.height * gy; let ok = true; for (let i = 0; i <= 8 && ok; i++) ok = document.elementFromPoint(x + i * 12, y + i * 4) === c; if (ok) return { x, y }; } return null; });
+  const freeSpot = () => $v(w, () => { const c = window.__pcd.renderer.domElement, r = c.getBoundingClientRect(); for (let gy = 0.15; gy < 0.85; gy += 0.05) for (let gx = 0.5; gx < 0.92; gx += 0.04) { const x = Math.round(r.left + r.width * gx), y = Math.round(r.top + r.height * gy); /* 操作は整数の画素で届くので、整数の所で確かめる（端数だと吹き出しの縁に掛かることがあった） */ let ok = true; for (let i = 0; i <= 8 && ok; i++) ok = document.elementFromPoint(x + i * 12, y + i * 4) === c; if (ok) return { x, y }; } return null; });
   const drag = async (button) => { const f = await freeSpot(); canvasC.x = f.x - 150; canvasC.y = f.y + 150; const d0 = await camDir(w), t0 = await $v(w, () => window.__pcd.controlsTarget()); await w.mouse.move(canvasC.x + 150, canvasC.y - 150); await w.mouse.down({ button }); for (let i = 1; i <= 8; i++) await w.mouse.move(canvasC.x + 150 + i * 12, canvasC.y - 150 + i * 4); await w.mouse.up({ button }); await wait(300); const d1 = await camDir(w), t1 = await $v(w, () => window.__pcd.controlsTarget()); return { rot: Math.hypot(...d0.map((v, i) => v - d1[i])), pan: Math.hypot(...t0.map((v, i) => v - t1[i])) }; };
   let a = await drag('left'), b = await drag('right');
   ok('入れ替えなし: 左ドラッグで回り、右ドラッグで平行に動く', a.rot > 0.05 && a.pan < 1e-6 && b.pan > 1e-4 && b.rot < 1e-3, JSON.stringify({ a, b }));
@@ -162,7 +162,7 @@ const camDist = w => w.evaluate(() => { const c = window.__pcd.cam.position.toAr
   ok('入れ替え: 左ドラッグで平行に動き、右ドラッグで回る', a.pan > 1e-4 && a.rot < 1e-3 && b.rot > 0.05, JSON.stringify({ a, b }));
   ok('案内の文も入れ替わる', /左ドラッグ: 平行に動かす/.test(await $v(w, () => document.getElementById('navHint').textContent)));
   await w.click('label:has(#swapMouse)');
-  const wheel = async () => { const f = await freeSpot(); const d0 = await camDist(w); await w.mouse.move(f.x, f.y); await w.mouse.wheel(0, -200); await wait(400); return (await camDist(w)) / d0; };
+  const wheel = async () => { const f = await freeSpot(); const d0 = await camDist(w); await w.mouse.move(f.x, f.y); await w.mouse.wheel(0, -200); for (let i = 0; i < 15; i++) { await wait(100); if (Math.abs((await camDist(w)) / d0 - 1) > 1e-6) break; } await wait(200); return (await camDist(w)) / d0; };
   const rNorm = await wheel();
   ok('ホイールを奥へ回すと近づく', rNorm < 0.99, rNorm.toFixed(3));
   await w.click('label:has(#wheelRev)');

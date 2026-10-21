@@ -685,7 +685,7 @@ async function applyColor(resetRange = true) {
   $('rowCmap').hidden = !(mode === 'height' || mode === 'field');
   $('rangeBox').hidden = !(mode === 'height' || (mode === 'field' && !(S.field && fieldSummary(S.field).categorical)));
   if (mode === 'field') {
-    if (!names.length) { status('この点群には色分けできる項目がありません'); $('colorMode').value = 'height'; return applyColor(); }
+    if (!names.length) { status(S.files.length ? 'この点群には色分けできる項目がありません' : '色分けする点群がありません'); $('colorMode').value = 'height'; return applyColor(); }
     S.field = $('fieldSel').value || names[0];
     const sum = fieldSummary(S.field);
     $('rangeBox').hidden = sum.categorical;
@@ -756,9 +756,10 @@ function refreshFieldSelect() {
   const names = fieldNames();
   const sel = $('fieldSel'), cur = sel.value;
   sel.innerHTML = names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  // 選び直していなければ、ボタンの名前（「反射」）どおり反射の強さ（intensity）を先に。なければ label
   if (names.includes(cur)) sel.value = cur;
-  else if (names.includes('label')) sel.value = 'label';
   else if (names.includes('intensity')) sel.value = 'intensity';
+  else if (names.includes('label')) sel.value = 'label';
 }
 
 // ------------------------------------------------------------------ ファイルの読み込み
@@ -2219,6 +2220,49 @@ function status(text, isError = false, soft = false) {
   clearTimeout(msgTimer);
   if (text && !isError) msgTimer = setTimeout(() => { el.textContent = ''; el.hidden = true; }, 8000);
 }
+// 右上の表示（と下の操作の案内）の下地の箱を、文字の幅にぴったり合わせる。
+//   折り返した文字（長い英語・長い知らせ）は、CSS だけだと箱が最大幅のまま残り、文字より横に長くなる。
+//   文字が変わるたび（訳した後も含む）に、行の幅のいちばん広いところを測って箱の幅にする
+function fitHud() {
+  const span = el => {
+    const rg = document.createRange(); rg.selectNodeContents(el);
+    let lo = Infinity, hi = -Infinity;
+    for (const r of rg.getClientRects()) if (r.width > 0) { lo = Math.min(lo, r.left); hi = Math.max(hi, r.right); }
+    return hi > lo ? hi - lo : 0;
+  };
+  for (const el of document.querySelectorAll('.hud > span, #navHint')) {
+    el.style.width = '';
+    if (!el.textContent || el.hidden) continue;
+    const cs = getComputedStyle(el), pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    const h0 = el.getBoundingClientRect().height;
+    // 幅を詰めると折り返しの位置が変わり、行がさらに短くなることがある。行の数（高さ）が変わらない範囲で数回詰める
+    for (let k = 0; k < 4; k++) {
+      const cur = el.getBoundingClientRect().width, t = span(el);
+      if (!t) break;
+      const w = Math.ceil(t + pad + 1);
+      if (!(w < cur - 1)) break;
+      el.style.width = w + 'px';
+      if (el.getBoundingClientRect().height > h0 + 1) {
+        // 詰めすぎて行が増えた: 行の数が変わらない一番狭い幅を探す（その幅で並べ直して、もう一度測る）
+        let lo = w, hi = Math.ceil(cur);
+        while (hi - lo > 1) { const mid = (lo + hi) >> 1; el.style.width = mid + 'px'; if (el.getBoundingClientRect().height > h0 + 1) lo = mid; else hi = mid; }
+        el.style.width = hi + 'px';
+      }
+    }
+  }
+}
+{
+  let fitReq = 0;
+  const fitSoon = () => { if (!fitReq) fitReq = requestAnimationFrame(() => { fitReq = 0; fitHud(); }); };
+  new MutationObserver(fitSoon).observe(document.querySelector('.hud'), { childList: true, characterData: true, subtree: true });
+  // 下の操作の案内も同じ（出したとき・訳したとき・カードの開け閉めで使える幅が変わったとき）
+  new MutationObserver(fitSoon).observe(document.getElementById('navHint'), { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(fitSoon).observe(document.getElementById('pop'), { attributes: true, attributeFilter: ['hidden'] });
+  window.addEventListener('resize', fitSoon);
+  // 文字が後から変わって（訳など）折り返しが変わったときも、大きさの変化で気づく
+  if (window.ResizeObserver) { const ro = new ResizeObserver(fitSoon); for (const el of document.querySelectorAll('.hud > span, #navHint')) ro.observe(el); }
+  if (document.fonts) document.fonts.ready.then(fitSoon);
+}
 function showProgress(text, p, phase) {
   $('progress').hidden = false;
   if (text) $('progressText').textContent = text;
@@ -2286,6 +2330,9 @@ async function pickFiles(types, allName, input, kind) {
     if (files.length) { removePop('open'); enqueue(files, kind); } // 選んだらファイルのカードは閉じる
   } catch (err) {
     if (err && err.name === 'AbortError') return; // 選ばずに閉じた
+    // 選んだファイルを読めなかった: 理由を出してから、ふつうのファイルを選ぶ画面に切り替える
+    //（この画面はブラウザの決まりで出せないことがある。そのときも何が起きたかは分かるように）
+    status(`選んだファイルを読めませんでした（${err && err.name || 'Error'}）。もう一度「開く」から選んでください`, true);
     input.click();
   }
 }
@@ -2605,6 +2652,27 @@ applySettings();
 for (const el of document.querySelectorAll('[title]')) el.removeAttribute('title');
 new MutationObserver(ms => { for (const m of ms) if (m.type === 'attributes' && m.target.hasAttribute('title')) m.target.removeAttribute('title'); else for (const n of m.addedNodes || []) if (n.nodeType === 1) { if (n.hasAttribute('title')) n.removeAttribute('title'); for (const c of n.querySelectorAll('[title]')) c.removeAttribute('title'); } })
   .observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['title'] });
+// 点群の描き方（シェーダー）と印の描き方を、起動のときに先に作っておく。GPU のない PC（ソフトウェアの描画）では
+// 作るのに数秒かかり、最初のファイルを開いた直後に画面が数秒止まっていた（A09）。起動の途中（まだ操作できない間）に済ませる。
+// GPU のある PC では一瞬で終わる。作った物は使い回されるので、入れ物は捨てない
+const warmShader = { mat: null };
+try {
+  const rt = new THREE.WebGLRenderTarget(1, 1), prev = renderer.getRenderTarget();
+  const sc2 = new THREE.Scene(), made = [];
+  warmShader.mat = makeMaterial('#ffffff');
+  const g0 = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3)); made.push(g0);
+  const pts = new THREE.Points(g0, warmShader.mat); pts.frustumCulled = false; sc2.add(pts);
+  // 印（回転の中心の線と輪・選んだ点の印など）は隠れていて作られないので、同じ材質の小さな身代わりを別の場面に置いて描く（印そのものは触らない）
+  scene.traverse(o => {
+    if (!o.material || !(o.isLine || o.isPoints || o.isMesh || o.isSprite)) return;
+    const g = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0.001, 0, 0, 0, 0.001, 0], 3));
+    if (o.isMesh) g.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, 1, 0, 0, 1], 2));
+    const k = o.isLineLoop ? THREE.LineLoop : o.isLineSegments ? THREE.LineSegments : o.isLine ? THREE.Line : o.isPoints ? THREE.Points : THREE.Mesh;
+    const d = o.isSprite ? new THREE.Sprite(o.material) : new k(g, o.material);
+    d.frustumCulled = false; sc2.add(d); made.push(g);
+  });
+  try { renderer.setRenderTarget(rt); renderer.render(sc2, cam); } finally { renderer.setRenderTarget(prev); rt.dispose(); for (const g of made) g.dispose(); }
+} catch (e) { /* 先に作れなくても、開いたときに作る */ }
 window.__pcd = { S, enqueue, setView, pickAt, call, world, renderer, shotCanvas, get cam() { return cam; }, controlsTarget: () => controls.target.toArray() }; // 動作確認用
 // OS から渡されたファイル（関連付け・ダブルクリック・コマンドライン・「このアプリで開く」）を開く（アプリ version だけ）。
 // 主プロセスが隠れた入力欄 #pcdOsOpen にファイルを入れてから知らせてくる

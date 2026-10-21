@@ -145,9 +145,11 @@ def gen_images():
     case('pbm_p1_nospace', ['img/p1_nospace.pbm'], img_expect(colors=((0,) * 3, (255,) * 3, (0,) * 3, (255,) * 3)), BW, 'PBM（P1、数字の間に空白なし。仕様で許される書き方）')
     # ICO / CUR / ICNS
     sq = np.kron(a[:, :12], np.ones((1, 1, 1), np.uint8))
-    im.save(path('img/png.ico'), sizes=[(16, 16)])
+    # 新しい Pillow は画像より大きい大きさを書かない（16×12 の画像に 16×16 を指定すると、中身のない 6 バイトの ICO になっていた）。正方形にしてから書く
+    ico_im = im.resize((16, 16), Image.NEAREST)
+    ico_im.save(path('img/png.ico'), sizes=[(16, 16)])
     try:
-        im.save(path('img/bmp.ico'), sizes=[(16, 16)], bitmap_format='bmp')
+        ico_im.save(path('img/bmp.ico'), sizes=[(16, 16)], bitmap_format='bmp')
         case('ico_bmp', ['img/bmp.ico'], {'n': [256, 256], 'rgb': True}, B, 'ICO（中身が BMP）')
     except Exception as ex:
         print('ico bmp skip', ex)

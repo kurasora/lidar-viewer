@@ -169,6 +169,16 @@ function lockDownSession() {
     perm === 'fileSystem' && !!d && d.fileAccessType === 'readable' && !d.isDirectory &&
     (wc ? isAppFile(wc.getURL()) : origin === 'file:///'));
   ses.setDevicePermissionHandler(() => false);
+  // ファイルを開く画面で、Chromium が「守る場所」としている所（Linux の ~/.config、Windows の AppData など）のファイルを選ぶと、
+  // 何も言わずに止まり（選ぶ画面の結果が返らない）、ファイルが開かずカードもそのまま残っていた。
+  // 利用者が自分で選んだファイルを読むだけなので、アプリの画面から・ファイル（フォルダでない）のときは許す
+  ses.on('file-system-access-restricted', (e, d, cb) => {
+    const fromApp = !!d && (d.origin === 'file://' || d.origin === 'file:///' || /^file:/.test(String(d.origin || '')));
+    cb(fromApp && !d.isDirectory ? 'allow' : 'deny');
+  });
+  // スペルチェックの辞書を Google から取りに行かない（入力欄はファイル名・数だけ。R15-002 の webPreferences だけでは止まらなかった）
+  ses.setSpellCheckerEnabled(false);
+  if (process.platform !== 'darwin') ses.setSpellCheckerLanguages([]);
   ses.webRequest.onBeforeRequest((d, cb) => {
     const s = (d.url.match(/^([a-z][a-z0-9+.-]*):/i) || [])[1];
     const scheme = s ? s.toLowerCase() : '';
@@ -226,8 +236,21 @@ app.commandLine.appendSwitch('enable-unsafe-swiftshader');
 // 試験用: 同じパソコンで 2 つ目を起動するときは、設定の置き場所を分ける
 if (process.env.PCDV_USERDATA) app.setPath('userData', process.env.PCDV_USERDATA);
 
-// 2 回目の起動では新しい窓を開かず、すでに開いている窓を前に出す
-if (!app.requestSingleInstanceLock()) {
+// 設定の置き場所が作れない・書けない（読み取り専用・権限なし）と、二重起動の確認も失敗して何も出さずに終わっていた（A10-019）。
+// そのときは理由を出してから終える（画面の言語はまだ分からないので、日本語と英語の両方で）
+let udError = null;
+try {
+  const ud = app.getPath('userData');
+  fs.mkdirSync(ud, { recursive: true });
+  fs.accessSync(ud, fs.constants.W_OK);
+} catch (e) { udError = e; }
+if (udError) {
+  app.whenReady().then(() => {
+    dialog.showErrorBox('LiDAR Viewer', `設定を置く場所を作れないため、起動できません。\n${app.getPath('userData')}\n（${udError.code || udError.message}）\nこの場所に書き込めるか確かめてください。\n\nLiDAR Viewer cannot start because it cannot create its settings folder. Check that the folder above is writable.`);
+    app.quit();
+  });
+} else if (!app.requestSingleInstanceLock()) {
+  // 2 回目の起動では新しい窓を開かず、すでに開いている窓を前に出す
   app.quit();
 } else {
   app.on('second-instance', (e, argv, cwd) => {

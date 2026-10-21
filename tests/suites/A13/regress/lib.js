@@ -225,14 +225,18 @@ async function sortedAxes(frame, id, maxN = 200000) {
 
 async function closeAll(frame, keepIds = []) {
   await frame.evaluate((keep) => {
-    for (const li of [...document.querySelectorAll('#fileList li')]) { if (keep.includes(+li.dataset.id)) continue; const x = li.querySelector('[data-act=remove]'); if (x) x.click(); }
-    for (const x of [...document.querySelectorAll('#trajList [data-act=tremove]')]) x.click();
+    // 1 つ閉じると一覧が作り直される（前に取った要素は外れる）ので、毎回取り直して、閉じる物がなくなるまで続ける
+    //（以前は 2 つ目以降が残り、そのシフトが次のファイルに使われていた）
+    const next = () => [...document.querySelectorAll('#fileList li')].find(li => !keep.includes(+li.dataset.id) && li.querySelector('[data-act=remove]'));
+    for (let i = 0, li; i < 200 && (li = next()); i++) li.querySelector('[data-act=remove]').click();
+    for (let i = 0, x; i < 200 && (x = document.querySelector('#trajList [data-act=tremove]')); i++) x.click();
     document.getElementById('statMsg').textContent = '';
   }, keepIds);
 }
 async function closeFilesExcept(frame, keepIds) {
   await frame.evaluate((keep) => {
-    for (const li of [...document.querySelectorAll('#fileList li')]) { if (keep.includes(+li.dataset.id)) continue; const x = li.querySelector('[data-act=remove]'); if (x) x.click(); }
+    const next = () => [...document.querySelectorAll('#fileList li')].find(li => !keep.includes(+li.dataset.id) && li.querySelector('[data-act=remove]'));
+    for (let i = 0, li; i < 200 && (li = next()); i++) li.querySelector('[data-act=remove]').click();
     document.getElementById('statMsg').textContent = '';
   }, keepIds);
 }

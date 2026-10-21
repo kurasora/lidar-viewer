@@ -45,7 +45,8 @@ export function addPixels(sink, w, h, rgba, scale = 1) {
 }
 
 async function browserDecode(bytes, type) {
-  const bmp = await createImageBitmap(new Blob([bytes], { type }));
+  // 色の管理（PNG の gAMA・ICC の色空間）は掛けず、ファイルに書かれた画素の値をそのまま使う（点の色・高さの値として使うため。A02 png_gamma）
+  const bmp = await createImageBitmap(new Blob([bytes], { type }), { colorSpaceConversion: 'none' });
   const cv = new OffscreenCanvas(bmp.width, bmp.height);
   const g = cv.getContext('2d');
   g.drawImage(bmp, 0, 0);
@@ -184,8 +185,34 @@ async function icns(b) {
   return browserDecode(best, 'image/png');
 }
 
+// BMP の 32 bit（BI_RGB）: 4 バイト目は規格では「使わない」だが、多くの道具（Pillow・GIMP など）はアルファを書く。
+//   ブラウザは無視して全部を不透明にするので、4 バイト目が全部 0 でないときはアルファとして読む（A02 bmp_32）。それ以外の BMP はブラウザに任せる
+function bmp32(b) {
+  if (b.length < 54 || b[0] !== 0x42 || b[1] !== 0x4d) return null;
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  const off = dv.getUint32(10, true), hs = dv.getUint32(14, true);
+  if (hs < 40) return null;
+  const w = dv.getInt32(18, true), hRaw = dv.getInt32(22, true), bpp = dv.getUint16(28, true), comp = dv.getUint32(30, true);
+  if (bpp !== 32 || comp !== 0 || w <= 0 || hRaw === 0) return null;
+  const h = Math.abs(hRaw), topDown = hRaw < 0;
+  if (w * h > 1e8 || off + w * h * 4 > b.length) return null; // 大きすぎる・切れている物はブラウザに任せる（そちらで知らせる）
+  let anyAlpha = false;
+  for (let i = 0; i < w * h && !anyAlpha; i++) if (b[off + 4 * i + 3]) anyAlpha = true;
+  if (!anyAlpha) return null;
+  const data = new Uint8ClampedArray(w * h * 4);
+  for (let r = 0; r < h; r++) {
+    const src = off + (topDown ? r : h - 1 - r) * w * 4;
+    for (let c = 0; c < w; c++) {
+      const s = src + 4 * c, d = 4 * (r * w + c);
+      data[d] = b[s + 2]; data[d + 1] = b[s + 1]; data[d + 2] = b[s]; data[d + 3] = b[s + 3];
+    }
+  }
+  return { w, h, data };
+}
+
 // 画像のバイト列を画素（RGBA）にする（メッシュのテクスチャでも使う）
 export async function decodeImage(b, ext) {
+  if (ext === 'bmp') { const r = bmp32(b); if (r) return r; }
   if (ext === 'pbm' || ext === 'pgm' || ext === 'ppm' || ext === 'pnm') return pnm(b);
   if (ext === 'tga') return tga(b);
   if (ext === 'xbm') return xbm(decodeLatin(b));
@@ -195,7 +222,44 @@ export async function decodeImage(b, ext) {
   if (ext === 'svg' || ext === 'svgz') throw new Error('SVG は画面側で読み込みます');
   if (typeof createImageBitmap !== 'function' || typeof OffscreenCanvas !== 'function') throw new Error('この環境では画像を展開できません');
   const type = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', bmp: 'image/bmp', webp: 'image/webp', ico: 'image/x-icon', cur: 'image/x-icon' }[ext] || '';
-  try { return await browserDecode(b, type); } catch (e) { throw new Error('画像を展開できませんでした（壊れているか、対応していない種類の画像です）'); }
+  try { return await browserDecode(b, type); } catch (e) {
+    if (ext === 'ico' || ext === 'cur') { try { const r = await icoLenient(b); if (r) return r; } catch (e2) { /* 下で知らせる */ } }
+    throw new Error('画像を展開できませんでした（壊れているか、対応していない種類の画像です）');
+  }
+}
+// ICO・CUR の中の BMP を、ブラウザが断ったときに自分で取り出す。透明の印（AND マスク）が規則より短い ICO
+//（Pillow などが書く）をブラウザは開けないが、ほかの多くのソフトは開ける。一番大きい絵を 1 つ使う
+async function icoLenient(b) {
+  if (b.length < 22) return null;
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  const n = dv.getUint16(4, true);
+  let best = null;
+  for (let i = 0; i < n && 6 + 16 * i + 16 <= b.length; i++) {
+    const e = 6 + 16 * i, w = b[e] || 256, h = b[e + 1] || 256, size = dv.getUint32(e + 8, true), off = dv.getUint32(e + 12, true);
+    if (off >= b.length) continue;
+    if (!best || w * h > best.w * best.h) best = { w, h, d: b.subarray(off, Math.min(b.length, off + size)) };
+  }
+  if (!best) return null;
+  const d = best.d;
+  if (d[0] === 0x89 && d[1] === 0x50) return browserDecode(d, 'image/png');
+  if (d.length < 40) return null;
+  const dd = new DataView(d.buffer, d.byteOffset, d.byteLength);
+  const hs = dd.getUint32(0, true), w = dd.getInt32(4, true), h = Math.abs(dd.getInt32(8, true)) >> 1, bpp = dd.getUint16(14, true);
+  if (hs < 40 || w <= 0 || h <= 0 || w * h > 1e7) return null;
+  const pal = bpp <= 8 ? (dd.getUint32(32, true) || 1 << bpp) : 0;
+  const xorStart = hs + 4 * pal, row = ((w * bpp + 31) >> 5) * 4, xorEnd = xorStart + row * h;
+  if (xorEnd > d.length) return null;
+  // ふつうの BMP ファイルにする（ファイルの頭 14 バイトを足し、高さを絵の部分だけにする）
+  const bm = new Uint8Array(14 + xorEnd), bv = new DataView(bm.buffer);
+  bm[0] = 0x42; bm[1] = 0x4d; bv.setUint32(2, bm.length, true); bv.setUint32(10, 14 + xorStart, true);
+  bm.set(d.subarray(0, xorEnd), 14); bv.setInt32(14 + 8, h, true); bv.setUint32(14 + 20, 0, true);
+  const img = (bpp === 32 && bmp32(bm)) || await browserDecode(bm, 'image/bmp');
+  // 透明の印が全部あれば当てる（1 の所は透明）。短ければ全部見える物として扱う
+  const mrow = ((w + 31) >> 5) * 4;
+  if (bpp < 32 && xorEnd + mrow * h <= d.length) {
+    for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) if (d[xorEnd + r * mrow + (c >> 3)] & (0x80 >> (c & 7))) img.data[4 * ((h - 1 - r) * w + c) + 3] = 0;
+  }
+  return img;
 }
 async function readImage_(src, sink, ctx) {
   const b = await src.all(4e8);

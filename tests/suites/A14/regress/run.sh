@@ -44,7 +44,7 @@ app_tests() {
   grep -q '"floorOK":false' $O/level_check.log && judge NG A14-001 || judge OK A14-001
   # A14-002 隠した天井の点が選ばれる（アプリ version）
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 240 node $R/c1_pick_hidden.js > $O/pick_hidden.log 2>&1
-  grep -q 'boxTop_hidden' $O/pick_hidden.log && echo "（pick_hidden.log の boxTop_hidden の Z が 0.8 前後なら直っている）" >> $O/judge.txt
+  grep -q 'boxTop_hidden' $O/pick_hidden.log && echo "（pick_hidden.log の boxTop_hidden が箱の点（床の高さ floorZ より 0.1 m 以上高い）なら直っている。この地図は箱の上面の中央に点がなく（センサーが低い）、許す幅の中の箱の横の面の点が選ばれる）" >> $O/judge.txt
   # その他の画面の確かめ（ログを見て判定）
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 241 node $R/c5_shift.js > $O/c5_shift.log 2>&1
   MEM=3000 TIMEOUT=900 $T/bin/heavy xvfb-run -a -n 244 node $R/c5b_coords.js > $O/c5b_coords.log 2>&1

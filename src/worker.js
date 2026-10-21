@@ -193,6 +193,12 @@ function pointSpacing(ds) {
 }
 
 // win: [lo, hi] を渡すと、奥行きがその範囲の点のうち「光線に一番近い点」を選ぶ（渡さなければ一番手前の点）
+// 点 i の、光線（q.o から q.d の向き）からの距離（索引と同じ座標で）
+function perpOf(ds, q, i) {
+  const P = ds.positions, vx = P[3 * i] - q.o[0], vy = P[3 * i + 1] - q.o[1], vz = P[3 * i + 2] - q.o[2];
+  const t = vx * q.d[0] + vy * q.d[1] + vz * q.d[2];
+  return Math.sqrt(Math.max(0, vx * vx + vy * vy + vz * vz - t * t));
+}
 function pickIn(ds, o, d, tolA, tolB, M, clipMin, clipMax, ceil, win = null) {
   if (!ds.index) buildIndex(ds);
   const I = ds.index, { cell, min, start, sorted, C, cdims, coarse } = I;
@@ -634,11 +640,14 @@ self.onmessage = async (e) => {
         if (!ds.index) self.postMessage({ type: 'status', text: `${q.name} の索引を作成中…` });
         let r = pickIn(ds, q.o, q.d, q.tolA, q.tolB, q.M, msg.clipMin, msg.clipMax, msg.ceil || null);
         // 許す幅いっぱいの中で一番手前の点は、斜めに見た床などで幅の縁（カメラ寄り）になる（R7-004）
-        // 一番手前の点から、許す幅の 3 倍（斜めに見た面の奥行きの幅）までの点のうち、光線に一番近い点を選び直す
+        // 一番手前の点から、許す幅の 2 倍（45° に斜めに見た面で、許す円の中に入る奥行きの幅）までの点のうち、光線に一番近い点を選び直す。
+        // 幅を広げすぎると、上から見た箱の縁から横の床へ移ってしまう（以前は 3 倍＋索引のマス。A14 c1）
         if (r) {
-          const w = 3 * (q.tolA * r.t + q.tolB) + ds.index.cell;
+          const tl = q.tolA * r.t + q.tolB, w = 2 * tl;
           const n = pickIn(ds, q.o, q.d, q.tolA, q.tolB, q.M, msg.clipMin, msg.clipMax, msg.ceil || null, [r.t, r.t + w]);
-          if (n) r = n;
+          // 選び直した点が、一番手前の点より光線にはっきり（許す幅の半分以上）近いときだけ使う。
+          // 上から見た箱の縦の面のように近さがほとんど変わらないときは、手前（上の縁）のままにする（A14 c1）
+          if (n && perpOf(ds, q, n.index) < perpOf(ds, q, r.index) - 0.5 * tl) r = n;
         }
         if (r && (!best || r.t * q.scale < best.tw)) best = { ...r, id: q.id, tw: r.t * q.scale };
       }

@@ -29,6 +29,12 @@ echo "###############################################################"
 node campaign.mjs trunc $G/jobs_trunc.jsonl
 node runner.mjs $G/jobs_trunc.jsonl $OUT/trunc.jsonl --timeout=20000 --mem=450 --quiet | sed -n '/== まとめ ==/,$p'
 
+echo "###############################################################"
+echo "# 2b) 手で作った途中切れ・過大確保の代表（OFF・VTK・PGM など。以前はここで流しておらず、集計に古い結果が残っていた）"
+echo "###############################################################"
+node $G/trunc_probe.mjs
+node runner.mjs $G/jobs_tprobe.jsonl $OUT/tprobe.jsonl --timeout=20000 --mem=450 --quiet | sed -n '/== まとめ ==/,$p'
+
 if [ -z "$QUICK" ]; then
 echo "###############################################################"
 echo "# 3) 変異ファジング（ビット反転・置換・切詰・繰返・挿入・削除）"
