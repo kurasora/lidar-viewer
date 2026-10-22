@@ -1,8 +1,15 @@
 # Mac version を GitHub の Mac で作り、起動して地図を開けるかを確かめる（手で実行する）
-# できた zip は、この実行の「Artifacts」の mac-<arch>-zip から取り出して Releases に置く
+# 2 つとも起動できたら、できた zip を Releases の v<package.json の version> に置く
+#   その版の Releases がまだなければ、下書き（Draft）を作って置く。同じ名前のファイルがあれば置き換える
+#   置きたくないときは、実行するときに「Releases に置く」のチェックを外す（zip はこの実行の「Artifacts」に残る）
 name: mac-check
 on:
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Releases に置く'
+        type: boolean
+        default: true
 jobs:
   mac:
     strategy:
@@ -49,3 +56,33 @@ jobs:
           path: |
             screen.png
             app.log
+  release:
+    # 2 つとも起動の確認が通ったときだけ置く
+    needs: mac
+    if: ${{ inputs.release }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mac-*-zip
+          path: out
+          merge-multiple: true
+      - name: Releases に置く
+        run: |
+          V=$(node -p "require('./package.json').version")
+          TAG="v$V"
+          ls -la out
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "$TAG の Releases に置きます"
+          else
+            echo "$TAG の Releases がないので、下書きを作ります"
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "LiDAR Viewer $V" --notes ""
+          fi
+          gh release upload "$TAG" out/LiDARViewer-*-mac-*.zip --clobber
+          gh release view "$TAG" --json isDraft,assets --jq '"下書き: \(.isDraft)", (.assets[].name)'
