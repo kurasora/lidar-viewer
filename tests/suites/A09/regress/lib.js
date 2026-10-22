@@ -255,8 +255,8 @@ async function openFiles(ctx, files, { timeout = 1500000, quietMs = 2500, onTick
       const loadedIds = m.filter(x => x[1] === 'loaded').map(x => x[4]);
       const pendingIdx = loadedIds.filter(id => !m.some(x => (x[1] === 'spacing' || x[1] === 'error') && x[4] === id));
       const wantLevel = n0 === 0 && document.getElementById('autoLevel').checked && loadedIds.length > 0;
-      // 水平補正の結果: 成功（analyzed）か、「水平補正…」の知らせ（失敗も含む）がこれまでに一度でも出たか
-      const levelDone = !wantLevel || m.some(x => x[1] === 'analyzed') || P.statMsgs.some(x => x[0] >= ts && /水平補正/.test(x[1]));
+      // 水平補正の結果: 成功（analyzed）か、「水平補正…」の知らせ（失敗も含む）がこれまでに一度でも出たか、補正のカードに「していません」と出たか
+      const levelDone = !wantLevel || m.some(x => x[1] === 'analyzed') || P.statMsgs.some(x => x[0] >= ts && /水平補正/.test(x[1])) || /自動の水平補正はしていません/.test(document.getElementById('levelResult').textContent); // 自動の補正ができないときは黙って補正のカードにだけ書く（A11-010）
       return { now: performance.now(), lastMsg: Math.max(last, ts), hidden: document.getElementById('progress').hidden, nFiles: S.files.length, n0, err: !!msg.style.color, msg: msg.textContent, pendingIdx: pendingIdx.length, levelDone, crashed: false,
         lastWorker: P.msgs.length ? P.msgs[P.msgs.length - 1].slice(0, 6) : null, prog: document.getElementById('progressText').textContent + ' ' + document.getElementById('progressBar').style.width };
     }, [nBefore, tStart]), 60000).catch(e => ({ crashed: /closed|crash/i.test(e.message), stuck: /timeout/.test(e.message), error: e.message }));
